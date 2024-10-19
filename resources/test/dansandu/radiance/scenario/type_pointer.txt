@@ -1,0 +1,34 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "type_pointer"
+    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\type_pointer.test.cpp"
+    line: 3
+    Begin test case run
+      Begin assertion
+        expression: myVoidPointer != nullptr
+        line: 7
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 0x000000000012D687
+          second representation: nullptr
+          operation: !=
+    End test case run
+      test assertions ran: 1
+      test assertions passed: 1
+      test assertions failed: 0
+      test case run success: true
+  End test case
+    test assertions ran: 1
+    test assertions passed: 1
+    test assertions failed: 0
+    test case success: true
+End test suite
+  test cases ran: 1
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 1
+  test assertions passed: 1
+  test assertions failed: 0
+  test suite success: true

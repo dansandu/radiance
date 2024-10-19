@@ -1,0 +1,181 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "sections"
+    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\sections.test.cpp"
+    line: 3
+    Begin test case run
+      Begin section
+        sections: 1
+      Begin section
+        sections: 1, 11
+      Begin section
+        sections: 1, 11, 111
+      Begin assertion
+        expression: 12ULL == 12ULL
+        line: 11
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 12ULL
+          second representation: 12ULL
+          operation: ==
+      End section
+        sections: 1, 11, 111
+        section success: true
+      Begin assertion
+        expression: 1 == 1
+        line: 18
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 1
+          second representation: 1
+          operation: ==
+      Begin assertion
+        expression: 2 == 2
+        line: 25
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 2
+          second representation: 2
+          operation: ==
+      End section
+        sections: 1, 11
+        section success: true
+      End section
+        sections: 1
+        section success: true
+    End test case run
+      test assertions ran: 3
+      test assertions passed: 3
+      test assertions failed: 0
+      test case run success: true
+    Begin test case run
+      Begin section
+        sections: 1
+      Begin section
+        sections: 1, 11
+      Begin section
+        sections: 1, 11, 112
+      End section
+        sections: 1, 11, 112
+        section success: true
+      Begin assertion
+        expression: 1 == 1
+        line: 18
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 1
+          second representation: 1
+          operation: ==
+      Begin assertion
+        expression: 2 == 2
+        line: 25
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 2
+          second representation: 2
+          operation: ==
+      End section
+        sections: 1, 11
+        section success: true
+      End section
+        sections: 1
+        section success: true
+    End test case run
+      test assertions ran: 2
+      test assertions passed: 2
+      test assertions failed: 0
+      test case run success: true
+    Begin test case run
+      Begin section
+        sections: 1
+      Begin section
+        sections: 1, 11
+      Begin assertion
+        expression: 1 == 1
+        line: 18
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 1
+          second representation: 1
+          operation: ==
+      Begin section
+        sections: 1, 11, 113
+      Begin assertion
+        expression: 'a' == 'a'
+        line: 22
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 'a'
+          second representation: 'a'
+          operation: ==
+      End section
+        sections: 1, 11, 113
+        section success: true
+      Begin assertion
+        expression: 2 == 2
+        line: 25
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 2
+          second representation: 2
+          operation: ==
+      End section
+        sections: 1, 11
+        section success: true
+      End section
+        sections: 1
+        section success: true
+    End test case run
+      test assertions ran: 3
+      test assertions passed: 3
+      test assertions failed: 0
+      test case run success: true
+    Begin test case run
+      Begin section
+        sections: 1
+      Begin section
+        sections: 1, 12
+      End section
+        sections: 1, 12
+        section success: true
+      End section
+        sections: 1
+        section success: true
+    End test case run
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test case run success: true
+    Begin test case run
+      Begin section
+        sections: 2
+      End section
+        sections: 2
+        section success: true
+    End test case run
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test case run success: true
+  End test case
+    test assertions ran: 8
+    test assertions passed: 8
+    test assertions failed: 0
+    test case success: true
+End test suite
+  test cases ran: 1
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 8
+  test assertions passed: 8
+  test assertions failed: 0
+  test suite success: true
