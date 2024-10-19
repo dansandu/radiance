@@ -47,7 +47,7 @@ int main(const int, const char* const* const)
             const auto outputFilePath = L"target/temporary/actual_" + std::wstring{entry.path().filename()};
 
             std::wcout << "Scenario \"" << testCaseName << "\" failed. See \"" << outputFilePath
-                       << "\" for actual output.";
+                       << "\" for actual output." << std::endl;
 
             auto file = std::wofstream{outputFilePath, std::ios_base::binary};
             file << std::noskipws << output;
