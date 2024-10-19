@@ -1,5 +1,6 @@
 #include "dansandu/radiance/test_reporter.test.hpp"
 
+#include <filesystem>
 #include <ios>
 #include <type_traits>
 
@@ -30,9 +31,10 @@ void TestReporter::testSuiteEnd(const TestSuiteResult& result)
 
 void TestReporter::testCaseBegin(const TestCaseMetadata& metadata)
 {
+    const auto fileName = std::filesystem::path{metadata.filePath}.filename();
     stream_ << "  Begin test case" << std::endl
             << "    test case name: \"" << metadata.testCaseName << '"' << std::endl
-            << "    file: \"" << metadata.filePath << '"' << std::endl
+            << "    file: " << fileName << std::endl
             << "    line: " << metadata.lineNumber << std::endl;
 }
 

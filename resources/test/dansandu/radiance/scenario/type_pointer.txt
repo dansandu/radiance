@@ -2,7 +2,7 @@ Begin test suite
   test cases being run: 1
   Begin test case
     test case name: "type_pointer"
-    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\type_pointer.test.cpp"
+    file: "type_pointer.test.cpp"
     line: 3
     Begin test case run
       Begin assertion
