@@ -1,0 +1,41 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "type_int"
+    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\type_int.test.cpp"
+    line: 8
+    Begin test case run
+      Begin assertion
+        expression: 23 % 10 == 3
+        line: 10
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 3
+          second representation: 3
+          operation: ==
+      Begin assertion
+        expression: f()
+        line: 12
+      End assertion
+        assertion success: true
+        Unary assertion
+          representation: 5
+    End test case run
+      test assertions ran: 2
+      test assertions passed: 2
+      test assertions failed: 0
+      test case run success: true
+  End test case
+    test assertions ran: 2
+    test assertions passed: 2
+    test assertions failed: 0
+    test case success: true
+End test suite
+  test cases ran: 1
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 2
+  test assertions passed: 2
+  test assertions failed: 0
+  test suite success: true

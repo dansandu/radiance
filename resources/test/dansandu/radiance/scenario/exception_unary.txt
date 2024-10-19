@@ -1,0 +1,34 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "exception_unary"
+    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\exception_unary.test.cpp"
+    line: 18
+    Begin test case run
+      Begin assertion
+        expression: MyType().throws("unary")
+        line: 20
+      End assertion
+        assertion success: false
+        exception type: class std::runtime_error
+        exception message: "unary"
+    End test case run
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test case run success: false
+      exception type: class std::exception
+      exception message: "unary"
+  End test case
+    test assertions ran: 1
+    test assertions passed: 0
+    test assertions failed: 1
+    test case success: false
+End test suite
+  test cases ran: 1
+  test cases passed: 0
+  test cases failed: 1
+  test assertions ran: 1
+  test assertions passed: 0
+  test assertions failed: 1
+  test suite success: false

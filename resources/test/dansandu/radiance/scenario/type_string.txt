@@ -1,0 +1,66 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "type_string"
+    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\type_string.test.cpp"
+    line: 3
+    Begin test case run
+      Begin assertion
+        expression: std::string{"\x1B[32mGreen\x1B[0m\n\"text\" \\\t"} != "string"
+        line: 5
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: "\xB1[32mGreen\xB1[0m\n\"text\" \\\t"s
+          second representation: "string"
+          operation: !=
+      Begin assertion
+        expression: myWideString == myWideString
+        line: 9
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: L"Wide string"s
+          second representation: L"Wide string"s
+          operation: ==
+      Begin assertion
+        expression: !myWideString.empty()
+        line: 11
+      End assertion
+        assertion success: true
+        Unary assertion
+          representation: true
+      Begin assertion
+        expression: myWideString.size()
+        line: 13
+      End assertion
+        assertion success: true
+        Unary assertion
+          representation: 11ULL
+      Begin assertion
+        expression: myWideString.size() == 11U
+        line: 15
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 11ULL
+          second representation: 11U
+          operation: ==
+    End test case run
+      test assertions ran: 5
+      test assertions passed: 5
+      test assertions failed: 0
+      test case run success: true
+  End test case
+    test assertions ran: 5
+    test assertions passed: 5
+    test assertions failed: 0
+    test case success: true
+End test suite
+  test cases ran: 1
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 5
+  test assertions passed: 5
+  test assertions failed: 0
+  test suite success: true
