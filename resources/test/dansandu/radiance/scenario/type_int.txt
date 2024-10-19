@@ -2,7 +2,7 @@ Begin test suite
   test cases being run: 1
   Begin test case
     test case name: "type_int"
-    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\type_int.test.cpp"
+    file: "type_int.test.cpp"
     line: 8
     Begin test case run
       Begin assertion

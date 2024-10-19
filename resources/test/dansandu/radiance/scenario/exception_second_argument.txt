@@ -2,7 +2,7 @@ Begin test suite
   test cases being run: 1
   Begin test case
     test case name: "exception_second_argument"
-    file: "C:\Users\Daniel\workspace\radiance\sources\test\dansandu\radiance\scenario\exception_second_argument.test.cpp"
+    file: "exception_second_argument.test.cpp"
     line: 24
     Begin test case run
       Begin assertion
