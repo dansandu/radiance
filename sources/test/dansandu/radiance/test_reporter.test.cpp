@@ -1,8 +1,11 @@
 #include "dansandu/radiance/test_reporter.test.hpp"
+#include "dansandu/radiance/utility.hpp"
 
 #include <filesystem>
 #include <ios>
 #include <type_traits>
+
+using dansandu::radiance::utility::join;
 
 namespace dansandu::radiance::test_reporter
 {

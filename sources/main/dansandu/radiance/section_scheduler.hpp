@@ -22,7 +22,7 @@ public:
     const wchar_t* const name;
     const int level;
     const int index;
-    const int exceptions;
+    const int uncaughtExceptions_;
     SectionScheduler* scheduler;
 };
 

@@ -3,8 +3,10 @@
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/reporter.hpp"
+#include "dansandu/radiance/utility.hpp"
 
 using dansandu::radiance::reporter::IReporter;
+using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::assertion
 {

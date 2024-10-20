@@ -1,8 +1,8 @@
-#include "dansandu/radiance/common.hpp"
+#include "dansandu/radiance/utility.hpp"
 
 #include <sstream>
 
-namespace dansandu::radiance
+namespace dansandu::radiance::utility
 {
 
 std::wstring toWideString(const char* const string)
