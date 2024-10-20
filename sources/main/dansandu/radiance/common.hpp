@@ -79,7 +79,7 @@ struct SectionResult
 
 struct AssertionMetadata
 {
-    TestCaseRunMetadata testCaseRunMetadata;
+    SectionMetadata sectionMetadata;
     const char* expression = nullptr;
     int lineNumber = 0;
 };

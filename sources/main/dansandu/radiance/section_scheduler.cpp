@@ -222,6 +222,14 @@ void SectionScheduler::endRun()
     DANSANDU_RADIANCE_INTERNAL_DEBUG();
 }
 
+SectionMetadata SectionScheduler::currentSection() const
+{
+    return SectionMetadata{
+        .testCaseRunMetadata = testCaseRunMetadata_,
+        .sections = sections_,
+    };
+}
+
 bool SectionScheduler::testCaseDone() const
 {
     return testCaseDone_;
