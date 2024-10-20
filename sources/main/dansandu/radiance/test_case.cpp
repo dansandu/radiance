@@ -88,8 +88,9 @@ void TestCase::handleAssertion(const char* const expressionString, const int lin
 {
     ++testCaseRunResult_.assertionsRan;
 
-    const auto assertionMetadata =
-        AssertionMetadata{testCaseRunResult_.testCaseRunMetadata, expressionString, lineNumber};
+    const auto assertionMetadata = AssertionMetadata{.sectionMetadata = sectionScheduler_.currentSection(),
+                                                     .expression = expressionString,
+                                                     .lineNumber = lineNumber};
 
     auto assertion = Assertion{assertionMetadata, reporter_};
 

@@ -1,21 +1,14 @@
-#include "dansandu/radiance/progress_bar.hpp"
+#include "dansandu/radiance/progress_bar_console_reporter.hpp"
+#include "dansandu/radiance/test_case_registry.hpp"
 
-#include <iostream>
-#include <thread>
-
-using dansandu::radiance::progress_bar::ProgressBar;
+using dansandu::radiance::progress_bar_console_reporter::ProgressBarConsoleReporter;
+using dansandu::radiance::test_case_registry::TestCaseRegistry;
 
 int main(const int, const char* const* const)
 {
-    const auto resolution = 10;
+    auto reporter = ProgressBarConsoleReporter{};
 
-    auto progressBar = ProgressBar{0, 0, L"main", resolution, [](const auto& text) { std::wcout << text; }, true};
-    for (int i = 0; i < resolution; ++i)
-    {
-        progressBar.updateDescription(std::to_wstring(i));
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        progressBar.advance(1);
-    }
-    progressBar.updateSummary(15677, 1234, 24535);
-    return 0;
+    const auto testSuiteResult = TestCaseRegistry::instance().runAllTestCases(reporter);
+
+    return !testSuiteResult.testSuiteSuccess;
 }

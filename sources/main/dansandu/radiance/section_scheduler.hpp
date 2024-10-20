@@ -43,6 +43,8 @@ public:
 
     void endRun();
 
+    SectionMetadata currentSection() const;
+
     bool testCaseDone() const;
 
     std::wstring getLog() const;
