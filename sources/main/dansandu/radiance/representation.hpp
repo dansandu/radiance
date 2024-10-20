@@ -15,8 +15,6 @@ PRALINE_EXPORT std::wstring represent(const char* const value);
 
 PRALINE_EXPORT std::wstring represent(const wchar_t* const value);
 
-PRALINE_EXPORT std::wstring represent(const std::wstring& value);
-
 PRALINE_EXPORT std::wstring represent(const char value);
 
 PRALINE_EXPORT std::wstring represent(const wchar_t value);

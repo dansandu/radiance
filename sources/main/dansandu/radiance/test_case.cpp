@@ -1,10 +1,12 @@
 #include "dansandu/radiance/test_case.hpp"
 #include "dansandu/radiance/assertion.hpp"
 #include "dansandu/radiance/common.hpp"
+#include "dansandu/radiance/utility.hpp"
 
 using dansandu::radiance::assertion::Assertion;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::section_scheduler::SectionScheduler;
+using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::test_case
 {

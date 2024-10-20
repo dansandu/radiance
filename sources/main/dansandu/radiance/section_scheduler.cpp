@@ -1,4 +1,5 @@
 #include "dansandu/radiance/section_scheduler.hpp"
+#include "dansandu/radiance/utility.hpp"
 
 #include <exception>
 #include <fstream>
@@ -10,6 +11,7 @@
 #include <vector>
 
 using dansandu::radiance::reporter::IReporter;
+using dansandu::radiance::utility::join;
 
 namespace dansandu::radiance::section_scheduler
 {
@@ -19,7 +21,7 @@ namespace dansandu::radiance::section_scheduler
 #define DANSANDU_RADIANCE_INTERNAL_DEBUG() debug(__LINE__)
 
 SectionScope::SectionScope(const wchar_t* const name, const int level, const int index)
-    : name{name}, level{level}, index{index}, exceptions{std::uncaught_exceptions()}, scheduler{nullptr}
+    : name{name}, level{level}, index{index}, uncaughtExceptions_{std::uncaught_exceptions()}, scheduler{nullptr}
 {
 }
 
@@ -27,7 +29,7 @@ SectionScope::~SectionScope() noexcept
 {
     if (scheduler)
     {
-        const auto failure = exceptions != std::uncaught_exceptions();
+        const auto failure = uncaughtExceptions_ < std::uncaught_exceptions();
         scheduler->endSection(name, failure);
     }
 }
