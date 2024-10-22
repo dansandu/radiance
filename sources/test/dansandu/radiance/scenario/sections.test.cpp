@@ -8,7 +8,7 @@ TEST_CASE(L"sections")
         {
             SECTION(L"111")
             {
-                REQUIRE(12ULL == 12ULL);
+                REQUIRE(12 == 12);
             }
 
             SECTION(L"112")

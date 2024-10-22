@@ -21,7 +21,7 @@ bool operator==(MyType, MyType)
 
 }
 
-TEST_CASE(L"exception_second_argument")
+TEST_CASE("exception_second_argument")
 {
     REQUIRE(MyType{} == throws("second"));
 }

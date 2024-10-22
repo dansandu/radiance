@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dansandu/radiance/assertion.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/reporter.hpp"
@@ -33,6 +34,32 @@ public:
 
     void handleAssertion(const char* const expressionString, const int lineNumber,
                          const std::function<void(AssertionResult&)>& expression);
+
+    template<typename ExpectedException>
+    void handleThrowAssertion(const char* const expressionString, const char* const expectedException,
+                              const int lineNumber, const std::function<void()>& expression)
+    {
+        ++testCaseRunResult_.assertionsRan;
+
+        const auto assertionMetadata = AssertionMetadata{.sectionMetadata = sectionScheduler_.currentSection(),
+                                                         .expression = expressionString,
+                                                         .lineNumber = lineNumber};
+
+        auto assertion = dansandu::radiance::assertion::Assertion{assertionMetadata, reporter_};
+
+        try
+        {
+            assertion.throwInvoke<ExpectedException>(expectedException, expression);
+
+            ++testCaseRunResult_.assertionsPassed;
+        }
+        catch (...)
+        {
+            ++testCaseRunResult_.assertionsFailed;
+
+            throw;
+        }
+    }
 
     dansandu::radiance::section_scheduler::SectionScheduler& sectionScheduler();
 

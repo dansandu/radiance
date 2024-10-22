@@ -1,0 +1,36 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "type_map"
+    file: "type_map.test.cpp"
+    line: 5
+    Begin test case run
+      Begin assertion
+        expression: someIntegersMap == anotherIntegersMap
+        line: 18
+      End assertion
+        assertion success: false
+        Binary assertion
+          first representation: {"key1"s: 123, "key2"s: 456, "key3"s: 789}
+          second representation: {"key2"s: 123, "key3"s: 0}
+          operation: ==
+    End test case run
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test case run success: false
+      exception type: class std::runtime_error
+      exception message: "Assertion failed"
+  End test case
+    test assertions ran: 1
+    test assertions passed: 0
+    test assertions failed: 1
+    test case success: false
+End test suite
+  test cases ran: 1
+  test cases passed: 0
+  test cases failed: 1
+  test assertions ran: 1
+  test assertions passed: 0
+  test assertions failed: 1
+  test suite success: false

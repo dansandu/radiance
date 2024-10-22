@@ -16,7 +16,7 @@ static bool operator==(MyType, MyType)
 
 }
 
-TEST_CASE(L"exception_expression")
+TEST_CASE("exception_expression")
 {
     REQUIRE(MyType{} == MyType{});
 }

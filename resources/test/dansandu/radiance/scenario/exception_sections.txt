@@ -12,13 +12,13 @@ Begin test suite
       Begin section
         sections: 1, 11, 111
       Begin assertion
-        expression: 12ULL == 12ULL
+        expression: 12 == 12
         line: 11
       End assertion
         assertion success: true
         Binary assertion
-          first representation: 12ULL
-          second representation: 12ULL
+          first representation: 12
+          second representation: 12
           operation: ==
       End section
         sections: 1, 11, 111

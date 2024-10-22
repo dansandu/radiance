@@ -1,0 +1,43 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "type_float"
+    file: "type_float.test.cpp"
+    line: 3
+    Begin test case run
+      Begin assertion
+        expression: 0.12345678f > 0.0f
+        line: 5
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 0.1235f
+          second representation: 0f
+          operation: >
+      Begin assertion
+        expression: 0.123456789012345 > 0.0
+        line: 7
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 0.12345679
+          second representation: 0
+          operation: >
+    End test case run
+      test assertions ran: 2
+      test assertions passed: 2
+      test assertions failed: 0
+      test case run success: true
+  End test case
+    test assertions ran: 2
+    test assertions passed: 2
+    test assertions failed: 0
+    test case success: true
+End test suite
+  test cases ran: 1
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 2
+  test assertions passed: 2
+  test assertions failed: 0
+  test suite success: true

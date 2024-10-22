@@ -19,7 +19,8 @@ public:
 
     void updateDescription(const std::wstring& description);
 
-    void updateSummary(const int testsFailed, const int testsSkipped, const int testsPassed);
+    void updateSummary(const int testsFailed, const int testsSkipped, const int testsPassed,
+                       const int assertionsPassed);
 
     void advance(const int amount = 1);
 

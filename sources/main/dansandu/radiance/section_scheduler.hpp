@@ -12,14 +12,14 @@ namespace dansandu::radiance::section_scheduler
 
 class SectionScheduler;
 
-class SectionScope
+class PRALINE_EXPORT SectionScope
 {
 public:
-    SectionScope(const wchar_t* const name, const int level, const int index);
+    SectionScope(const std::wstring& name, const int level, const int index);
 
     ~SectionScope() noexcept;
 
-    const wchar_t* const name;
+    const std::wstring name;
     const int level;
     const int index;
     const int uncaughtExceptions_;
@@ -31,15 +31,17 @@ class PRALINE_EXPORT SectionScheduler
 public:
     SectionScheduler(dansandu::radiance::reporter::IReporter& reporter);
 
+    ~SectionScheduler() noexcept;
+
     void beginRun(const TestCaseRunMetadata& testCaseRunMetadata);
 
-    SectionScope newSection(const wchar_t* const sectionName);
+    SectionScope newSection(const std::string& sectionName);
+
+    SectionScope newSection(const std::wstring& sectionName);
 
     bool tryBeginSection(SectionScope& sectionScope);
 
-    bool beginSection(const wchar_t* const sectionName);
-
-    void endSection(const wchar_t* const name, const bool failure);
+    void endSection(const bool failure);
 
     void endRun();
 
@@ -57,7 +59,7 @@ private:
     TestCaseRunMetadata testCaseRunMetadata_;
     std::wostringstream logStream_;
     std::vector<int> sequencer_;
-    std::vector<const wchar_t*> sections_;
+    std::vector<std::wstring> sections_;
     std::vector<int> trace_;
     int level_;
     bool testCaseDone_;

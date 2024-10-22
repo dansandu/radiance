@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <cwctype>
+#include <iomanip>
 #include <sstream>
 #include <type_traits>
 
@@ -47,12 +48,12 @@ static bool isPrintable(const T character)
     }
     else
     {
-        static_assert(false, "unrecognized character type");
+        static_assert(false, "isPrintable character type is non-exhaustive");
     }
 }
 
 template<typename T>
-void escapeCharacter(const T character, std::wstring& result, bool doubleQuotesString)
+void escapeCharacter(const T character, const bool doubleQuotesString, std::wstring& result)
 {
     if (doubleQuotesString && character == '"')
     {
@@ -94,21 +95,27 @@ void escapeCharacter(const T character, std::wstring& result, bool doubleQuotesS
 }
 
 template<typename T>
-std::wstring escapeString(const T* const value)
+void escapeString(const T* const value, std::wstring& result)
+{
+    result.push_back('"');
+
+    for (auto iterator = value; iterator && *iterator != '\0'; ++iterator)
+    {
+        const auto doubleQuotesString = true;
+
+        escapeCharacter(*iterator, doubleQuotesString, result);
+    }
+
+    result.push_back('"');
+}
+
+std::wstring represent(const char* const value)
 {
     if (value)
     {
-        auto result = std::wstring();
+        auto result = std::wstring{};
 
-        result.push_back('"');
-
-        for (auto iterator = value; *iterator != '\0'; ++iterator)
-        {
-            const auto doubleQuotesString = true;
-            escapeCharacter(*iterator, result, doubleQuotesString);
-        }
-
-        result.push_back('"');
+        escapeString(value, result);
 
         return result;
     }
@@ -118,14 +125,22 @@ std::wstring escapeString(const T* const value)
     }
 }
 
-std::wstring represent(const char* const value)
-{
-    return escapeString(value);
-}
-
 std::wstring represent(const wchar_t* const value)
 {
-    return L"L" + escapeString(value);
+    if (value)
+    {
+        auto result = std::wstring{};
+
+        result.push_back(L'L');
+
+        escapeString(value, result);
+
+        return result;
+    }
+    else
+    {
+        return represent(nullptr);
+    }
 }
 
 std::wstring represent(const char value)
@@ -135,9 +150,23 @@ std::wstring represent(const char value)
     result.push_back('\'');
 
     const auto doubleQuotesString = false;
-    escapeCharacter(value, result, doubleQuotesString);
+
+    escapeCharacter(value, doubleQuotesString, result);
 
     result.push_back('\'');
+
+    return result;
+}
+
+std::wstring represent(const unsigned char value)
+{
+    auto result = std::wstring();
+
+    const auto hex = "0123456789ABCDEF";
+    result.push_back('0');
+    result.push_back('x');
+    result.push_back(hex[value & 0xF]);
+    result.push_back(hex[(value >> 4) & 0xF]);
 
     return result;
 }
@@ -151,7 +180,8 @@ std::wstring represent(const wchar_t value)
     result.push_back('\'');
 
     const auto doubleQuotesString = false;
-    escapeCharacter(value, result, doubleQuotesString);
+
+    escapeCharacter(value, doubleQuotesString, result);
 
     result.push_back('\'');
 
@@ -165,35 +195,63 @@ std::wstring represent(const int value)
     return stream.str();
 }
 
-std::wstring represent(const unsigned value)
+std::wstring represent(const unsigned int value)
 {
     auto stream = std::wostringstream{};
-    stream << value << L"U";
+    stream << value << L'u';
     return stream.str();
 }
 
 std::wstring represent(const unsigned long value)
 {
     auto stream = std::wostringstream{};
-    stream << value << L"UL";
+    stream << value << L"ul";
     return stream.str();
 }
 
 std::wstring represent(const unsigned long long value)
 {
     auto stream = std::wostringstream{};
-    stream << value << L"ULL";
+    stream << value << L"ull";
+    return stream.str();
+}
+
+std::wstring represent(const float value)
+{
+    auto stream = std::wostringstream{};
+    stream << std::setprecision(4) << value << L'f';
+    return stream.str();
+}
+
+std::wstring represent(const double value)
+{
+    auto stream = std::wostringstream{};
+    stream << std::setprecision(8) << value;
     return stream.str();
 }
 
 std::wstring represent(const std::string& value)
 {
-    return escapeString(value.c_str()) + L"s";
+    auto result = std::wstring{};
+
+    escapeString(value.c_str(), result);
+
+    result.push_back(L's');
+
+    return result;
 }
 
 std::wstring represent(const std::wstring& value)
 {
-    return L"L" + escapeString(value.c_str()) + L"s";
+    auto result = std::wstring{};
+
+    result.push_back(L'L');
+
+    escapeString(value.c_str(), result);
+
+    result.push_back(L's');
+
+    return result;
 }
 
 }

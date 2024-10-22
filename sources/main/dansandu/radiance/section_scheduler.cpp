@@ -12,6 +12,7 @@
 
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::utility::join;
+using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::section_scheduler
 {
@@ -20,7 +21,7 @@ namespace dansandu::radiance::section_scheduler
 
 #define DANSANDU_RADIANCE_INTERNAL_DEBUG() debug(__LINE__)
 
-SectionScope::SectionScope(const wchar_t* const name, const int level, const int index)
+SectionScope::SectionScope(const std::wstring& name, const int level, const int index)
     : name{name}, level{level}, index{index}, uncaughtExceptions_{std::uncaught_exceptions()}, scheduler{nullptr}
 {
 }
@@ -30,7 +31,7 @@ SectionScope::~SectionScope() noexcept
     if (scheduler)
     {
         const auto failure = uncaughtExceptions_ < std::uncaught_exceptions();
-        scheduler->endSection(name, failure);
+        scheduler->endSection(failure);
     }
 }
 
@@ -44,6 +45,10 @@ SectionScheduler::SectionScheduler(IReporter& reporter)
       reporter_{reporter}
 {
     logStream_ << std::boolalpha;
+}
+
+SectionScheduler::~SectionScheduler() noexcept
+{
 }
 
 void SectionScheduler::beginRun(const TestCaseRunMetadata& testCaseRunMetadata)
@@ -73,10 +78,13 @@ void SectionScheduler::beginRun(const TestCaseRunMetadata& testCaseRunMetadata)
     failure_ = false;
 }
 
-SectionScope SectionScheduler::newSection(const wchar_t* const sectionName)
+SectionScope SectionScheduler::newSection(const std::string& sectionName)
 {
-    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(sectionName != nullptr);
+    return newSection(toWideString(sectionName));
+}
 
+SectionScope SectionScheduler::newSection(const std::wstring& sectionName)
+{
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(level_ >= 0);
 
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(level_ < std::ssize(sequencer_));
@@ -148,7 +156,7 @@ bool SectionScheduler::tryBeginSection(SectionScope& sectionScope)
     return false;
 }
 
-void SectionScheduler::endSection(const wchar_t* const sectionName, const bool failure)
+void SectionScheduler::endSection(const bool failure)
 {
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(level_ > 0);
 

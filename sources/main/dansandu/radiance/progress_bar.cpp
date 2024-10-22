@@ -9,7 +9,9 @@
 #include <stdexcept>
 #include <string>
 
+using dansandu::radiance::utility::highlightText;
 using dansandu::radiance::utility::join;
+using dansandu::radiance::utility::TextHighlight;
 using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::progress_bar
@@ -22,40 +24,6 @@ static constexpr auto emptyBarCharacter = L'=';
 static constexpr auto moveCursorUpTwoLines = L"\x1B[2F";
 static constexpr auto deleteTwoLines = L"\x1B[2M";
 static constexpr auto failureText = L"failed";
-
-enum class TextHighlight
-{
-    None,
-    Red,
-    Green,
-    Blue,
-    Yellow,
-};
-
-static std::wstring highlightText(const std::wstring& text, const TextHighlight textHighlight)
-{
-    if (text.empty())
-    {
-        return text;
-    }
-
-    switch (textHighlight)
-    {
-    case TextHighlight::None:
-        return text;
-    case TextHighlight::Red:
-        return L"\x1B[31m" + text + L"\x1B[0m";
-    case TextHighlight::Green:
-        return L"\x1B[32m" + text + L"\x1B[0m";
-    case TextHighlight::Yellow:
-        return L"\x1B[33m" + text + L"\x1B[0m";
-    case TextHighlight::Blue:
-        return L"\x1B[34m" + text + L"\x1B[0m";
-
-    default:
-        throw std::logic_error{"unknown text highlight"};
-    }
-}
 
 static std::wstring formatIndex(const int stageIndex, const int stageCount)
 {
@@ -186,7 +154,8 @@ void ProgressBar::updateDescription(const std::wstring& description)
     display();
 }
 
-void ProgressBar::updateSummary(const int testsFailed, const int testsSkipped, const int testsPassed)
+void ProgressBar::updateSummary(const int testsFailed, const int testsSkipped, const int testsPassed,
+                                const int assertionsPassed)
 {
     if (testsFailed == 0 && testsSkipped == 0 && testsPassed == 0)
     {
@@ -199,17 +168,23 @@ void ProgressBar::updateSummary(const int testsFailed, const int testsSkipped, c
 
         if (testsFailed > 0)
         {
-            metrics.push_back(highlightText(std::to_wstring(testsFailed) + L" failed", TextHighlight::Red));
+            metrics.push_back(highlightText(std::to_wstring(testsFailed) + L" tests failed", TextHighlight::Red));
         }
 
         if (testsSkipped > 0)
         {
-            metrics.push_back(highlightText(std::to_wstring(testsSkipped) + L" skipped", TextHighlight::Yellow));
+            metrics.push_back(highlightText(std::to_wstring(testsSkipped) + L" tests skipped", TextHighlight::Yellow));
         }
 
-        metrics.push_back(highlightText(std::to_wstring(testsPassed) + L" passed", TextHighlight::Green));
+        metrics.push_back(highlightText(std::to_wstring(testsPassed) + L" tests passed", TextHighlight::Green));
 
-        summary_ += formatIndex(stageIndex_, stageCount_) + L" tests " + join(metrics, L" | ");
+        if (testsFailed == 0 && testsSkipped == 0 && testsPassed > 0)
+        {
+            metrics.push_back(
+                highlightText(std::to_wstring(assertionsPassed) + L" assertions passed", TextHighlight::Green));
+        }
+
+        summary_ += formatIndex(stageIndex_, stageCount_) + L" test " + join(metrics, L" | ");
     }
 
     display();

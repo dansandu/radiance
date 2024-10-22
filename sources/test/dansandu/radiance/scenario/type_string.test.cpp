@@ -12,5 +12,5 @@ TEST_CASE(L"type_string")
 
     REQUIRE(myWideString.size());
 
-    REQUIRE(myWideString.size() == 11U);
+    REQUIRE(myWideString.size() == 11u);
 }

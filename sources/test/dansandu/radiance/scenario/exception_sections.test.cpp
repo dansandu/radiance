@@ -1,25 +1,25 @@
 #include "dansandu/radiance/radiance.hpp"
 
-TEST_CASE(L"exception_sections")
+TEST_CASE("exception_sections")
 {
-    SECTION(L"1")
+    SECTION("1")
     {
-        SECTION(L"11")
+        SECTION("11")
         {
-            SECTION(L"111")
+            SECTION("111")
             {
-                REQUIRE(12ULL == 12ULL);
+                REQUIRE(12 == 12);
 
                 throw std::runtime_error{"error section 111"};
             }
 
-            SECTION(L"112")
+            SECTION("112")
             {
             }
 
             REQUIRE(1 == 1);
 
-            SECTION(L"113")
+            SECTION("113")
             {
                 REQUIRE('a' == 'a');
 
@@ -29,12 +29,12 @@ TEST_CASE(L"exception_sections")
             REQUIRE(2 == 2);
         }
 
-        SECTION(L"12")
+        SECTION("12")
         {
         }
     }
 
-    SECTION(L"2")
+    SECTION("2")
     {
         throw std::runtime_error{"error section 2"};
     }
