@@ -1,6 +1,7 @@
 #include "dansandu/radiance/representation.hpp"
 
 #include <cctype>
+#include <cmath>
 #include <cwctype>
 #include <iomanip>
 #include <sstream>
@@ -219,14 +220,18 @@ std::wstring represent(const unsigned long long value)
 std::wstring represent(const float value)
 {
     auto stream = std::wostringstream{};
-    stream << std::setprecision(4) << value << L'f';
+
+    stream << std::fixed << std::setprecision(6) << value << L'f';
+
     return stream.str();
 }
 
 std::wstring represent(const double value)
 {
     auto stream = std::wostringstream{};
-    stream << std::setprecision(8) << value;
+
+    stream << std::fixed << std::setprecision(6) << value;
+
     return stream.str();
 }
 
