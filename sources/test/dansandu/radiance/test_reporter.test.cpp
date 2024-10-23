@@ -3,6 +3,8 @@
 
 #include <filesystem>
 #include <ios>
+#include <ranges>
+#include <string_view>
 #include <type_traits>
 
 using dansandu::radiance::utility::join;
@@ -112,6 +114,13 @@ void TestReporter::assertionEnd(const AssertionResult& result)
                             << "          first representation: " << argument.firstRepresentation << std::endl
                             << "          second representation: " << argument.secondRepresentation << std::endl
                             << "          operation: " << argument.operation << std::endl;
+                }
+                else if constexpr (std::is_same_v<ArgumentType, ThrowAssertion>)
+                {
+                    stream_ << "        Throw assertion" << std::endl
+                            << "          expected exception: " << argument.expectedException << std::endl
+                            << "          exception thrown: " << argument.exceptionThrown << std::endl
+                            << "          exception message: " << argument.exceptionMessage << std::endl;
                 }
                 else
                 {

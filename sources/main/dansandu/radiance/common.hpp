@@ -68,7 +68,7 @@ struct TestCaseRunResult
 struct SectionMetadata
 {
     TestCaseRunMetadata testCaseRunMetadata;
-    std::vector<const wchar_t*> sections;
+    std::vector<std::wstring> sections;
 };
 
 struct SectionResult
@@ -96,11 +96,18 @@ struct BinaryAssertion
     const char* operation = nullptr;
 };
 
+struct ThrowAssertion
+{
+    std::wstring exceptionMessage;
+    const char* expectedException = nullptr;
+    bool exceptionThrown = false;
+};
+
 struct AssertionResult
 {
     AssertionMetadata assertionMetadata;
     bool assertionSuccess = false;
-    std::variant<UnaryAssertion, BinaryAssertion> assertion;
+    std::variant<UnaryAssertion, BinaryAssertion, ThrowAssertion> assertion;
     std::optional<ExceptionMetadata> exceptionMetadata;
 };
 

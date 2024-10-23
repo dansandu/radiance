@@ -1,0 +1,51 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "single_section"
+    file: "single_section.test.cpp"
+    line: 3
+    Begin test case run
+      Begin assertion
+        expression: 1
+        line: 5
+      End assertion
+        assertion success: true
+        Unary assertion
+          representation: 1
+      Begin section
+        sections: 1
+      Begin assertion
+        expression: 2
+        line: 9
+      End assertion
+        assertion success: true
+        Unary assertion
+          representation: 2
+      End section
+        sections: 1
+        section success: true
+      Begin assertion
+        expression: 3
+        line: 12
+      End assertion
+        assertion success: true
+        Unary assertion
+          representation: 3
+    End test case run
+      test assertions ran: 3
+      test assertions passed: 3
+      test assertions failed: 0
+      test case run success: true
+  End test case
+    test assertions ran: 3
+    test assertions passed: 3
+    test assertions failed: 0
+    test case success: true
+End test suite
+  test cases ran: 1
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 3
+  test assertions passed: 3
+  test assertions failed: 0
+  test suite success: true

@@ -36,15 +36,15 @@ Begin test suite
       End assertion
         assertion success: true
         Unary assertion
-          representation: 11ULL
+          representation: 11ull
       Begin assertion
-        expression: myWideString.size() == 11U
+        expression: myWideString.size() == 11u
         line: 15
       End assertion
         assertion success: true
         Binary assertion
-          first representation: 11ULL
-          second representation: 11U
+          first representation: 11ull
+          second representation: 11u
           operation: ==
     End test case run
       test assertions ran: 5

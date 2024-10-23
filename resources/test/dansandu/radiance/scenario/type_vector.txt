@@ -1,0 +1,52 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "type_vector"
+    file: "type_vector.test.cpp"
+    line: 5
+    Begin test case run
+      Begin assertion
+        expression: myIntegers == myIntegers
+        line: 9
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: [1, 2, 3, 4]
+          second representation: [1, 2, 3, 4]
+          operation: ==
+      Begin assertion
+        expression: myStrings == myStrings
+        line: 13
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: ["a", "b", "c"]
+          second representation: ["a", "b", "c"]
+          operation: ==
+      Begin assertion
+        expression: myBinary == myBinary
+        line: 17
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: [0x10, 0xA0, 0x1C, 0xFF]
+          second representation: [0x10, 0xA0, 0x1C, 0xFF]
+          operation: ==
+    End test case run
+      test assertions ran: 3
+      test assertions passed: 3
+      test assertions failed: 0
+      test case run success: true
+  End test case
+    test assertions ran: 3
+    test assertions passed: 3
+    test assertions failed: 0
+    test case success: true
+End test suite
+  test cases ran: 1
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 3
+  test assertions passed: 3
+  test assertions failed: 0
+  test suite success: true
