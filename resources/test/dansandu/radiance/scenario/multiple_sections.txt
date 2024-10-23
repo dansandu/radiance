@@ -1,8 +1,8 @@
 Begin test suite
   test cases being run: 1
   Begin test case
-    test case name: "sections"
-    file: "sections.test.cpp"
+    test case name: "multiple_sections"
+    file: "multiple_sections.test.cpp"
     line: 3
     Begin test case run
       Begin section

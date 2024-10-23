@@ -30,18 +30,17 @@ SectionScope::~SectionScope() noexcept
 {
     if (scheduler)
     {
-        const auto failure = uncaughtExceptions_ < std::uncaught_exceptions();
-        scheduler->endSection(failure);
+        const auto success = uncaughtExceptions_ >= std::uncaught_exceptions();
+        scheduler->endSection(success);
     }
 }
 
 SectionScheduler::SectionScheduler(IReporter& reporter)
-    : testCaseRunMetadata_{},
-      level_{0},
-      testCaseDone_{false},
+    : level_{0},
+      exitingRun_{false},
+      sectionFailed_{false},
       seekingSection_{false},
-      exiting_{false},
-      failure_{false},
+      testCaseDone_{true},
       reporter_{reporter}
 {
     logStream_ << std::boolalpha;
@@ -69,13 +68,13 @@ void SectionScheduler::beginRun(const TestCaseRunMetadata& testCaseRunMetadata)
         trace_.push_back(0);
     }
 
-    testCaseDone_ = true;
+    exitingRun_ = false;
+
+    sectionFailed_ = false;
 
     seekingSection_ = false;
 
-    exiting_ = false;
-
-    failure_ = false;
+    testCaseDone_ = true;
 }
 
 SectionScope SectionScheduler::newSection(const std::string& sectionName)
@@ -97,13 +96,14 @@ SectionScope SectionScheduler::newSection(const std::wstring& sectionName)
 
     const auto sectionLevel = level_;
 
-    if (!exiting_ || seekingSection_)
+    if ((!exitingRun_ && trace_[level_] == 0) || (seekingSection_ && trace_[level_] < sectionIndex))
     {
-        if (trace_[level_] == 0 || (seekingSection_ && trace_[level_] < sectionIndex))
-        {
-            trace_[level_] = sectionIndex;
+        trace_[level_] = sectionIndex;
 
+        if (seekingSection_)
+        {
             seekingSection_ = false;
+
             testCaseDone_ = false;
         }
     }
@@ -113,7 +113,7 @@ SectionScope SectionScheduler::newSection(const std::wstring& sectionName)
 
 bool SectionScheduler::tryBeginSection(SectionScope& sectionScope)
 {
-    if (exiting_)
+    if (exitingRun_)
     {
         return false;
     }
@@ -156,7 +156,7 @@ bool SectionScheduler::tryBeginSection(SectionScope& sectionScope)
     return false;
 }
 
-void SectionScheduler::endSection(const bool failure)
+void SectionScheduler::endSection(const bool success)
 {
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(level_ > 0);
 
@@ -164,29 +164,41 @@ void SectionScheduler::endSection(const bool failure)
 
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(std::ssize(sections_) > 0);
 
-    --level_;
+    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(std::ssize(trace_) > 1);
 
     auto sectionsCopy = sections_;
+
+    --level_;
 
     sequencer_.pop_back();
 
     sections_.pop_back();
 
-    if (!exiting_)
+    if (!exitingRun_)
     {
-        exiting_ = true;
-        failure_ = failure;
+        exitingRun_ = true;
 
-        if (!failure_)
+        if (success)
         {
             seekingSection_ = true;
         }
     }
 
+    if (!success && !sectionFailed_)
+    {
+        sectionFailed_ = true;
+
+        seekingSection_ = false;
+
+        testCaseDone_ = false;
+
+        trace_.pop_back();
+
+        ++trace_.back();
+    }
+
     if (seekingSection_)
     {
-        DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(std::ssize(trace_) > 0);
-
         trace_.pop_back();
     }
 
@@ -198,34 +210,13 @@ void SectionScheduler::endSection(const bool failure)
                 .testCaseRunMetadata = testCaseRunMetadata_,
                 .sections = std::move(sectionsCopy),
             },
-        .sectionSuccess = !failure_,
+        .sectionSuccess = !sectionFailed_,
     });
 }
 
 void SectionScheduler::endRun()
 {
     logStream_ << "END RUN" << std::endl;
-
-    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(std::ssize(trace_) > 0);
-
-    if (failure_)
-    {
-        if (std::ssize(trace_) == 1 && trace_[0] == 0)
-        {
-            testCaseDone_ = true;
-        }
-        else
-        {
-            DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(std::ssize(trace_) > 1);
-
-            DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(trace_.back() == 0);
-
-            testCaseDone_ = false;
-
-            trace_.pop_back();
-            ++trace_.back();
-        }
-    }
 
     DANSANDU_RADIANCE_INTERNAL_DEBUG();
 }
@@ -247,7 +238,8 @@ void SectionScheduler::debug(const int line)
 {
     logStream_ << "    line: " << line << ", level: " << level_ << "], sections: [" << join(sections_)
                << "], sequencer: [" << join(sequencer_) << "], trace: [" << join(trace_)
-               << "], seek: " << seekingSection_ << ", exit: " << exiting_ << ", failure: " << failure_ << std::endl;
+               << "], exiting run: " << exitingRun_ << ", section failed: " << sectionFailed_
+               << ", seeking section: " << seekingSection_ << ", test case done: " << testCaseDone_ << std::endl;
 }
 
 std::wstring SectionScheduler::getLog() const

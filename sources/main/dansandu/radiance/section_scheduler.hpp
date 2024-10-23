@@ -41,7 +41,7 @@ public:
 
     bool tryBeginSection(SectionScope& sectionScope);
 
-    void endSection(const bool failure);
+    void endSection(const bool success);
 
     void endRun();
 
@@ -62,10 +62,10 @@ private:
     std::vector<std::wstring> sections_;
     std::vector<int> trace_;
     int level_;
-    bool testCaseDone_;
+    bool exitingRun_;
+    bool sectionFailed_;
     bool seekingSection_;
-    bool exiting_;
-    bool failure_;
+    bool testCaseDone_;
     dansandu::radiance::reporter::IReporter& reporter_;
 };
 

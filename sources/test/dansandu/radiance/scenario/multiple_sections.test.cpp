@@ -1,6 +1,6 @@
 #include "dansandu/radiance/radiance.hpp"
 
-TEST_CASE(L"sections")
+TEST_CASE(L"multiple_sections")
 {
     SECTION(L"1")
     {
