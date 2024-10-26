@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <string>
 
 using dansandu::radiance::progress_bar::ProgressBar;
@@ -34,9 +35,9 @@ int main(const int, const char* const* const)
     const auto scenariosTotal = static_cast<int>(scenarios.size());
     const auto displayElapsedTime = true;
 
-    auto progressBar = ProgressBar{
-        stageIndex,        stageCount, stageName, scenariosTotal, [](const auto& text) { std::wcout << text; },
-        displayElapsedTime};
+    std::optional<ProgressBar> progressBar(
+        std::in_place, stageIndex, stageCount, stageName, scenariosTotal, [](const auto& text) { std::wcout << text; },
+        displayElapsedTime);
 
     auto scenariosFailed = 0;
     auto scenariosPassed = 0;
@@ -49,7 +50,7 @@ int main(const int, const char* const* const)
         const auto testCaseName = fileName.substr(0, fileName.size() - fileExtension.size());
         const auto expectedOutput = removeCarriage(readFile(entry.path()));
 
-        progressBar.updateDescription(testCaseName);
+        progressBar->updateDescription(testCaseName);
 
         auto reporter = TestReporter{};
 
@@ -59,6 +60,13 @@ int main(const int, const char* const* const)
 
         if (output != expectedOutput)
         {
+            ++scenariosFailed;
+
+            const auto scenariosSkipped = scenariosTotal - scenariosPassed - scenariosFailed;
+
+            progressBar->updateSummary(scenariosFailed, scenariosSkipped, scenariosPassed, assertionsPassed);
+            progressBar.reset();
+
             const auto outputFilePath = L"target/temporary/actual_" + std::wstring{entry.path().filename()};
 
             std::wcout << "Scenario \"" << testCaseName << "\" failed. See \"" << outputFilePath
@@ -67,11 +75,6 @@ int main(const int, const char* const* const)
             auto file = std::wofstream{outputFilePath, std::ios_base::binary};
             file << std::noskipws << output;
 
-            ++scenariosFailed;
-
-            const auto scenariosSkipped = scenariosTotal - scenariosPassed - scenariosFailed;
-
-            progressBar.updateSummary(scenariosFailed, scenariosSkipped, scenariosPassed, assertionsPassed);
             return 1;
         }
         else
@@ -80,12 +83,12 @@ int main(const int, const char* const* const)
             ++assertionsPassed;
         }
 
-        progressBar.advance();
+        progressBar->advance();
     }
 
     const auto scenariosSkipped = scenariosTotal - scenariosPassed;
 
-    progressBar.updateSummary(scenariosFailed, scenariosSkipped, scenariosPassed, assertionsPassed);
+    progressBar->updateSummary(scenariosFailed, scenariosSkipped, scenariosPassed, assertionsPassed);
 
     return 0;
 }
