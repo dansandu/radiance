@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+#include <optional>
 #include <sstream>
 #include <string>
 
@@ -22,10 +24,13 @@ PRALINE_EXPORT std::wstring toWideString(const char* const string);
 
 PRALINE_EXPORT std::wstring toWideString(const std::string& string);
 
-inline std::wstring toWideString(std::wstring string)
-{
-    return string;
-}
+PRALINE_EXPORT std::wstring toWideString(std::wstring string);
+
+PRALINE_EXPORT std::optional<std::string> getEnvironmentVariable(const std::string& variable);
+
+PRALINE_EXPORT std::wstring readFile(const std::filesystem::path& filePath);
+
+PRALINE_EXPORT std::wstring removeCarriage(std::wstring text);
 
 template<typename Iterable>
 auto join(const Iterable& iterable, const std::wstring separator = L", ")
