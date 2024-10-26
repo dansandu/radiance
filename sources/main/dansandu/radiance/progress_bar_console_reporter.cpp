@@ -14,22 +14,21 @@ using dansandu::radiance::utility::TextHighlight;
 namespace dansandu::radiance::progress_bar_console_reporter
 {
 
-ProgressBarConsoleReporter::ProgressBarConsoleReporter() : failureHandled_{false}
+ProgressBarConsoleReporter::ProgressBarConsoleReporter(const int stageIndex, const int stageCount)
+    : stageIndex_{stageIndex}, stageCount_{stageCount}, failureHandled_{false}
 {
     stream_ << std::boolalpha;
 }
 
 void ProgressBarConsoleReporter::testSuiteBegin(const TestSuiteMetadata& metadata)
 {
-    const auto stageIndex = 12;
-    const auto stageCount = 12;
     const auto stageName = L"test";
     const auto resolution = metadata.testCasesBeingRun;
     const auto displayElapsedTime = true;
 
-    progressBar_ =
-        ProgressBar{stageIndex,        stageCount, stageName, resolution, [](const auto& text) { std::wcout << text; },
-                    displayElapsedTime};
+    progressBar_.emplace(
+        stageIndex_, stageCount_, stageName, resolution, [](const auto& text) { std::wcout << text; },
+        displayElapsedTime);
 }
 
 void ProgressBarConsoleReporter::testSuiteEnd(const TestSuiteResult& result)
@@ -53,7 +52,7 @@ void ProgressBarConsoleReporter::testCaseBegin(const TestCaseMetadata& metadata)
 
 void ProgressBarConsoleReporter::testCaseEnd(const TestCaseResult& result)
 {
-    progressBar_->advance(1);
+    progressBar_->advance();
 }
 
 void ProgressBarConsoleReporter::testCaseRunBegin(const TestCaseRunMetadata& metadata)

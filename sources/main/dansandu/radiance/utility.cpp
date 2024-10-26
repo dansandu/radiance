@@ -1,5 +1,11 @@
 #include "dansandu/radiance/utility.hpp"
 
+#include <algorithm>
+#include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -44,6 +50,43 @@ std::wstring toWideString(const char* const string)
 std::wstring toWideString(const std::string& string)
 {
     return toWideString(string.c_str());
+}
+
+std::wstring toWideString(std::wstring string)
+{
+    return string;
+}
+
+std::optional<std::string> getEnvironmentVariable(const std::string& variable)
+{
+    size_t requiredSize;
+
+    getenv_s(&requiredSize, nullptr, 0, variable.c_str());
+    if (requiredSize == 0)
+    {
+        return {};
+    }
+
+    const auto value = std::make_unique<char[]>(requiredSize);
+
+    getenv_s(&requiredSize, value.get(), requiredSize, variable.c_str());
+
+    return std::optional<std::string>{std::in_place, value.get()};
+}
+
+std::wstring readFile(const std::filesystem::path& filePath)
+{
+    auto file = std::wifstream{filePath, std::ios_base::binary};
+    file >> std::noskipws;
+    auto stream = std::wostringstream{};
+    stream << file.rdbuf();
+    return stream.str();
+}
+
+std::wstring removeCarriage(std::wstring text)
+{
+    text.erase(std::remove(text.begin(), text.end(), L'\r'), text.end());
+    return text;
 }
 
 }

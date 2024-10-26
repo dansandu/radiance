@@ -12,7 +12,7 @@ namespace dansandu::radiance::progress_bar_console_reporter
 class PRALINE_EXPORT ProgressBarConsoleReporter : public dansandu::radiance::reporter::IReporter
 {
 public:
-    ProgressBarConsoleReporter();
+    ProgressBarConsoleReporter(const int stageIndex, const int stageCount);
 
     void testSuiteBegin(const TestSuiteMetadata& metadata) override;
 
@@ -29,6 +29,8 @@ public:
     void assertionEnd(const AssertionResult& result) override;
 
 private:
+    int stageIndex_;
+    int stageCount_;
     std::wostringstream stream_;
     std::optional<dansandu::radiance::progress_bar::ProgressBar> progressBar_;
     bool failureHandled_;
