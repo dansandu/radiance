@@ -1,9 +1,11 @@
 #pragma once
 
+#include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <map>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -91,6 +93,17 @@ std::wstring represent(const std::set<T>& set)
     }
 
     return L"{" + dansandu::radiance::utility::join(elements) + L"}";
+}
+
+template<typename T>
+std::wstring represent(const Tolerance<T>& tolerance)
+{
+    auto stream = std::wostringstream{};
+
+    stream << L"Tolerance(" << represent(tolerance.target) << L", relative=" << tolerance.relative << L", absolute="
+           << tolerance.absolute << L")";
+
+    return stream.str();
 }
 
 }
