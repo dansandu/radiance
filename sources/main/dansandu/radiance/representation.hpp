@@ -3,10 +3,12 @@
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
+#include <concepts>
 #include <map>
 #include <set>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace dansandu::radiance::representation
@@ -51,16 +53,27 @@ std::wstring represent(const T* const value)
 }
 
 template<typename T>
-std::wstring represent(const std::vector<T>& vector)
-{
-    auto elements = std::vector<std::wstring>{};
-
-    for (const auto& element : vector)
+concept ToStringable = requires(const T value) {
     {
-        elements.push_back(represent(element));
-    }
+        value.toString()
+    } -> std::convertible_to<std::string>;
+} || requires(const T value) {
+    {
+        value.toString()
+    } -> std::convertible_to<std::wstring>;
+};
 
-    return L"[" + dansandu::radiance::utility::join(elements) + L"]";
+template<typename T>
+std::wstring represent(const T& value)
+{
+    if constexpr (ToStringable<T>)
+    {
+        return dansandu::radiance::utility::toWideString(value.toString());
+    }
+    else
+    {
+        return L"???";
+    }
 }
 
 template<typename K, typename V>
@@ -90,6 +103,19 @@ std::wstring represent(const std::set<T>& set)
 }
 
 template<typename T>
+std::wstring represent(const std::vector<T>& vector)
+{
+    auto elements = std::vector<std::wstring>{};
+
+    for (const auto& element : vector)
+    {
+        elements.push_back(represent(element));
+    }
+
+    return L"[" + dansandu::radiance::utility::join(elements) + L"]";
+}
+
+template<typename T>
 std::wstring represent(const Tolerance<T>& tolerance)
 {
     auto stream = std::wostringstream{};
@@ -98,12 +124,6 @@ std::wstring represent(const Tolerance<T>& tolerance)
            << tolerance.absolute << L")";
 
     return stream.str();
-}
-
-template<typename T>
-std::wstring represent(const T& value)
-{
-    return L"???";
 }
 
 }
