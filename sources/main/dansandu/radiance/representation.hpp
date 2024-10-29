@@ -51,12 +51,6 @@ std::wstring represent(const T* const value)
 }
 
 template<typename T>
-std::wstring represent(const T& value)
-{
-    return L"???";
-}
-
-template<typename T>
 std::wstring represent(const std::vector<T>& vector)
 {
     auto elements = std::vector<std::wstring>{};
@@ -104,6 +98,12 @@ std::wstring represent(const Tolerance<T>& tolerance)
            << tolerance.absolute << L")";
 
     return stream.str();
+}
+
+template<typename T>
+std::wstring represent(const T& value)
+{
+    return L"???";
 }
 
 }
