@@ -47,33 +47,38 @@ PRALINE_EXPORT std::wstring represent(const std::string& value);
 PRALINE_EXPORT std::wstring represent(const std::wstring& value);
 
 template<typename T>
+std::wstring represent(const T* const value);
+
+template<typename T>
+std::wstring represent(const Tolerance<T>& tolerance);
+
+template<typename K, typename V>
+std::wstring represent(const std::map<K, V>& map);
+
+template<typename T>
+std::wstring represent(const std::set<T>& set);
+
+template<typename T>
+std::wstring represent(const std::vector<T>& vector);
+
+template<typename T>
+std::wstring represent(const T& value);
+
+template<typename T>
 std::wstring represent(const T* const value)
 {
     return represent(static_cast<const void* const>(value));
 }
 
 template<typename T>
-concept ToStringable = requires(const T value) {
-    {
-        value.toString()
-    } -> std::convertible_to<std::string>;
-} || requires(const T value) {
-    {
-        value.toString()
-    } -> std::convertible_to<std::wstring>;
-};
-
-template<typename T>
-std::wstring represent(const T& value)
+std::wstring represent(const Tolerance<T>& tolerance)
 {
-    if constexpr (ToStringable<T>)
-    {
-        return dansandu::radiance::utility::toWideString(value.toString());
-    }
-    else
-    {
-        return L"???";
-    }
+    auto stream = std::wostringstream{};
+
+    stream << L"Tolerance(" << represent(tolerance.target) << L", relative=" << tolerance.relative << L", absolute="
+           << tolerance.absolute << L")";
+
+    return stream.str();
 }
 
 template<typename K, typename V>
@@ -116,14 +121,27 @@ std::wstring represent(const std::vector<T>& vector)
 }
 
 template<typename T>
-std::wstring represent(const Tolerance<T>& tolerance)
+concept ToStringable = requires(const T value) {
+    {
+        value.toString()
+    } -> std::convertible_to<std::string>;
+} || requires(const T value) {
+    {
+        value.toString()
+    } -> std::convertible_to<std::wstring>;
+};
+
+template<typename T>
+std::wstring represent(const T& value)
 {
-    auto stream = std::wostringstream{};
-
-    stream << L"Tolerance(" << represent(tolerance.target) << L", relative=" << tolerance.relative << L", absolute="
-           << tolerance.absolute << L")";
-
-    return stream.str();
+    if constexpr (ToStringable<T>)
+    {
+        return dansandu::radiance::utility::toWideString(value.toString());
+    }
+    else
+    {
+        return L"???";
+    }
 }
 
 }

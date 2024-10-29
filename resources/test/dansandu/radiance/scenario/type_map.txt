@@ -6,31 +6,38 @@ Begin test suite
     line: 5
     Begin test case run
       Begin assertion
-        expression: someIntegersMap == anotherIntegersMap
+        expression: someIntegersMap != anotherIntegersMap
         line: 18
       End assertion
-        assertion success: false
+        assertion success: true
         Binary assertion
           first representation: {"key1"s: 123, "key2"s: 456, "key3"s: 789}
           second representation: {"key2"s: 123, "key3"s: 0}
+          operation: !=
+      Begin assertion
+        expression: vectorMap == vectorMap
+        line: 25
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: {"even"s: [0, 2, 4, 6], "odd"s: [1, 3, 5, 7]}
+          second representation: {"even"s: [0, 2, 4, 6], "odd"s: [1, 3, 5, 7]}
           operation: ==
     End test case run
-      test assertions ran: 1
-      test assertions passed: 0
-      test assertions failed: 1
-      test case run success: false
-      exception type: class std::runtime_error
-      exception message: "Assertion failed"
+      test assertions ran: 2
+      test assertions passed: 2
+      test assertions failed: 0
+      test case run success: true
   End test case
-    test assertions ran: 1
-    test assertions passed: 0
-    test assertions failed: 1
-    test case success: false
+    test assertions ran: 2
+    test assertions passed: 2
+    test assertions failed: 0
+    test case success: true
 End test suite
   test cases ran: 1
-  test cases passed: 0
-  test cases failed: 1
-  test assertions ran: 1
-  test assertions passed: 0
-  test assertions failed: 1
-  test suite success: false
+  test cases passed: 1
+  test cases failed: 0
+  test assertions ran: 2
+  test assertions passed: 2
+  test assertions failed: 0
+  test suite success: true
