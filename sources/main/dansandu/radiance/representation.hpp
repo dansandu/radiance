@@ -3,10 +3,12 @@
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
+#include <concepts>
 #include <map>
 #include <set>
 #include <sstream>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace dansandu::radiance::representation
@@ -45,22 +47,38 @@ PRALINE_EXPORT std::wstring represent(const std::string& value);
 PRALINE_EXPORT std::wstring represent(const std::wstring& value);
 
 template<typename T>
+std::wstring represent(const T* const value);
+
+template<typename T>
+std::wstring represent(const Tolerance<T>& tolerance);
+
+template<typename K, typename V>
+std::wstring represent(const std::map<K, V>& map);
+
+template<typename T>
+std::wstring represent(const std::set<T>& set);
+
+template<typename T>
+std::wstring represent(const std::vector<T>& vector);
+
+template<typename T>
+std::wstring represent(const T& value);
+
+template<typename T>
 std::wstring represent(const T* const value)
 {
     return represent(static_cast<const void* const>(value));
 }
 
 template<typename T>
-std::wstring represent(const std::vector<T>& vector)
+std::wstring represent(const Tolerance<T>& tolerance)
 {
-    auto elements = std::vector<std::wstring>{};
+    auto stream = std::wostringstream{};
 
-    for (const auto& element : vector)
-    {
-        elements.push_back(represent(element));
-    }
+    stream << L"Tolerance(" << represent(tolerance.target) << L", relative=" << tolerance.relative << L", absolute="
+           << tolerance.absolute << L")";
 
-    return L"[" + dansandu::radiance::utility::join(elements) + L"]";
+    return stream.str();
 }
 
 template<typename K, typename V>
@@ -90,20 +108,40 @@ std::wstring represent(const std::set<T>& set)
 }
 
 template<typename T>
-std::wstring represent(const Tolerance<T>& tolerance)
+std::wstring represent(const std::vector<T>& vector)
 {
-    auto stream = std::wostringstream{};
+    auto elements = std::vector<std::wstring>{};
 
-    stream << L"Tolerance(" << represent(tolerance.target) << L", relative=" << tolerance.relative << L", absolute="
-           << tolerance.absolute << L")";
+    for (const auto& element : vector)
+    {
+        elements.push_back(represent(element));
+    }
 
-    return stream.str();
+    return L"[" + dansandu::radiance::utility::join(elements) + L"]";
 }
+
+template<typename T>
+concept ToStringable = requires(const T value) {
+    {
+        value.toString()
+    } -> std::convertible_to<std::string>;
+} || requires(const T value) {
+    {
+        value.toString()
+    } -> std::convertible_to<std::wstring>;
+};
 
 template<typename T>
 std::wstring represent(const T& value)
 {
-    return L"???";
+    if constexpr (ToStringable<T>)
+    {
+        return dansandu::radiance::utility::toWideString(value.toString());
+    }
+    else
+    {
+        return L"???";
+    }
 }
 
 }

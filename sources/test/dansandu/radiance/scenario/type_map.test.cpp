@@ -15,5 +15,12 @@ TEST_CASE("type_map")
         {"key3", 0},
     }};
 
-    REQUIRE(someIntegersMap == anotherIntegersMap);
+    REQUIRE(someIntegersMap != anotherIntegersMap);
+
+    const auto vectorMap = std::map<std::string, std::vector<int>>{{
+        {"even", {0, 2, 4, 6}},
+        {"odd", {1, 3, 5, 7}},
+    }};
+
+    REQUIRE(vectorMap == vectorMap);
 }
