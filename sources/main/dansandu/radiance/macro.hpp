@@ -77,6 +77,20 @@
 #error "Unknown compiler"
 #endif
 
+#if defined(__clang__)
+#define REQUIRE_THROW(expression, exception)                                                                           \
+    _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wunused-value\"")                            \
+        dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(                                          \
+            #expression, #exception, __LINE__, [&]() { expression; }) _Pragma("clang diagnostic pop")
+#elif defined(__GNUC__)
+#define REQUIRE_THROW(expression, exception)                                                                           \
+    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wunused-value\"")                                \
+        dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(                                          \
+            #expression, #exception, __LINE__, [&]() { expression; }) _Pragma("GCC diagnostic pop")
+#elif defined(_MSC_VER)
 #define REQUIRE_THROW(expression, exception)                                                                           \
     dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(#expression, #exception, __LINE__,            \
                                                                          [&]() { expression; })
+#elif
+#error "Unknown compiler"
+#endif
