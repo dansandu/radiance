@@ -23,6 +23,7 @@ TestSuite::TestSuite(const TestSuiteMetadata& testSuiteMetadata,
                        .assertionsRan = 0,
                        .assertionsPassed = 0,
                        .assertionsFailed = 0,
+                       .loggingSuccess = true,
                        .testSuiteSuccess = true},
       testCaseDescriptors_{testCaseDescriptors},
       reporter_{reporter}
@@ -75,7 +76,7 @@ void TestSuite::run()
         testSuiteResult_.assertionsRan += testCase.testCaseResult().assertionsRan;
         testSuiteResult_.assertionsPassed += testCase.testCaseResult().assertionsPassed;
         testSuiteResult_.assertionsFailed += testCase.testCaseResult().assertionsFailed;
-
+        testSuiteResult_.loggingSuccess = testSuiteResult_.loggingSuccess && testCase.testCaseResult().loggingSuccess;
         testSuiteResult_.testSuiteSuccess =
             testSuiteResult_.testSuiteSuccess && testCase.testCaseResult().testCaseSuccess;
     }

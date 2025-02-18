@@ -18,6 +18,7 @@ Begin test suite
       test assertions ran: 1
       test assertions passed: 0
       test assertions failed: 1
+      logging success: true
       test case run success: false
       exception type: class std::runtime_error
       exception message: "Assertion failed"
@@ -25,6 +26,7 @@ Begin test suite
     test assertions ran: 1
     test assertions passed: 0
     test assertions failed: 1
+    logging success: true
     test case success: false
 End test suite
   test cases ran: 1
@@ -33,4 +35,5 @@ End test suite
   test assertions ran: 1
   test assertions passed: 0
   test assertions failed: 1
+  logging success: true
   test suite success: false

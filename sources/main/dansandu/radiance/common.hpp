@@ -1,5 +1,7 @@
 #pragma once
 
+#include "dansandu/journey/common.hpp"
+
 #include <cmath>
 #include <optional>
 #include <string>
@@ -15,6 +17,7 @@ struct TestSuiteMetadata
     int testCasesTotal = 0;
     int testCasesBeingRun = 0;
     int testCasesBeingSkipped = 0;
+    dansandu::journey::Level loggingLevelFailure = dansandu::journey::Level::warning;
 };
 
 struct ExceptionMetadata
@@ -32,6 +35,7 @@ struct TestSuiteResult
     int assertionsRan = 0;
     int assertionsPassed = 0;
     int assertionsFailed = 0;
+    bool loggingSuccess = false;
     bool testSuiteSuccess = false;
 };
 
@@ -49,6 +53,7 @@ struct TestCaseResult
     int assertionsRan = 0;
     int assertionsPassed = 0;
     int assertionsFailed = 0;
+    bool loggingSuccess = false;
     bool testCaseSuccess = false;
 };
 
@@ -63,6 +68,7 @@ struct TestCaseRunResult
     int assertionsRan = 0;
     int assertionsPassed = 0;
     int assertionsFailed = 0;
+    bool loggingSuccess = false;
     bool testCaseRunSuccess = false;
     std::optional<ExceptionMetadata> exceptionMetadata;
 };
@@ -76,6 +82,7 @@ struct SectionMetadata
 struct SectionResult
 {
     SectionMetadata sectionMetadata;
+    bool loggingSuccess = false;
     bool sectionSuccess = false;
 };
 

@@ -1,3 +1,7 @@
 organization: dansandu
 artifact: radiance
 version: 1.0.0.SNAPSHOT
+dependencies:
+- organization: dansandu
+  artifact: journey
+  version: 1.0.0.SNAPSHOT

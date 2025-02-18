@@ -27,17 +27,21 @@ Begin test suite
           representation: 111
       End section
         sections: 1, 11, 111
+        logging success: true
         section success: true
       End section
         sections: 1, 11
+        logging success: true
         section success: false
       End section
         sections: 1
+        logging success: true
         section success: false
     End test case run
       test assertions ran: 2
       test assertions passed: 2
       test assertions failed: 0
+      logging success: true
       test case run success: false
       exception type: class std::runtime_error
       exception message: "error section 11"
@@ -48,14 +52,17 @@ Begin test suite
         sections: 1, 12
       End section
         sections: 1, 12
+        logging success: true
         section success: false
       End section
         sections: 1
+        logging success: true
         section success: false
     End test case run
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      logging success: true
       test case run success: false
       exception type: class std::runtime_error
       exception message: "error section 12"
@@ -73,9 +80,11 @@ Begin test suite
           representation: 13
       End section
         sections: 1, 13
+        logging success: true
         section success: true
       End section
         sections: 1
+        logging success: true
         section success: true
       Begin assertion
         expression: 0 == 0
@@ -90,17 +99,20 @@ Begin test suite
       test assertions ran: 2
       test assertions passed: 2
       test assertions failed: 0
+      logging success: true
       test case run success: true
     Begin test case run
       Begin section
         sections: 2
       End section
         sections: 2
+        logging success: true
         section success: false
     End test case run
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      logging success: true
       test case run success: false
       exception type: class std::runtime_error
       exception message: "error section 2"
@@ -118,11 +130,13 @@ Begin test suite
       test assertions ran: 1
       test assertions passed: 1
       test assertions failed: 0
+      logging success: true
       test case run success: true
   End test case
     test assertions ran: 5
     test assertions passed: 5
     test assertions failed: 0
+    logging success: true
     test case success: false
 End test suite
   test cases ran: 1
@@ -131,4 +145,5 @@ End test suite
   test assertions ran: 5
   test assertions passed: 5
   test assertions failed: 0
+  logging success: true
   test suite success: false

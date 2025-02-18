@@ -31,6 +31,7 @@ void TestReporter::testSuiteEnd(const TestSuiteResult& result)
             << "  test assertions ran: " << result.assertionsRan << std::endl
             << "  test assertions passed: " << result.assertionsPassed << std::endl
             << "  test assertions failed: " << result.assertionsFailed << std::endl
+            << "  logging success: " << result.loggingSuccess << std::endl
             << "  test suite success: " << result.testSuiteSuccess << std::endl;
 }
 
@@ -49,6 +50,7 @@ void TestReporter::testCaseEnd(const TestCaseResult& result)
             << "    test assertions ran: " << result.assertionsRan << std::endl
             << "    test assertions passed: " << result.assertionsPassed << std::endl
             << "    test assertions failed: " << result.assertionsFailed << std::endl
+            << "    logging success: " << result.loggingSuccess << std::endl
             << "    test case success: " << result.testCaseSuccess << std::endl;
 }
 
@@ -63,6 +65,7 @@ void TestReporter::testCaseRunEnd(const TestCaseRunResult& result)
             << "      test assertions ran: " << result.assertionsRan << std::endl
             << "      test assertions passed: " << result.assertionsPassed << std::endl
             << "      test assertions failed: " << result.assertionsFailed << std::endl
+            << "      logging success: " << result.loggingSuccess << std::endl
             << "      test case run success: " << result.testCaseRunSuccess << std::endl;
 
     if (result.exceptionMetadata)
@@ -81,6 +84,7 @@ void TestReporter::sectionEnd(const SectionResult& result)
 {
     stream_ << "      End section" << std::endl
             << "        sections: " << join(result.sectionMetadata.sections) << std::endl
+            << "        logging success: " << result.loggingSuccess << std::endl
             << "        section success: " << result.sectionSuccess << std::endl;
 }
 
