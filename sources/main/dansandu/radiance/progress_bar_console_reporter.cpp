@@ -1,4 +1,5 @@
 #include "dansandu/radiance/progress_bar_console_reporter.hpp"
+#include "dansandu/journey/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <ios>
@@ -6,6 +7,7 @@
 #include <ranges>
 #include <type_traits>
 
+using dansandu::journey::toString;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::utility::highlightText;
 using dansandu::radiance::utility::join;
@@ -80,7 +82,8 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
             stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
                     << testCaseMetadata.filePath << "(" << testCaseMetadata.lineNumber << ")" << std::endl
                     << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
-                    << " warnings, errors or criticals were logged -- see log file for details" << std::endl
+                    << " " << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure)
+                    << "(s) or above were logged -- see log file for details" << std::endl
                     << std::endl;
         }
     }
