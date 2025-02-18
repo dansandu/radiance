@@ -22,6 +22,7 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11, 111
+        logging success: true
         section success: true
       Begin assertion
         expression: 1 == 1
@@ -43,14 +44,17 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11
+        logging success: true
         section success: true
       End section
         sections: 1
+        logging success: true
         section success: true
     End test case run
       test assertions ran: 3
       test assertions passed: 3
       test assertions failed: 0
+      logging success: true
       test case run success: true
     Begin test case run
       Begin section
@@ -61,6 +65,7 @@ Begin test suite
         sections: 1, 11, 112
       End section
         sections: 1, 11, 112
+        logging success: true
         section success: true
       Begin assertion
         expression: 1 == 1
@@ -82,14 +87,17 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11
+        logging success: true
         section success: true
       End section
         sections: 1
+        logging success: true
         section success: true
     End test case run
       test assertions ran: 2
       test assertions passed: 2
       test assertions failed: 0
+      logging success: true
       test case run success: true
     Begin test case run
       Begin section
@@ -118,6 +126,7 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11, 113
+        logging success: true
         section success: true
       Begin assertion
         expression: 2 == 2
@@ -130,14 +139,17 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11
+        logging success: true
         section success: true
       End section
         sections: 1
+        logging success: true
         section success: true
     End test case run
       test assertions ran: 3
       test assertions passed: 3
       test assertions failed: 0
+      logging success: true
       test case run success: true
     Begin test case run
       Begin section
@@ -146,30 +158,36 @@ Begin test suite
         sections: 1, 12
       End section
         sections: 1, 12
+        logging success: true
         section success: true
       End section
         sections: 1
+        logging success: true
         section success: true
     End test case run
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      logging success: true
       test case run success: true
     Begin test case run
       Begin section
         sections: 2
       End section
         sections: 2
+        logging success: true
         section success: true
     End test case run
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      logging success: true
       test case run success: true
   End test case
     test assertions ran: 8
     test assertions passed: 8
     test assertions failed: 0
+    logging success: true
     test case success: true
 End test suite
   test cases ran: 1
@@ -178,4 +196,5 @@ End test suite
   test assertions ran: 8
   test assertions passed: 8
   test assertions failed: 0
+  logging success: true
   test suite success: true

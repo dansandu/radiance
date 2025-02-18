@@ -1,4 +1,5 @@
 #include "dansandu/radiance/section_scheduler.hpp"
+#include "dansandu/journey/logger.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <exception>
@@ -10,6 +11,7 @@
 #include <utility>
 #include <vector>
 
+using dansandu::journey::logger::Logger;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::utility::join;
 using dansandu::radiance::utility::toWideString;
@@ -50,9 +52,13 @@ SectionScheduler::~SectionScheduler() noexcept
 {
 }
 
-void SectionScheduler::beginRun(const TestCaseRunMetadata& testCaseRunMetadata)
+void SectionScheduler::beginRun(const TestCaseRunMetadata& testCaseRunMetadata, const Logger& logger)
 {
+    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(!logger_.has_value());
+
     testCaseRunMetadata_ = testCaseRunMetadata;
+
+    logger_ = logger;
 
     logStream_ << "BEGIN RUN" << std::endl;
 
@@ -166,7 +172,14 @@ void SectionScheduler::endSection(const bool success)
 
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(std::ssize(trace_) > 1);
 
+    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(logger_.has_value());
+
     auto sectionsCopy = sections_;
+
+    const auto loggingSuccess =
+        logger_->getHighestLevelLogged() > testCaseRunMetadata_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
+
+    const auto actualSuccess = success && loggingSuccess;
 
     --level_;
 
@@ -178,13 +191,13 @@ void SectionScheduler::endSection(const bool success)
     {
         exitingRun_ = true;
 
-        if (success)
+        if (actualSuccess)
         {
             seekingSection_ = true;
         }
     }
 
-    if (!success && !sectionFailed_)
+    if (!actualSuccess && !sectionFailed_)
     {
         sectionFailed_ = true;
 
@@ -210,6 +223,7 @@ void SectionScheduler::endSection(const bool success)
                 .testCaseRunMetadata = testCaseRunMetadata_,
                 .sections = std::move(sectionsCopy),
             },
+        .loggingSuccess = loggingSuccess,
         .sectionSuccess = !sectionFailed_,
     });
 }
@@ -217,6 +231,8 @@ void SectionScheduler::endSection(const bool success)
 void SectionScheduler::endRun()
 {
     logStream_ << "END RUN" << std::endl;
+
+    logger_.reset();
 
     DANSANDU_RADIANCE_INTERNAL_DEBUG();
 }

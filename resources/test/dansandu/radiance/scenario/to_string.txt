@@ -18,11 +18,13 @@ Begin test suite
       test assertions ran: 1
       test assertions passed: 1
       test assertions failed: 0
+      logging success: true
       test case run success: true
   End test case
     test assertions ran: 1
     test assertions passed: 1
     test assertions failed: 0
+    logging success: true
     test case success: true
 End test suite
   test cases ran: 1
@@ -31,4 +33,5 @@ End test suite
   test assertions ran: 1
   test assertions passed: 1
   test assertions failed: 0
+  logging success: true
   test suite success: true

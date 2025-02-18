@@ -1,8 +1,13 @@
 #include "dansandu/radiance/test_case.hpp"
+#include "dansandu/journey/logger.hpp"
+#include "dansandu/journey/reporter.hpp"
 #include "dansandu/radiance/assertion.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
+using dansandu::journey::Level;
+using dansandu::journey::logger::Logger;
+using dansandu::journey::reporter::LogFileReporter;
 using dansandu::radiance::assertion::Assertion;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::section_scheduler::SectionScheduler;
@@ -16,6 +21,7 @@ TestCase::TestCase(const TestCaseMetadata& testCaseMetadata, Descriptor descript
                       .assertionsRan = 0,
                       .assertionsPassed = 0,
                       .assertionsFailed = 0,
+                      .loggingSuccess = true,
                       .testCaseSuccess = true},
       testCaseRunResult_{},
       descriptor_{descriptor},
@@ -36,19 +42,27 @@ void TestCase::run()
         .testCaseMetadata = testCaseResult_.testCaseMetadata,
     };
 
+    const auto logFileReporter = LogFileReporter("unit_tests.log");
+
     do
     {
+        auto logger = Logger(L"unit_tests");
+        logger.addReporter(logger.getName(), Level::warning, logFileReporter);
+
+        Logger::globalInstance().addChildLogger(logger);
+
         testCaseRunResult_ = TestCaseRunResult{
             .testCaseRunMetadata = testCaseRunMetadata,
             .assertionsRan = 0,
             .assertionsPassed = 0,
             .assertionsFailed = 0,
+            .loggingSuccess = false,
             .testCaseRunSuccess = false,
         };
 
         reporter_.testCaseRunBegin(testCaseRunMetadata);
 
-        sectionScheduler_.beginRun(testCaseRunMetadata);
+        sectionScheduler_.beginRun(testCaseRunMetadata, logger);
 
         try
         {
@@ -71,14 +85,22 @@ void TestCase::run()
             };
         }
 
+        testCaseRunResult_.loggingSuccess =
+            logger.getHighestLevelLogged() > testCaseResult_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
+        testCaseRunResult_.testCaseRunSuccess =
+            testCaseRunResult_.testCaseRunSuccess && testCaseRunResult_.loggingSuccess;
+
         testCaseResult_.assertionsRan += testCaseRunResult_.assertionsRan;
         testCaseResult_.assertionsPassed += testCaseRunResult_.assertionsPassed;
         testCaseResult_.assertionsFailed += testCaseRunResult_.assertionsFailed;
+        testCaseResult_.loggingSuccess = testCaseResult_.loggingSuccess && testCaseRunResult_.loggingSuccess;
         testCaseResult_.testCaseSuccess = testCaseResult_.testCaseSuccess && testCaseRunResult_.testCaseRunSuccess;
 
         sectionScheduler_.endRun();
 
         reporter_.testCaseRunEnd(testCaseRunResult_);
+
+        Logger::globalInstance().removeChildLogger(logger.getName());
 
     } while (!sectionScheduler_.testCaseDone());
 }

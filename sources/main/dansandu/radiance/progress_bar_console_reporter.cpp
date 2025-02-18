@@ -64,15 +64,23 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
 {
     if (!failureHandled_)
     {
+        const auto& testCaseMetadata = result.testCaseRunMetadata.testCaseMetadata;
+
         if (result.exceptionMetadata)
         {
-            const auto& testCaseMetadata = result.testCaseRunMetadata.testCaseMetadata;
-
             stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
                     << testCaseMetadata.filePath << "(" << testCaseMetadata.lineNumber << ")" << std::endl
                     << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
                     << " exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage << '"'
                     << std::endl
+                    << std::endl;
+        }
+        else if (!result.loggingSuccess)
+        {
+            stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
+                    << testCaseMetadata.filePath << "(" << testCaseMetadata.lineNumber << ")" << std::endl
+                    << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
+                    << " warnings, errors or criticals were logged -- see log file for details" << std::endl
                     << std::endl;
         }
     }

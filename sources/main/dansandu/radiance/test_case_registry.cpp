@@ -1,11 +1,13 @@
 
 #include "dansandu/radiance/test_case_registry.hpp"
+#include "dansandu/journey/common.hpp"
 #include "dansandu/radiance/reporter.hpp"
 #include "dansandu/radiance/test_case.hpp"
 #include "dansandu/radiance/test_suite.hpp"
 
 #include <algorithm>
 
+using dansandu::journey::Level;
 using dansandu::radiance::exception::DuplicateTestCaseNameException;
 using dansandu::radiance::exception::TestCaseWithNameNotFoundException;
 using dansandu::radiance::reporter::IReporter;
@@ -58,6 +60,7 @@ TestSuiteResult TestCaseRegistry::runTestCase(const std::wstring& testCaseName, 
         .testCasesTotal = testCasesTotal,
         .testCasesBeingRun = testCasesBeingRun,
         .testCasesBeingSkipped = testCasesTotal - testCasesBeingRun,
+        .loggingLevelFailure = Level::warning,
     };
 
     auto testSuite = TestSuite{testSuiteMetadata, testCasesToRun, reporter};
@@ -80,6 +83,7 @@ TestSuiteResult TestCaseRegistry::runAllTestCases(IReporter& reporter) const
         .testCasesTotal = testCasesTotal,
         .testCasesBeingRun = testCasesBeingRun,
         .testCasesBeingSkipped = testCasesTotal - testCasesBeingRun,
+        .loggingLevelFailure = Level::warning,
     };
 
     auto testSuite = TestSuite{testSuiteMetadata, testCasesToRun, reporter};
