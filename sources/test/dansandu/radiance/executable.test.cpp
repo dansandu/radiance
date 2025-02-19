@@ -54,7 +54,7 @@ int main(const int, const char* const* const)
 
         auto reporter = TestReporter{};
 
-        TestCaseRegistry::instance().runTestCase(testCaseName, reporter);
+        TestCaseRegistry::instance().runTestCases({testCaseName}, reporter);
 
         const auto output = reporter.getString();
 

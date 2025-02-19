@@ -6,6 +6,7 @@
 #include "dansandu/radiance/utility.hpp"
 
 #include <string>
+#include <vector>
 
 using dansandu::radiance::progress_bar_console_reporter::ProgressBarConsoleReporter;
 using dansandu::radiance::test_case_registry::TestCaseRegistry;
@@ -24,9 +25,14 @@ int main(const int argc, const char* const* const argv)
 
     if (argc > 1)
     {
-        const auto testCaseName = toWideString(argv[1]);
+        auto testCasesNames = std::vector<std::wstring>{};
 
-        const auto testSuiteResult = TestCaseRegistry::instance().runTestCase(testCaseName, reporter);
+        for (auto index = 1; index < argc; ++index)
+        {
+            testCasesNames.push_back(toWideString(argv[index]));
+        }
+
+        const auto testSuiteResult = TestCaseRegistry::instance().runTestCases(testCasesNames, reporter);
 
         return !testSuiteResult.testSuiteSuccess;
     }

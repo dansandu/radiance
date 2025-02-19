@@ -16,8 +16,8 @@ public:
 
     bool registerTestCase(dansandu::radiance::test_case::TestCase::Descriptor testCaseDescriptor);
 
-    TestSuiteResult runTestCase(const std::wstring& testCaseName,
-                                dansandu::radiance::reporter::IReporter& reporter) const;
+    TestSuiteResult runTestCases(const std::vector<std::wstring>& testCasesNames,
+                                 dansandu::radiance::reporter::IReporter& reporter) const;
 
     TestSuiteResult runAllTestCases(dansandu::radiance::reporter::IReporter& reporter) const;
 

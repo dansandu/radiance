@@ -41,16 +41,26 @@ bool TestCaseRegistry::registerTestCase(TestCase::Descriptor descriptor)
     return true;
 }
 
-TestSuiteResult TestCaseRegistry::runTestCase(const std::wstring& testCaseName, IReporter& reporter) const
+TestSuiteResult TestCaseRegistry::runTestCases(const std::vector<std::wstring>& testCasesNames,
+                                               IReporter& reporter) const
 {
-    const auto testCasePosition = std::find_if(testCaseDescriptors_.cbegin(), testCaseDescriptors_.cend(),
-                                               [&](const auto& d) { return d.testCaseName == testCaseName; });
-    if (testCasePosition == testCaseDescriptors_.cend())
-    {
-        throw TestCaseWithNameNotFoundException{testCaseName};
-    }
+    auto testCasesToRun = std::vector<TestCase::Descriptor>{};
 
-    const auto testCasesToRun = std::vector<TestCase::Descriptor>{*testCasePosition};
+    for (const auto& testCaseName : testCasesNames)
+    {
+        const auto testCasePosition = std::find_if(testCaseDescriptors_.cbegin(), testCaseDescriptors_.cend(),
+                                                   [&](const auto& d) { return d.testCaseName == testCaseName; });
+        if (testCasePosition == testCaseDescriptors_.cend())
+        {
+            throw TestCaseWithNameNotFoundException{testCaseName};
+        }
+
+        if (std::find_if(testCasesToRun.cbegin(), testCasesToRun.cend(),
+                         [&](const auto& d) { return d.testCaseName == testCaseName; }) == testCasesToRun.cend())
+        {
+            testCasesToRun.push_back(*testCasePosition);
+        }
+    }
 
     const auto testCasesTotal = static_cast<int>(testCaseDescriptors_.size());
 
