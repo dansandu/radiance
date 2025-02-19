@@ -1,3 +1,4 @@
+#include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/progress_bar.hpp"
 #include "dansandu/radiance/test_case_registry.hpp"
 #include "dansandu/radiance/test_reporter.test.hpp"
@@ -9,6 +10,7 @@
 #include <optional>
 #include <string>
 
+using dansandu::radiance::exception::wrapInTryCatch;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::test_case_registry::TestCaseRegistry;
 using dansandu::radiance::test_reporter::TestReporter;
@@ -16,7 +18,10 @@ using dansandu::radiance::utility::getEnvironmentVariable;
 using dansandu::radiance::utility::readFile;
 using dansandu::radiance::utility::removeCarriage;
 
-int main(const int, const char* const* const)
+namespace
+{
+
+int runScenarios(const int, const char* const* const)
 {
     const auto stageIndexString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_INDEX");
     const auto stageIndex = stageIndexString.has_value() ? std::stoi(stageIndexString.value()) : 0;
@@ -54,7 +59,7 @@ int main(const int, const char* const* const)
 
         auto reporter = TestReporter{};
 
-        TestCaseRegistry::instance().runTestCase(testCaseName, reporter);
+        TestCaseRegistry::instance().runTestCases({testCaseName}, reporter);
 
         const auto output = reporter.getString();
 
@@ -91,4 +96,11 @@ int main(const int, const char* const* const)
     progressBar->updateSummary(scenariosFailed, scenariosSkipped, scenariosPassed, assertionsPassed);
 
     return 0;
+}
+
+}
+
+int main(const int argumentCount, const char* const* const arguments)
+{
+    return wrapInTryCatch(runScenarios, argumentCount, arguments);
 }

@@ -1,18 +1,23 @@
 
 #include "dansandu/radiance/test_case_registry.hpp"
 #include "dansandu/journey/common.hpp"
+#include "dansandu/radiance/progress_bar_console_reporter.hpp"
 #include "dansandu/radiance/reporter.hpp"
 #include "dansandu/radiance/test_case.hpp"
 #include "dansandu/radiance/test_suite.hpp"
+#include "dansandu/radiance/utility.hpp"
 
 #include <algorithm>
 
 using dansandu::journey::Level;
 using dansandu::radiance::exception::DuplicateTestCaseNameException;
 using dansandu::radiance::exception::TestCaseWithNameNotFoundException;
+using dansandu::radiance::progress_bar_console_reporter::ProgressBarConsoleReporter;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::test_case::TestCase;
 using dansandu::radiance::test_suite::TestSuite;
+using dansandu::radiance::utility::getEnvironmentVariable;
+using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::test_case_registry
 {
@@ -33,7 +38,7 @@ bool TestCaseRegistry::registerTestCase(TestCase::Descriptor descriptor)
 {
     if (containsIf(testCaseDescriptors_, [&](const auto& d) { return d.testCaseName == descriptor.testCaseName; }))
     {
-        throw DuplicateTestCaseNameException{descriptor.testCaseName};
+        throw DuplicateTestCaseNameException{L"Duplicate test case name '" + descriptor.testCaseName + L"'"};
     }
 
     testCaseDescriptors_.push_back(std::move(descriptor));
@@ -41,16 +46,26 @@ bool TestCaseRegistry::registerTestCase(TestCase::Descriptor descriptor)
     return true;
 }
 
-TestSuiteResult TestCaseRegistry::runTestCase(const std::wstring& testCaseName, IReporter& reporter) const
+TestSuiteResult TestCaseRegistry::runTestCases(const std::vector<std::wstring>& testCasesNames,
+                                               IReporter& reporter) const
 {
-    const auto testCasePosition = std::find_if(testCaseDescriptors_.cbegin(), testCaseDescriptors_.cend(),
-                                               [&](const auto& d) { return d.testCaseName == testCaseName; });
-    if (testCasePosition == testCaseDescriptors_.cend())
-    {
-        throw TestCaseWithNameNotFoundException{testCaseName};
-    }
+    auto testCasesToRun = std::vector<TestCase::Descriptor>{};
 
-    const auto testCasesToRun = std::vector<TestCase::Descriptor>{*testCasePosition};
+    for (const auto& testCaseName : testCasesNames)
+    {
+        const auto testCasePosition = std::find_if(testCaseDescriptors_.cbegin(), testCaseDescriptors_.cend(),
+                                                   [&](const auto& d) { return d.testCaseName == testCaseName; });
+        if (testCasePosition == testCaseDescriptors_.cend())
+        {
+            throw TestCaseWithNameNotFoundException{L"No test case named '" + testCaseName + L"' was found"};
+        }
+
+        if (std::find_if(testCasesToRun.cbegin(), testCasesToRun.cend(),
+                         [&](const auto& d) { return d.testCaseName == testCaseName; }) == testCasesToRun.cend())
+        {
+            testCasesToRun.push_back(*testCasePosition);
+        }
+    }
 
     const auto testCasesTotal = static_cast<int>(testCaseDescriptors_.size());
 
@@ -90,6 +105,37 @@ TestSuiteResult TestCaseRegistry::runAllTestCases(IReporter& reporter) const
     testSuite.run();
 
     return testSuite.testSuiteResult();
+}
+
+int runTestSuite(const int argumentCount, const char* const* const arguments)
+{
+    const auto stageIndexString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_INDEX");
+    const auto stageIndex = stageIndexString.has_value() ? std::stoi(stageIndexString.value()) : 0;
+
+    const auto stageCountString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_COUNT");
+    const auto stageCount = stageCountString.has_value() ? std::stoi(stageCountString.value()) : 0;
+
+    auto reporter = ProgressBarConsoleReporter{stageIndex, stageCount};
+
+    if (argumentCount > 1)
+    {
+        auto testCasesNames = std::vector<std::wstring>{};
+
+        for (auto index = 1; index < argumentCount; ++index)
+        {
+            testCasesNames.push_back(toWideString(arguments[index]));
+        }
+
+        const auto testSuiteResult = TestCaseRegistry::instance().runTestCases(testCasesNames, reporter);
+
+        return !testSuiteResult.testSuiteSuccess;
+    }
+    else
+    {
+        const auto testSuiteResult = TestCaseRegistry::instance().runAllTestCases(reporter);
+
+        return !testSuiteResult.testSuiteSuccess;
+    }
 }
 
 }

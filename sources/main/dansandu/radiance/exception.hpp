@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <stdexcept>
 #include <string>
 
@@ -42,5 +43,8 @@ class TestCaseWithNameNotFoundException : public BaseRadianceException
 public:
     using BaseRadianceException::BaseRadianceException;
 };
+
+PRALINE_EXPORT int wrapInTryCatch(const std::function<int(const int, const char* const* const)>& callback,
+                                  const int argumentCount, const char* const* const arguments);
 
 }
