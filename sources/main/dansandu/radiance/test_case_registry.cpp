@@ -33,7 +33,7 @@ bool TestCaseRegistry::registerTestCase(TestCase::Descriptor descriptor)
 {
     if (containsIf(testCaseDescriptors_, [&](const auto& d) { return d.testCaseName == descriptor.testCaseName; }))
     {
-        throw DuplicateTestCaseNameException{descriptor.testCaseName};
+        throw DuplicateTestCaseNameException{L"Duplicate test case name '" + descriptor.testCaseName + L"'"};
     }
 
     testCaseDescriptors_.push_back(std::move(descriptor));
@@ -52,7 +52,7 @@ TestSuiteResult TestCaseRegistry::runTestCases(const std::vector<std::wstring>& 
                                                    [&](const auto& d) { return d.testCaseName == testCaseName; });
         if (testCasePosition == testCaseDescriptors_.cend())
         {
-            throw TestCaseWithNameNotFoundException{testCaseName};
+            throw TestCaseWithNameNotFoundException{L"No test case named '" + testCaseName + L"' was found"};
         }
 
         if (std::find_if(testCasesToRun.cbegin(), testCasesToRun.cend(),
