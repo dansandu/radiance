@@ -10,7 +10,7 @@
 #include <optional>
 #include <string>
 
-using dansandu::radiance::exception::BaseRadianceException;
+using dansandu::radiance::exception::wrapInTryCatch;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::test_case_registry::TestCaseRegistry;
 using dansandu::radiance::test_reporter::TestReporter;
@@ -21,7 +21,7 @@ using dansandu::radiance::utility::removeCarriage;
 namespace
 {
 
-int runScenarios()
+int runScenarios(const int, const char* const* const)
 {
     const auto stageIndexString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_INDEX");
     const auto stageIndex = stageIndexString.has_value() ? std::stoi(stageIndexString.value()) : 0;
@@ -100,20 +100,7 @@ int runScenarios()
 
 }
 
-int main(const int, const char* const* const)
+int main(const int argumentCount, const char* const* const arguments)
 {
-    try
-    {
-        return runScenarios();
-    }
-    catch (const BaseRadianceException& exception)
-    {
-        std::wcerr << "Exception was thrown with message: " << exception.message() << std::endl;
-        return 1;
-    }
-    catch (const std::exception& exception)
-    {
-        std::cerr << "Exception was thrown with message: " << exception.what() << std::endl;
-        return 1;
-    }
+    return wrapInTryCatch(runScenarios, argumentCount, arguments);
 }

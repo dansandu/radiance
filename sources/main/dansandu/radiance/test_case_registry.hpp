@@ -25,4 +25,6 @@ private:
     std::vector<dansandu::radiance::test_case::TestCase::Descriptor> testCaseDescriptors_;
 };
 
+PRALINE_EXPORT int runTestSuite(const int argumentCount, const char* const* const arguments);
+
 }
