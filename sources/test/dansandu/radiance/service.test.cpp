@@ -1,8 +1,10 @@
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/progress_bar.hpp"
 #include "dansandu/radiance/test_case_registry.hpp"
 #include "dansandu/radiance/test_reporter.test.hpp"
 #include "dansandu/radiance/utility.hpp"
+#include "dansandu/service_runner/service_registry.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -10,7 +12,7 @@
 #include <optional>
 #include <string>
 
-using dansandu::radiance::exception::wrapInTryCatch;
+using dansandu::journey::exception::wrapInTryCatch;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::test_case_registry::TestCaseRegistry;
 using dansandu::radiance::test_reporter::TestReporter;
@@ -100,7 +102,4 @@ int runScenarios(const int, const char* const* const)
 
 }
 
-int main(const int argumentCount, const char* const* const arguments)
-{
-    return wrapInTryCatch(runScenarios, argumentCount, arguments);
-}
+DANSANDU_SERVICE_RUNNER_REGISTER_SERVICE("radiance_scenarios", runScenarios);

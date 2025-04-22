@@ -1,4 +1,5 @@
 #include "dansandu/radiance/progress_bar.hpp"
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <algorithm>
@@ -9,10 +10,10 @@
 #include <stdexcept>
 #include <string>
 
+using dansandu::journey::utility::toWideString;
 using dansandu::radiance::utility::highlightText;
 using dansandu::radiance::utility::join;
 using dansandu::radiance::utility::TextHighlight;
-using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::progress_bar
 {

@@ -1,5 +1,6 @@
 #include "dansandu/radiance/section_scheduler.hpp"
 #include "dansandu/journey/logger.hpp"
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <exception>
@@ -12,9 +13,9 @@
 #include <vector>
 
 using dansandu::journey::logger::Logger;
+using dansandu::journey::utility::toWideString;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::utility::join;
-using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::section_scheduler
 {
