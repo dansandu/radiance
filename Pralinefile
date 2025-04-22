@@ -5,3 +5,7 @@ dependencies:
 - organization: dansandu
   artifact: journey
   version: 1.0.0.SNAPSHOT
+- organization: dansandu
+  artifact: service_runner
+  version: 1.0.0.SNAPSHOT
+  scope: test

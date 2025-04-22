@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/binding.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/exception.hpp"
@@ -10,7 +11,7 @@
 #include <type_traits>
 #include <typeinfo>
 
-using dansandu::radiance::utility::toWideString;
+using dansandu::journey::utility::toWideString;
 
 namespace dansandu::radiance::assertion
 {

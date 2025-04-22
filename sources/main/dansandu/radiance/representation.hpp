@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
@@ -136,7 +137,7 @@ std::wstring represent(const T& value)
 {
     if constexpr (ToStringable<T>)
     {
-        return dansandu::radiance::utility::toWideString(value.toString());
+        return dansandu::journey::utility::toWideString(value.toString());
     }
     else
     {

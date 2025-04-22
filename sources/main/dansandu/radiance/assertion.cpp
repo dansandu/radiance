@@ -1,12 +1,13 @@
 #include "dansandu/radiance/assertion.hpp"
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/binding.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/reporter.hpp"
 #include "dansandu/radiance/utility.hpp"
 
+using dansandu::journey::utility::toWideString;
 using dansandu::radiance::reporter::IReporter;
-using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::assertion
 {

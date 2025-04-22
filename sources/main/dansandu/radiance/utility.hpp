@@ -20,12 +20,6 @@ enum class TextHighlight
 
 PRALINE_EXPORT std::wstring highlightText(const std::wstring& text, const TextHighlight textHighlight);
 
-PRALINE_EXPORT std::wstring toWideString(const char* const string);
-
-PRALINE_EXPORT std::wstring toWideString(const std::string& string);
-
-PRALINE_EXPORT std::wstring toWideString(std::wstring string);
-
 PRALINE_EXPORT std::optional<std::string> getEnvironmentVariable(const std::string& variable);
 
 PRALINE_EXPORT std::wstring readFile(const std::filesystem::path& filePath);

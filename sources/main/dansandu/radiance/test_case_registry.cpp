@@ -1,15 +1,18 @@
 
 #include "dansandu/radiance/test_case_registry.hpp"
 #include "dansandu/journey/common.hpp"
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/progress_bar_console_reporter.hpp"
 #include "dansandu/radiance/reporter.hpp"
 #include "dansandu/radiance/test_case.hpp"
 #include "dansandu/radiance/test_suite.hpp"
 #include "dansandu/radiance/utility.hpp"
+#include "dansandu/service_runner/service_registry.hpp"
 
 #include <algorithm>
 
 using dansandu::journey::Level;
+using dansandu::journey::utility::toWideString;
 using dansandu::radiance::exception::DuplicateTestCaseNameException;
 using dansandu::radiance::exception::TestCaseWithNameNotFoundException;
 using dansandu::radiance::progress_bar_console_reporter::ProgressBarConsoleReporter;
@@ -17,7 +20,6 @@ using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::test_case::TestCase;
 using dansandu::radiance::test_suite::TestSuite;
 using dansandu::radiance::utility::getEnvironmentVariable;
-using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::test_case_registry
 {
@@ -117,7 +119,7 @@ int runTestSuite(const int argumentCount, const char* const* const arguments)
 
     auto reporter = ProgressBarConsoleReporter{stageIndex, stageCount};
 
-    if (argumentCount > 1)
+    if (argumentCount > 0)
     {
         auto testCasesNames = std::vector<std::wstring>{};
 
@@ -137,5 +139,7 @@ int runTestSuite(const int argumentCount, const char* const* const arguments)
         return !testSuiteResult.testSuiteSuccess;
     }
 }
+
+DANSANDU_SERVICE_RUNNER_REGISTER_SERVICE("default", runTestSuite);
 
 }

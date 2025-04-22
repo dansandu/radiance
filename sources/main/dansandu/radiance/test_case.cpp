@@ -1,6 +1,7 @@
 #include "dansandu/radiance/test_case.hpp"
 #include "dansandu/journey/logger.hpp"
 #include "dansandu/journey/reporter.hpp"
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/assertion.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/utility.hpp"
@@ -8,10 +9,10 @@
 using dansandu::journey::Level;
 using dansandu::journey::logger::Logger;
 using dansandu::journey::reporter::LogFileReporter;
+using dansandu::journey::utility::toWideString;
 using dansandu::radiance::assertion::Assertion;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::section_scheduler::SectionScheduler;
-using dansandu::radiance::utility::toWideString;
 
 namespace dansandu::radiance::test_case
 {
