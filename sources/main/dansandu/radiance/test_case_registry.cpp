@@ -123,7 +123,7 @@ int runTestSuite(const int argumentCount, const char* const* const arguments)
     {
         auto testCasesNames = std::vector<std::wstring>{};
 
-        for (auto index = 1; index < argumentCount; ++index)
+        for (auto index = 0; index < argumentCount; ++index)
         {
             testCasesNames.push_back(toWideString(arguments[index]));
         }
