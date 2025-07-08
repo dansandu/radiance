@@ -7,7 +7,6 @@
 #include "dansandu/radiance/test_case.hpp"
 #include "dansandu/radiance/test_suite.hpp"
 #include "dansandu/radiance/utility.hpp"
-#include "dansandu/service_runner/service_registry.hpp"
 
 #include <algorithm>
 
@@ -139,7 +138,5 @@ int runTestSuite(const int argumentCount, const char* const* const arguments)
         return !testSuiteResult.testSuiteSuccess;
     }
 }
-
-DANSANDU_SERVICE_RUNNER_REGISTER_SERVICE("default", runTestSuite);
 
 }

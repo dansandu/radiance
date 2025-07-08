@@ -123,13 +123,9 @@ std::wstring represent(const std::vector<T>& vector)
 
 template<typename T>
 concept ToStringable = requires(const T value) {
-    {
-        value.toString()
-    } -> std::convertible_to<std::string>;
+    { value.toString() } -> std::convertible_to<std::string>;
 } || requires(const T value) {
-    {
-        value.toString()
-    } -> std::convertible_to<std::wstring>;
+    { value.toString() } -> std::convertible_to<std::wstring>;
 };
 
 template<typename T>
