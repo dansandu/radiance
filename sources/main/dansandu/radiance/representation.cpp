@@ -166,8 +166,8 @@ std::wstring represent(const unsigned char value)
     const auto hex = "0123456789ABCDEF";
     result.push_back('0');
     result.push_back('x');
-    result.push_back(hex[value & 0xF]);
-    result.push_back(hex[(value >> 4) & 0xF]);
+    result.push_back(hex[(value >> 4) & 0x0F]);
+    result.push_back(hex[value & 0x0F]);
 
     return result;
 }
