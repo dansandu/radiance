@@ -4,6 +4,7 @@
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
+#include <array>
 #include <concepts>
 #include <map>
 #include <set>
@@ -114,6 +115,19 @@ std::wstring represent(const std::vector<T>& vector)
     auto elements = std::vector<std::wstring>{};
 
     for (const auto& element : vector)
+    {
+        elements.push_back(represent(element));
+    }
+
+    return L"[" + dansandu::radiance::utility::join(elements) + L"]";
+}
+
+template<typename T, size_t N>
+std::wstring represent(const std::array<T, N>& array)
+{
+    auto elements = std::vector<std::wstring>{};
+
+    for (const auto& element : array)
     {
         elements.push_back(represent(element));
     }
