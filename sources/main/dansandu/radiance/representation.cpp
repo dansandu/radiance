@@ -90,8 +90,8 @@ void escapeCharacter(const T character, const bool doubleQuotesString, std::wstr
         const auto hex = "0123456789ABCDEF";
         result.push_back('\\');
         result.push_back('x');
-        result.push_back(hex[character & 0xF]);
-        result.push_back(hex[(character >> 4) & 0xF]);
+        result.push_back(hex[(character >> 4) & 0x0F]);
+        result.push_back(hex[character & 0x0F]);
     }
 }
 
