@@ -11,7 +11,7 @@ Begin test suite
       End assertion
         assertion success: true
         Binary assertion
-          first representation: "\xB1[32mGreen\xB1[0m\n\"text\" \\\t"s
+          first representation: "\x1B[32mGreen\x1B[0m\n\"text\" \\\t"s
           second representation: "string"
           operation: !=
       Begin assertion
