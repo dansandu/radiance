@@ -1,13 +1,13 @@
-#include "dansandu/journey/logger.hpp"
+#include "dansandu/journey/logging.hpp"
 #include "dansandu/radiance/radiance.hpp"
 
 #include <stdexcept>
 
-using dansandu::journey::logger::LogCritical;
-using dansandu::journey::logger::LogDebug;
-using dansandu::journey::logger::LogError;
-using dansandu::journey::logger::LogInfo;
-using dansandu::journey::logger::LogWarning;
+using dansandu::journey::logging::LogCritical;
+using dansandu::journey::logging::LogDebug;
+using dansandu::journey::logging::LogError;
+using dansandu::journey::logging::LogInfo;
+using dansandu::journey::logging::LogWarning;
 
 TEST_CASE("logging")
 {
