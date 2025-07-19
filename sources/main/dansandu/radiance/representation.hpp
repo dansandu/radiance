@@ -136,7 +136,7 @@ std::wstring represent(const std::array<T, N>& array)
 }
 
 template<typename T>
-concept ToStringable = requires(const T value) {
+concept HasToStringMethod = requires(const T value) {
     {
         value.toString()
     } -> std::convertible_to<std::string>;
@@ -147,11 +147,26 @@ concept ToStringable = requires(const T value) {
 };
 
 template<typename T>
+concept HasToStringFunction = requires(const T value) {
+    {
+        toString(value)
+    } -> std::convertible_to<std::string>;
+} || requires(const T value) {
+    {
+        toString(value)
+    } -> std::convertible_to<std::wstring>;
+};
+
+template<typename T>
 std::wstring represent(const T& value)
 {
-    if constexpr (ToStringable<T>)
+    if constexpr (HasToStringMethod<T>)
     {
         return dansandu::journey::utility::toWideString(value.toString());
+    }
+    else if constexpr (HasToStringFunction<T>)
+    {
+        return dansandu::journey::utility::toWideString(toString(value));
     }
     else
     {
