@@ -3,26 +3,35 @@ Begin test suite
   Begin test case
     test case name: "to_string"
     file: "to_string.test.cpp"
-    line: 31
+    line: 37
     Begin test case run
       Begin assertion
-        expression: MyCustomType(1) == MyCustomType(2)
-        line: 33
+        expression: ToStringMethod() == ToStringMethod()
+        line: 39
       End assertion
         assertion success: true
         Binary assertion
-          first representation: MyCustomType(1)
-          second representation: MyCustomType(2)
+          first representation: ToStringMethod()
+          second representation: ToStringMethod()
+          operation: ==
+      Begin assertion
+        expression: ToStringFunction() == ToStringFunction()
+        line: 41
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: ToStringFunction()
+          second representation: ToStringFunction()
           operation: ==
     End test case run
-      test assertions ran: 1
-      test assertions passed: 1
+      test assertions ran: 2
+      test assertions passed: 2
       test assertions failed: 0
       logging success: true
       test case run success: true
   End test case
-    test assertions ran: 1
-    test assertions passed: 1
+    test assertions ran: 2
+    test assertions passed: 2
     test assertions failed: 0
     logging success: true
     test case success: true
@@ -30,8 +39,8 @@ End test suite
   test cases ran: 1
   test cases passed: 1
   test cases failed: 0
-  test assertions ran: 1
-  test assertions passed: 1
+  test assertions ran: 2
+  test assertions passed: 2
   test assertions failed: 0
   logging success: true
   test suite success: true

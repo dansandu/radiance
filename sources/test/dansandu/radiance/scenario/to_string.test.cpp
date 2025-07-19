@@ -5,30 +5,38 @@
 namespace
 {
 
-class MyCustomType
+struct ToStringMethod
 {
-public:
-    MyCustomType(const int id) : id_{id}
-    {
-    }
-
     std::string toString() const
     {
-        return "MyCustomType(" + std::to_string(id_) + ")";
+        return "ToStringMethod()";
     }
-
-private:
-    int id_;
 };
 
-bool operator==(const MyCustomType&, const MyCustomType)
+bool operator==(ToStringMethod, ToStringMethod)
 {
     return true;
+}
+
+struct ToStringFunction
+{
+};
+
+bool operator==(ToStringFunction, ToStringFunction)
+{
+    return true;
+}
+
+std::string toString(ToStringFunction)
+{
+    return "ToStringFunction()";
 }
 
 }
 
 TEST_CASE("to_string")
 {
-    REQUIRE(MyCustomType(1) == MyCustomType(2));
+    REQUIRE(ToStringMethod() == ToStringMethod());
+
+    REQUIRE(ToStringFunction() == ToStringFunction());
 }
