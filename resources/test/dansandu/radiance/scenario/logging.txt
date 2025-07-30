@@ -3,7 +3,7 @@ Begin test suite
   Begin test case
     test case name: "logging"
     file: "logging.test.cpp"
-    line: 12
+    line: 6
     Begin test case run
       Begin section
         sections: debug

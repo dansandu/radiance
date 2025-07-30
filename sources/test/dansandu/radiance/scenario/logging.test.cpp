@@ -3,36 +3,30 @@
 
 #include <stdexcept>
 
-using dansandu::journey::logging::LogCritical;
-using dansandu::journey::logging::LogDebug;
-using dansandu::journey::logging::LogError;
-using dansandu::journey::logging::LogInfo;
-using dansandu::journey::logging::LogWarning;
-
 TEST_CASE("logging")
 {
     SECTION("debug")
     {
-        LogInfo("LogDebug");
+        LOG_DEBUG("LogDebug");
     }
 
     SECTION("info")
     {
-        LogInfo("InfoMessage");
+        LOG_INFO("InfoMessage");
     }
 
     SECTION("warning")
     {
-        LogWarning("WarningMessage");
+        LOG_WARNING("WarningMessage");
     }
 
     SECTION("error")
     {
-        LogError("ErrorMessage");
+        LOG_ERROR("ErrorMessage");
     }
 
     SECTION("critical")
     {
-        LogCritical("CriticalMessage");
+        LOG_CRITICAL("CriticalMessage");
     }
 }
