@@ -12,7 +12,6 @@
 #include <optional>
 #include <string>
 
-using dansandu::journey::exception::wrapInTryCatch;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::test_case_registry::TestCaseRegistry;
 using dansandu::radiance::test_reporter::TestReporter;
