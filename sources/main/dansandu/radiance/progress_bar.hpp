@@ -40,4 +40,6 @@ private:
     bool displayElapsedTime_;
 };
 
+std::wstring formatDuration(const long long milliseconds);
+
 }
