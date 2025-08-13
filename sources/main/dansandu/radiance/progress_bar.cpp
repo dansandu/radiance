@@ -18,15 +18,18 @@ using dansandu::radiance::utility::TextHighlight;
 namespace dansandu::radiance::progress_bar
 {
 
-static constexpr auto maximumDescriptionSize = 40;
-static constexpr auto barSize = 50;
-static constexpr auto filledBarCharacter = L'=';
-static constexpr auto emptyBarCharacter = L'=';
-static constexpr auto moveCursorUpTwoLines = L"\x1B[2F";
-static constexpr auto deleteTwoLines = L"\x1B[2M";
-static constexpr auto failureText = L"failed";
+namespace
+{
 
-static std::wstring formatIndex(const int stageIndex, const int stageCount)
+constexpr auto maximumDescriptionSize = 40;
+constexpr auto barSize = 50;
+constexpr auto filledBarCharacter = L'=';
+constexpr auto emptyBarCharacter = L'=';
+constexpr auto moveCursorUpTwoLines = L"\x1B[2F";
+constexpr auto deleteTwoLines = L"\x1B[2M";
+constexpr auto failureText = L"failed";
+
+std::wstring formatIndex(const int stageIndex, const int stageCount)
 {
     const auto index = std::to_wstring(stageIndex);
     const auto count = std::to_wstring(stageCount);
@@ -34,7 +37,7 @@ static std::wstring formatIndex(const int stageIndex, const int stageCount)
     return padding + L"(" + index + L"/" + count + L")";
 }
 
-static std::wstring formatDescription(const std::wstring& description)
+std::wstring formatDescription(const std::wstring& description)
 {
     const auto descriptionSize = static_cast<int>(description.size());
     if (descriptionSize > maximumDescriptionSize)
@@ -47,46 +50,7 @@ static std::wstring formatDescription(const std::wstring& description)
     }
 }
 
-static std::wstring formatDuration(const long long milliseconds)
-{
-    const auto promotions = {
-        std::make_pair(1000.0, L"s"),
-        std::make_pair(60.0, L"m"),
-        std::make_pair(60.0, L"h"),
-        std::make_pair(24.0, L"d"),
-    };
-
-    auto elapsed = static_cast<double>(milliseconds);
-    auto elapsedUnit = L"ms";
-    auto elapsedFraction = 0.0;
-    auto elapsedFrationUnit = static_cast<const wchar_t*>(nullptr);
-
-    for (const auto [factor, unit] : promotions)
-    {
-        if (elapsed > factor)
-        {
-            elapsedFraction = std::fmod(elapsed, factor);
-            elapsedFrationUnit = elapsedUnit;
-            elapsed = std::floor(elapsed / factor);
-            elapsedUnit = unit;
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    auto result = std::to_wstring(static_cast<long long>(elapsed)) + elapsedUnit;
-
-    if (static_cast<long long>(elapsedFraction) > 0)
-    {
-        result += L" " + std::to_wstring(static_cast<long long>(elapsedFraction)) + elapsedFrationUnit;
-    }
-
-    return result;
-}
-
-static std::wstring formatPercentage(const double percentage)
+std::wstring formatPercentage(const double percentage)
 {
     if (percentage < 1.0)
     {
@@ -97,6 +61,47 @@ static std::wstring formatPercentage(const double percentage)
     else
     {
         return L"99.99%";
+    }
+}
+
+}
+
+std::wstring formatDuration(const long long milliseconds)
+{
+    const auto promotions = {
+        std::make_pair(1000LL, L"s"),
+        std::make_pair(60LL, L"m"),
+        std::make_pair(60LL, L"h"),
+        std::make_pair(24LL, L"d"),
+    };
+
+    auto elapsed = milliseconds;
+    auto elapsedUnit = L"ms";
+    auto elapsedRemainder = 0LL;
+    auto elapsedRemainderUnit = static_cast<const wchar_t*>(nullptr);
+
+    for (const auto [factor, unit] : promotions)
+    {
+        if (elapsed > factor)
+        {
+            elapsedRemainder = elapsed % factor;
+            elapsedRemainderUnit = elapsedUnit;
+            elapsed = elapsed / factor;
+            elapsedUnit = unit;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if (elapsedRemainder > 0)
+    {
+        return std::to_wstring(elapsed) + elapsedUnit + L" " + std::to_wstring(elapsedRemainder) + elapsedRemainderUnit;
+    }
+    else
+    {
+        return std::to_wstring(elapsed) + elapsedUnit;
     }
 }
 
