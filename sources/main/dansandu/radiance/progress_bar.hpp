@@ -12,8 +12,8 @@ namespace dansandu::radiance::progress_bar
 class PRALINE_EXPORT ProgressBar
 {
 public:
-    ProgressBar(const int stageIndex, const int stageCount, const std::wstring& stageName, const int resolution,
-                std::function<void(const std::wstring&)> printer, const bool displayElapsedTime);
+    ProgressBar(const std::wstring& stageName, const int resolution, std::function<void(const std::wstring&)> printer,
+                const bool displayElapsedTime);
 
     ~ProgressBar();
 
@@ -27,8 +27,6 @@ public:
 private:
     void display(const bool firstPrint = false);
 
-    int stageIndex_;
-    int stageCount_;
     std::wstring stageName_;
     int resolution_;
     int progress_;

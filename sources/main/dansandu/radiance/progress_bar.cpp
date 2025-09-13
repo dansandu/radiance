@@ -29,14 +29,6 @@ constexpr auto moveCursorUpTwoLines = L"\x1B[2F";
 constexpr auto deleteTwoLines = L"\x1B[2M";
 constexpr auto failureText = L"failed";
 
-std::wstring formatIndex(const int stageIndex, const int stageCount)
-{
-    const auto index = std::to_wstring(stageIndex);
-    const auto count = std::to_wstring(stageCount);
-    const auto padding = std::wstring(count.size() - index.size(), L' ');
-    return padding + L"(" + index + L"/" + count + L")";
-}
-
 std::wstring formatDescription(const std::wstring& description)
 {
     const auto descriptionSize = static_cast<int>(description.size());
@@ -82,7 +74,7 @@ std::wstring formatDuration(const long long milliseconds)
 
     for (const auto [factor, unit] : promotions)
     {
-        if (elapsed > factor)
+        if (elapsed >= factor)
         {
             elapsedRemainder = elapsed % factor;
             elapsedRemainderUnit = elapsedUnit;
@@ -105,12 +97,9 @@ std::wstring formatDuration(const long long milliseconds)
     }
 }
 
-ProgressBar::ProgressBar(const int stageIndex, const int stageCount, const std::wstring& stageName,
-                         const int resolution, std::function<void(const std::wstring&)> printer,
-                         const bool displayElapsedTime)
-    : stageIndex_{stageIndex},
-      stageCount_{stageCount},
-      stageName_{stageName},
+ProgressBar::ProgressBar(const std::wstring& stageName, const int resolution,
+                         std::function<void(const std::wstring&)> printer, const bool displayElapsedTime)
+    : stageName_{stageName},
       resolution_{resolution},
       progress_{0},
       startTime_{std::chrono::steady_clock::now()},
@@ -165,8 +154,7 @@ void ProgressBar::updateSummary(const int testsFailed, const int testsSkipped, c
 {
     if (testsFailed == 0 && testsSkipped == 0 && testsPassed == 0)
     {
-        summary_ =
-            formatIndex(stageIndex_, stageCount_) + L" " + highlightText(L"No tests found", TextHighlight::Yellow);
+        summary_ = L" " + highlightText(L"No tests found", TextHighlight::Yellow);
     }
     else
     {
@@ -190,7 +178,7 @@ void ProgressBar::updateSummary(const int testsFailed, const int testsSkipped, c
                 highlightText(std::to_wstring(assertionsPassed) + L" assertions passed", TextHighlight::Green));
         }
 
-        summary_ += formatIndex(stageIndex_, stageCount_) + L" test " + join(metrics, L" | ");
+        summary_ += L" test " + join(metrics, L" | ");
     }
 
     display();
@@ -215,7 +203,7 @@ void ProgressBar::advance(const int amount)
 
 void ProgressBar::display(const bool firstPrint)
 {
-    auto header = formatIndex(stageIndex_, stageCount_) + L" " + stageName_;
+    auto header = L" " + stageName_;
 
     if (!description_.empty())
     {

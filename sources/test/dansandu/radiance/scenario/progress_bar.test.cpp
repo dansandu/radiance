@@ -7,6 +7,8 @@ TEST_CASE("progress_bar")
 {
     REQUIRE(formatDuration(28LL) == L"28ms");
 
+    REQUIRE(formatDuration(1000LL) == L"1s");
+
     REQUIRE(formatDuration(1760LL) == L"1s 760ms");
 
     REQUIRE(formatDuration(10250LL) == L"10s 250ms");
