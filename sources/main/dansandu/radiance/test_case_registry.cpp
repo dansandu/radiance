@@ -110,13 +110,7 @@ TestSuiteResult TestCaseRegistry::runAllTestCases(IReporter& reporter) const
 
 int runTestSuite(const int argumentCount, const char* const* const arguments)
 {
-    const auto stageIndexString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_INDEX");
-    const auto stageIndex = stageIndexString.has_value() ? std::stoi(stageIndexString.value()) : 0;
-
-    const auto stageCountString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_COUNT");
-    const auto stageCount = stageCountString.has_value() ? std::stoi(stageCountString.value()) : 0;
-
-    auto reporter = ProgressBarConsoleReporter{stageIndex, stageCount};
+    auto reporter = ProgressBarConsoleReporter{};
 
     if (argumentCount > 0)
     {

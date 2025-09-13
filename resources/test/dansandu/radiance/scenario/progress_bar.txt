@@ -15,8 +15,17 @@ Begin test suite
           second representation: L"28ms"
           operation: ==
       Begin assertion
-        expression: formatDuration(1760LL) == L"1s 760ms"
+        expression: formatDuration(1000LL) == L"1s"
         line: 10
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: L"1s"s
+          second representation: L"1s"
+          operation: ==
+      Begin assertion
+        expression: formatDuration(1760LL) == L"1s 760ms"
+        line: 12
       End assertion
         assertion success: true
         Binary assertion
@@ -25,7 +34,7 @@ Begin test suite
           operation: ==
       Begin assertion
         expression: formatDuration(10250LL) == L"10s 250ms"
-        line: 12
+        line: 14
       End assertion
         assertion success: true
         Binary assertion
@@ -34,7 +43,7 @@ Begin test suite
           operation: ==
       Begin assertion
         expression: formatDuration(447058LL) == L"7m 27s"
-        line: 14
+        line: 16
       End assertion
         assertion success: true
         Binary assertion
@@ -43,7 +52,7 @@ Begin test suite
           operation: ==
       Begin assertion
         expression: formatDuration(7130900LL) == L"1h 58m"
-        line: 16
+        line: 18
       End assertion
         assertion success: true
         Binary assertion
@@ -52,7 +61,7 @@ Begin test suite
           operation: ==
       Begin assertion
         expression: formatDuration(172810000LL) == L"2d"
-        line: 18
+        line: 20
       End assertion
         assertion success: true
         Binary assertion
@@ -61,7 +70,7 @@ Begin test suite
           operation: ==
       Begin assertion
         expression: formatDuration(950399999LL) == L"10d 23h"
-        line: 20
+        line: 22
       End assertion
         assertion success: true
         Binary assertion
@@ -69,14 +78,14 @@ Begin test suite
           second representation: L"10d 23h"
           operation: ==
     End test case run
-      test assertions ran: 7
-      test assertions passed: 7
+      test assertions ran: 8
+      test assertions passed: 8
       test assertions failed: 0
       logging success: true
       test case run success: true
   End test case
-    test assertions ran: 7
-    test assertions passed: 7
+    test assertions ran: 8
+    test assertions passed: 8
     test assertions failed: 0
     logging success: true
     test case success: true
@@ -84,8 +93,8 @@ End test suite
   test cases ran: 1
   test cases passed: 1
   test cases failed: 0
-  test assertions ran: 7
-  test assertions passed: 7
+  test assertions ran: 8
+  test assertions passed: 8
   test assertions failed: 0
   logging success: true
   test suite success: true

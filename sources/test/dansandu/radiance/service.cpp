@@ -2,7 +2,7 @@
 #include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/progress_bar.hpp"
 #include "dansandu/radiance/test_case_registry.hpp"
-#include "dansandu/radiance/test_reporter.test.hpp"
+#include "dansandu/radiance/test_reporter.hpp"
 #include "dansandu/radiance/utility.hpp"
 #include "dansandu/service_runner/service_registry.hpp"
 
@@ -24,12 +24,6 @@ namespace
 
 int runScenarios(const int, const char* const* const)
 {
-    const auto stageIndexString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_INDEX");
-    const auto stageIndex = stageIndexString.has_value() ? std::stoi(stageIndexString.value()) : 0;
-
-    const auto stageCountString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_COUNT");
-    const auto stageCount = stageCountString.has_value() ? std::stoi(stageCountString.value()) : 0;
-
     const auto scenariosDirectory = "resources/test/dansandu/radiance/scenario";
 
     auto scenariosReader = std::filesystem::directory_iterator(scenariosDirectory);
@@ -42,8 +36,7 @@ int runScenarios(const int, const char* const* const)
     const auto displayElapsedTime = true;
 
     std::optional<ProgressBar> progressBar(
-        std::in_place, stageIndex, stageCount, stageName, scenariosTotal, [](const auto& text) { std::wcout << text; },
-        displayElapsedTime);
+        std::in_place, stageName, scenariosTotal, [](const auto& text) { std::wcout << text; }, displayElapsedTime);
 
     auto scenariosFailed = 0;
     auto scenariosPassed = 0;
@@ -101,4 +94,4 @@ int runScenarios(const int, const char* const* const)
 
 }
 
-DANSANDU_SERVICE_RUNNER_REGISTER_SERVICE("radiance_scenarios", runScenarios);
+DANSANDU_SERVICE_RUNNER_REGISTER_SERVICE("dansandu-radiance-radiance_scenarios", runScenarios);

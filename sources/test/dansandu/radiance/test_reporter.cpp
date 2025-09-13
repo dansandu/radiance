@@ -1,4 +1,4 @@
-#include "dansandu/radiance/test_reporter.test.hpp"
+#include "dansandu/radiance/test_reporter.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <filesystem>

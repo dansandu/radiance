@@ -16,8 +16,7 @@ using dansandu::radiance::utility::TextHighlight;
 namespace dansandu::radiance::progress_bar_console_reporter
 {
 
-ProgressBarConsoleReporter::ProgressBarConsoleReporter(const int stageIndex, const int stageCount)
-    : stageIndex_{stageIndex}, stageCount_{stageCount}, failureHandled_{false}
+ProgressBarConsoleReporter::ProgressBarConsoleReporter() : failureHandled_{false}
 {
     stream_ << std::boolalpha;
 }
@@ -29,8 +28,7 @@ void ProgressBarConsoleReporter::testSuiteBegin(const TestSuiteMetadata& metadat
     const auto displayElapsedTime = true;
 
     progressBar_.emplace(
-        stageIndex_, stageCount_, stageName, resolution, [](const auto& text) { std::wcout << text; },
-        displayElapsedTime);
+        stageName, resolution, [](const auto& text) { std::wcout << text; }, displayElapsedTime);
 }
 
 void ProgressBarConsoleReporter::testSuiteEnd(const TestSuiteResult& result)

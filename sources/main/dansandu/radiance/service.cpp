@@ -6,6 +6,6 @@ using dansandu::radiance::test_case_registry::runTestSuite;
 namespace dansandu::radiance::service
 {
 
-DANSANDU_SERVICE_RUNNER_REGISTER_SERVICE("default", runTestSuite);
+DANSANDU_SERVICE_RUNNER_REGISTER_SERVICE("dansandu-radiance-run_tests", runTestSuite);
 
 }
