@@ -137,24 +137,16 @@ std::wstring represent(const std::array<T, N>& array)
 
 template<typename T>
 concept HasToStringMethod = requires(const T value) {
-    {
-        value.toString()
-    } -> std::convertible_to<std::string>;
+    { value.toString() } -> std::convertible_to<std::string>;
 } || requires(const T value) {
-    {
-        value.toString()
-    } -> std::convertible_to<std::wstring>;
+    { value.toString() } -> std::convertible_to<std::wstring>;
 };
 
 template<typename T>
 concept HasToStringFunction = requires(const T value) {
-    {
-        toString(value)
-    } -> std::convertible_to<std::string>;
+    { toString(value) } -> std::convertible_to<std::string>;
 } || requires(const T value) {
-    {
-        toString(value)
-    } -> std::convertible_to<std::wstring>;
+    { toString(value) } -> std::convertible_to<std::wstring>;
 };
 
 template<typename T>

@@ -27,8 +27,7 @@ void ProgressBarConsoleReporter::testSuiteBegin(const TestSuiteMetadata& metadat
     const auto resolution = metadata.testCasesBeingRun;
     const auto displayElapsedTime = true;
 
-    progressBar_.emplace(
-        stageName, resolution, [](const auto& text) { std::wcout << text; }, displayElapsedTime);
+    progressBar_.emplace(stageName, resolution, [](const auto& text) { std::wcout << text; }, displayElapsedTime);
 }
 
 void ProgressBarConsoleReporter::testSuiteEnd(const TestSuiteResult& result)
