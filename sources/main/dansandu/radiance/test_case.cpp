@@ -87,7 +87,7 @@ void TestCase::run()
         }
 
         testCaseRunResult_.loggingSuccess =
-            logger.getHighestLevelLogged() > testCaseResult_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
+            logger.getHighestLevelLogged() < testCaseResult_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
         testCaseRunResult_.testCaseRunSuccess =
             testCaseRunResult_.testCaseRunSuccess && testCaseRunResult_.loggingSuccess;
 

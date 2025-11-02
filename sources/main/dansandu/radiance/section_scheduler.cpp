@@ -178,7 +178,7 @@ void SectionScheduler::endSection(const bool success)
     auto sectionsCopy = sections_;
 
     const auto loggingSuccess =
-        logger_->getHighestLevelLogged() > testCaseRunMetadata_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
+        logger_->getHighestLevelLogged() < testCaseRunMetadata_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
 
     const auto actualSuccess = success && loggingSuccess;
 
