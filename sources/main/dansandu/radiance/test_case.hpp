@@ -36,8 +36,8 @@ public:
                          const std::function<void(AssertionResult&)>& expression);
 
     template<typename ExpectedException>
-    void handleThrowAssertion(const char* const expressionString, const char* const expectedException,
-                              const int lineNumber, const std::function<void()>& expression)
+    void handleThrowAssertion(const char* const expressionString, const int lineNumber,
+                              const std::function<void()>& expression)
     {
         ++testCaseRunResult_.assertionsRan;
 
@@ -49,7 +49,7 @@ public:
 
         try
         {
-            assertion.throwInvoke<ExpectedException>(expectedException, expression);
+            assertion.throwInvoke<ExpectedException>(expression);
 
             ++testCaseRunResult_.assertionsPassed;
         }

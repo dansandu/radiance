@@ -7,7 +7,7 @@ TEST_CASE("logging")
 {
     SECTION("debug")
     {
-        LOG_DEBUG("LogDebug");
+        LOG_DEBUG("DebugMessage");
     }
 
     SECTION("info")

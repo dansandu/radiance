@@ -8,6 +8,13 @@ namespace dansandu::radiance::reporter
 class PRALINE_EXPORT IReporter
 {
 public:
+    IReporter() = default;
+
+    IReporter(const IReporter& other) = delete;
+    IReporter(IReporter&& other) noexcept = delete;
+    IReporter& operator=(const IReporter& other) = delete;
+    IReporter& operator=(IReporter&& other) noexcept = delete;
+
     virtual ~IReporter() noexcept = 0;
 
     virtual void testSuiteBegin(const TestSuiteMetadata& metadata);

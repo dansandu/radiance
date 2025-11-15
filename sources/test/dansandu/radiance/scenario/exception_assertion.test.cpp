@@ -1,34 +1,58 @@
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/radiance/radiance.hpp"
 
 #include <stdexcept>
 
+using dansandu::journey::exception::WideException;
+
 TEST_CASE("exception_assertion")
 {
-    SECTION("good std::exception")
+    SECTION("WideException throw match")
     {
-        const auto myFunction = []() { throw std::exception{"my error"}; };
+        const auto myFunction = []() { throw WideException{L"WideException message"}; };
 
-        REQUIRE_THROW(myFunction(), std::exception);
+        REQUIRE_THROW(WideException, myFunction());
     }
 
-    SECTION("good std::runtime_error")
+    SECTION("WideException throw mismatch")
     {
-        const auto myFunction = []() { throw std::runtime_error{"my error"}; };
+        const auto myFunction = []() { throw WideException{L"WideException message"}; };
 
-        REQUIRE_THROW(myFunction(), std::runtime_error);
+        REQUIRE_THROW(std::exception, myFunction());
     }
 
-    SECTION("bad std::logic_error")
+    SECTION("std::exception throw match")
     {
-        const auto myFunction = []() { throw std::logic_error{"my error"}; };
+        const auto myFunction = []() { throw std::exception{"std::exception message"}; };
 
-        REQUIRE_THROW(myFunction(), std::runtime_error);
+        REQUIRE_THROW(std::exception, myFunction());
     }
 
-    SECTION("bad no throw")
+    SECTION("std::logic_error throw mismatch")
+    {
+        const auto myFunction = []() { throw std::logic_error{"std::logic_error message"}; };
+
+        REQUIRE_THROW(std::runtime_error, myFunction());
+    }
+
+    SECTION("no throw mismatch")
     {
         const auto myFunction = []() {};
 
-        REQUIRE_THROW(myFunction(), std::runtime_error);
+        REQUIRE_THROW(std::exception, myFunction());
+    }
+
+    SECTION("int throw match")
+    {
+        const auto myFunction = []() { throw int(7); };
+
+        REQUIRE_THROW(int, myFunction());
+    }
+
+    SECTION("int throw mismatch")
+    {
+        const auto myFunction = []() { throw int(13); };
+
+        REQUIRE_THROW(std::exception, myFunction());
     }
 }

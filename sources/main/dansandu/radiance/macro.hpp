@@ -8,7 +8,7 @@
 #include "dansandu/radiance/test_case_registry.hpp"
 #include "dansandu/radiance/utility.hpp"
 
-#define DANSANDU_RADIANCEE_INTERNAL_TEST_CASE(name, functionName)                                                      \
+#define DANSANDU_RADIANCE_INTERNAL_TEST_CASE(name, functionName)                                                       \
     static void functionName(dansandu::radiance::test_case::TestCase&);                                                \
     static bool DANSANDU_JOURNEY_UNIQUE_NAME(dansandu_radiance_test_case_registrar_) =                                 \
         dansandu::radiance::test_case_registry::TestCaseRegistry::instance().registerTestCase({                        \
@@ -20,7 +20,7 @@
     static void functionName(dansandu::radiance::test_case::TestCase& dansandu_radiance_internal_test_case)
 
 #define TEST_CASE(name)                                                                                                \
-    DANSANDU_RADIANCEE_INTERNAL_TEST_CASE(name, DANSANDU_JOURNEY_UNIQUE_NAME(dansandu_radiance_test_case_))
+    DANSANDU_RADIANCE_INTERNAL_TEST_CASE(name, DANSANDU_JOURNEY_UNIQUE_NAME(dansandu_radiance_test_case_))
 
 #define SECTION(name)                                                                                                  \
     if (auto dansandu_radiance_internal_sectionScope =                                                                 \
@@ -28,39 +28,8 @@
         dansandu_radiance_internal_test_case.sectionScheduler().tryBeginSection(                                       \
             dansandu_radiance_internal_sectionScope))
 
-#if defined(__clang__)
-#define REQUIRE(...)                                                                                                   \
-    _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Woverloaded-shift-op-parentheses\"")         \
-        dansandu_radiance_internal_test_case.handleAssertion(                                                          \
-            #__VA_ARGS__, __LINE__,                                                                                    \
-            [&](dansandu::radiance::AssertionResult& dansandu_radiance_internal_assertionResult)                       \
-            {                                                                                                          \
-                auto dansandu_radiance_internal_result = dansandu::radiance::binding::ArgumentBinder{}                 \
-                                                             << __VA_ARGS__ >>                                         \
-                                                         dansandu::radiance::binding::ArgumentBinder{};                \
-                dansandu_radiance_internal_assertionResult.assertion =                                                 \
-                    std::move(dansandu_radiance_internal_result.first);                                                \
-                dansandu_radiance_internal_assertionResult.assertionSuccess =                                          \
-                    dansandu_radiance_internal_result.second;                                                          \
-            }) _Pragma("clang diagnostic pop")
-#elif defined(__GNUC__)
-#define REQUIRE(...)                                                                                                   \
-    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Woverloaded-shift-op-parentheses\"")             \
-        dansandu_radiance_internal_test_case.handleAssertion(                                                          \
-            #__VA_ARGS__, __LINE__,                                                                                    \
-            [&](dansandu::radiance::AssertionResult& dansandu_radiance_internal_assertionResult)                       \
-            {                                                                                                          \
-                auto dansandu_radiance_internal_result = dansandu::radiance::binding::ArgumentBinder{}                 \
-                                                             << __VA_ARGS__ >>                                         \
-                                                         dansandu::radiance::binding::ArgumentBinder{};                \
-                dansandu_radiance_internal_assertionResult.assertion =                                                 \
-                    std::move(dansandu_radiance_internal_result.first);                                                \
-                dansandu_radiance_internal_assertionResult.assertionSuccess =                                          \
-                    dansandu_radiance_internal_result.second;                                                          \
-            }) _Pragma("GCC diagnostic pop")
-#elif defined(_MSC_VER)
-#define REQUIRE(...)                                                                                                   \
-    __pragma(warning(push)) __pragma(warning(disable : 4554)) dansandu_radiance_internal_test_case.handleAssertion(    \
+#define DANSANDU_RADIANCE_INTERNAL_ASSERTION(...)                                                                      \
+    dansandu_radiance_internal_test_case.handleAssertion(                                                              \
         #__VA_ARGS__, __LINE__,                                                                                        \
         [&](dansandu::radiance::AssertionResult& dansandu_radiance_internal_assertionResult)                           \
         {                                                                                                              \
@@ -68,25 +37,37 @@
                                                      dansandu::radiance::binding::ArgumentBinder{};                    \
             dansandu_radiance_internal_assertionResult.assertion = std::move(dansandu_radiance_internal_result.first); \
             dansandu_radiance_internal_assertionResult.assertionSuccess = dansandu_radiance_internal_result.second;    \
-        }) __pragma(warning(pop))
+        })
+
+#if defined(__clang__)
+#define REQUIRE(...)                                                                                                   \
+    _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Woverloaded-shift-op-parentheses\"")         \
+        DANSANDU_RADIANCE_INTERNAL_ASSERTION(__VA_ARGS__) _Pragma("clang diagnostic pop")
+#elif defined(__GNUC__)
+#define REQUIRE(...)                                                                                                   \
+    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Woverloaded-shift-op-parentheses\"")             \
+        DANSANDU_RADIANCE_INTERNAL_ASSERTION(__VA_ARGS__) _Pragma("GCC diagnostic pop")
+#elif defined(_MSC_VER)
+#define REQUIRE(...)                                                                                                   \
+    __pragma(warning(push)) __pragma(warning(disable : 4554)) DANSANDU_RADIANCE_INTERNAL_ASSERTION(__VA_ARGS__)        \
+        __pragma(warning(pop))
 #elif
 #error "Unknown compiler"
 #endif
 
+#define DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)                                              \
+    dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(#expression, __LINE__, [&]() { expression; })
+
 #if defined(__clang__)
-#define REQUIRE_THROW(expression, exception)                                                                           \
+#define REQUIRE_THROW(exception, expression)                                                                           \
     _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wunused-value\"")                            \
-        dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(                                          \
-            #expression, #exception, __LINE__, [&]() { expression; }) _Pragma("clang diagnostic pop")
+        DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression) _Pragma("clang diagnostic pop")
 #elif defined(__GNUC__)
-#define REQUIRE_THROW(expression, exception)                                                                           \
+#define REQUIRE_THROW(exception, expression)                                                                           \
     _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wunused-value\"")                                \
-        dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(                                          \
-            #expression, #exception, __LINE__, [&]() { expression; }) _Pragma("GCC diagnostic pop")
+        DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression) _Pragma("GCC diagnostic pop")
 #elif defined(_MSC_VER)
-#define REQUIRE_THROW(expression, exception)                                                                           \
-    dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(#expression, #exception, __LINE__,            \
-                                                                         [&]() { expression; })
+#define REQUIRE_THROW(exception, expression) DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)
 #elif
 #error "Unknown compiler"
 #endif

@@ -1,4 +1,5 @@
 #include "dansandu/radiance/assertion.hpp"
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/binding.hpp"
 #include "dansandu/radiance/common.hpp"
@@ -6,6 +7,7 @@
 #include "dansandu/radiance/reporter.hpp"
 #include "dansandu/radiance/utility.hpp"
 
+using dansandu::journey::exception::WideException;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::reporter::IReporter;
 
@@ -33,6 +35,15 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
     {
         expression(assertionResult_);
     }
+    catch (const WideException& wideException)
+    {
+        assertionResult_.exceptionMetadata = ExceptionMetadata{
+            .exceptionType = toWideString(typeid(wideException).name()),
+            .exceptionMessage = wideException.getMessage(),
+        };
+
+        throw;
+    }
     catch (const std::exception& exception)
     {
         assertionResult_.exceptionMetadata = ExceptionMetadata{
@@ -40,7 +51,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
             .exceptionMessage = toWideString(exception.what()),
         };
 
-        throw exception;
+        throw;
     }
     catch (...)
     {

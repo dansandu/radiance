@@ -43,7 +43,7 @@ struct TestCaseMetadata
 {
     TestSuiteMetadata testSuiteMetadata;
     std::wstring testCaseName;
-    const char* filePath = nullptr;
+    std::string filePath;
     int lineNumber = 0;
 };
 
@@ -89,7 +89,7 @@ struct SectionResult
 struct AssertionMetadata
 {
     SectionMetadata sectionMetadata;
-    const char* expression = nullptr;
+    std::string expression;
     int lineNumber = 0;
 };
 
@@ -102,13 +102,14 @@ struct BinaryAssertion
 {
     std::wstring firstRepresentation;
     std::wstring secondRepresentation;
-    const char* operation = nullptr;
+    std::string operation;
 };
 
 struct ThrowAssertion
 {
     std::wstring exceptionMessage;
-    const char* expectedException = nullptr;
+    std::string expectedException;
+    std::string actualException;
     bool exceptionThrown = false;
 };
 
