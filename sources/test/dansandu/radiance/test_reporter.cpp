@@ -91,7 +91,7 @@ void TestReporter::sectionEnd(const SectionResult& result)
 void TestReporter::assertionBegin(const AssertionMetadata& metadata)
 {
     stream_ << "      Begin assertion" << std::endl
-            << "        expression: " << metadata.expression << std::endl
+            << "        expression: " << metadata.expression.c_str() << std::endl
             << "        line: " << metadata.lineNumber << std::endl;
 }
 
@@ -117,12 +117,13 @@ void TestReporter::assertionEnd(const AssertionResult& result)
                     stream_ << "        Binary assertion" << std::endl
                             << "          first representation: " << argument.firstRepresentation << std::endl
                             << "          second representation: " << argument.secondRepresentation << std::endl
-                            << "          operation: " << argument.operation << std::endl;
+                            << "          operation: " << argument.operation.c_str() << std::endl;
                 }
                 else if constexpr (std::is_same_v<ArgumentType, ThrowAssertion>)
                 {
                     stream_ << "        Throw assertion" << std::endl
-                            << "          expected exception: " << argument.expectedException << std::endl
+                            << "          expected exception: " << argument.expectedException.c_str() << std::endl
+                            << "          actual exception: " << argument.actualException.c_str() << std::endl
                             << "          exception thrown: " << argument.exceptionThrown << std::endl
                             << "          exception message: " << argument.exceptionMessage << std::endl;
                 }

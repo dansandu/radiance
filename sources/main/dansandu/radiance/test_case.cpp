@@ -1,4 +1,5 @@
 #include "dansandu/radiance/test_case.hpp"
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/journey/logging.hpp"
 #include "dansandu/journey/reporter.hpp"
 #include "dansandu/journey/utility.hpp"
@@ -7,6 +8,7 @@
 #include "dansandu/radiance/utility.hpp"
 
 using dansandu::journey::Level;
+using dansandu::journey::exception::WideException;
 using dansandu::journey::logging::Logger;
 using dansandu::journey::reporter::LogFileReporter;
 using dansandu::journey::utility::toWideString;
@@ -47,10 +49,10 @@ void TestCase::run()
 
     do
     {
-        auto logger = Logger(L"unit_tests");
-        logger.addReporter(logger.getName(), Level::warning, logFileReporter);
+        auto logger = Logger(L"unit_tests", Level::debug);
+        logger.addReporter(logger.getName(), Level::debug, logFileReporter);
 
-        Logger::globalInstance().addChildLogger(logger);
+        Logger::getGlobalInstance().addChildLogger(logger);
 
         testCaseRunResult_ = TestCaseRunResult{
             .testCaseRunMetadata = testCaseRunMetadata,
@@ -70,6 +72,13 @@ void TestCase::run()
             descriptor_.invoker(*this);
 
             testCaseRunResult_.testCaseRunSuccess = true;
+        }
+        catch (const WideException& wideException)
+        {
+            testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
+                .exceptionType = toWideString(typeid(wideException).name()),
+                .exceptionMessage = wideException.getMessage(),
+            };
         }
         catch (const std::exception& exception)
         {
@@ -101,7 +110,7 @@ void TestCase::run()
 
         reporter_.testCaseRunEnd(testCaseRunResult_);
 
-        Logger::globalInstance().removeChildLogger(logger.getName());
+        Logger::getGlobalInstance().removeChildLogger(logger.getName());
 
     } while (!sectionScheduler_.testCaseDone());
 }

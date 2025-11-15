@@ -68,7 +68,7 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
         if (result.exceptionMetadata)
         {
             stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                    << testCaseMetadata.filePath << "(" << testCaseMetadata.lineNumber << ")" << std::endl
+                    << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
                     << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
                     << " exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage << '"'
                     << std::endl
@@ -77,7 +77,7 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
         else if (!result.loggingSuccess)
         {
             stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                    << testCaseMetadata.filePath << "(" << testCaseMetadata.lineNumber << ")" << std::endl
+                    << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
                     << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
                     << " " << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure)
                     << "(s) or above were logged -- see log file for details" << std::endl
@@ -96,8 +96,8 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
         const auto& sectionMetadata = assertionMetadata.sectionMetadata;
         const auto& testCaseMetadata = sectionMetadata.testCaseRunMetadata.testCaseMetadata;
 
-        stream_ << "  " << highlightText(L"Assertion failed", TextHighlight::Red) << " " << testCaseMetadata.filePath
-                << "(" << assertionMetadata.lineNumber << ")" << std::endl;
+        stream_ << "  " << highlightText(L"Assertion failed", TextHighlight::Red) << " "
+                << testCaseMetadata.filePath.c_str() << "(" << assertionMetadata.lineNumber << ")" << std::endl;
 
         if (!sectionMetadata.sections.empty())
         {
@@ -126,7 +126,7 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
                     if constexpr (std::is_same_v<ArgumentType, UnaryAssertion>)
                     {
                         stream_ << "      " << highlightText(L"REQUIRE", TextHighlight::Blue) << "("
-                                << assertionMetadata.expression << ')' << std::endl
+                                << assertionMetadata.expression.c_str() << ')' << std::endl
                                 << "              " << argument.representation << std::endl
                                 << "      evaluates to " << result.assertionSuccess << std::endl
                                 << std::endl;
@@ -134,16 +134,16 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
                     else if constexpr (std::is_same_v<ArgumentType, BinaryAssertion>)
                     {
                         stream_ << "      " << highlightText(L"REQUIRE", TextHighlight::Blue) << "("
-                                << assertionMetadata.expression << ')' << std::endl
-                                << "              " << argument.firstRepresentation << ' ' << argument.operation << ' '
-                                << argument.secondRepresentation << std::endl
+                                << assertionMetadata.expression.c_str() << ')' << std::endl
+                                << "              " << argument.firstRepresentation << ' ' << argument.operation.c_str()
+                                << ' ' << argument.secondRepresentation << std::endl
                                 << "      evaluates to " << result.assertionSuccess << std::endl
                                 << std::endl;
                     }
                     else if constexpr (std::is_same_v<ArgumentType, ThrowAssertion>)
                     {
                         stream_ << "      " << highlightText(L"REQUIRE_THROW", TextHighlight::Blue) << "("
-                                << assertionMetadata.expression << ')' << std::endl;
+                                << assertionMetadata.expression.c_str() << ')' << std::endl;
 
                         if (!argument.exceptionThrown)
                         {
@@ -151,7 +151,8 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
                         }
                         else
                         {
-                            stream_ << "      a different type of exception was thrown with message: \""
+                            stream_ << "      a different type of exception was thrown with message:\n"
+                                    << "            " << argument.actualException.c_str() << ": \""
                                     << argument.exceptionMessage << '"' << std::endl;
                         }
                     }
