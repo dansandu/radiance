@@ -1,4 +1,5 @@
 #include "dansandu/journey/exception.hpp"
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/progress_bar.hpp"
 #include "dansandu/radiance/test_case_registry.hpp"
@@ -12,10 +13,10 @@
 #include <optional>
 #include <string>
 
+using dansandu::journey::utility::getEnvironmentVariable;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::test_case_registry::TestCaseRegistry;
 using dansandu::radiance::test_reporter::TestReporter;
-using dansandu::radiance::utility::getEnvironmentVariable;
 using dansandu::radiance::utility::readFile;
 using dansandu::radiance::utility::removeCarriage;
 
@@ -44,8 +45,8 @@ int runScenarios(const int, const char* const* const)
 
     for (const auto& entry : scenarios)
     {
-        const auto fileExtension = std::wstring{entry.path().extension()};
-        const auto fileName = std::wstring{entry.path().filename()};
+        const auto fileExtension = entry.path().extension().wstring();
+        const auto fileName = entry.path().filename().wstring();
         const auto testCaseName = fileName.substr(0, fileName.size() - fileExtension.size());
         const auto expectedOutput = removeCarriage(readFile(entry.path()));
 
@@ -66,12 +67,12 @@ int runScenarios(const int, const char* const* const)
             progressBar->updateSummary(scenariosFailed, scenariosSkipped, scenariosPassed, assertionsPassed);
             progressBar.reset();
 
-            const auto outputFilePath = L"target/temporary/actual_" + std::wstring{entry.path().filename()};
+            const auto outputFilePath = L"target/temporary/actual_" + entry.path().filename().wstring();
 
             std::wcout << "Scenario \"" << testCaseName << "\" failed. See \"" << outputFilePath
                        << "\" for actual output." << std::endl;
 
-            auto file = std::wofstream{outputFilePath, std::ios_base::binary};
+            auto file = std::wofstream{std::filesystem::path{outputFilePath}, std::ios_base::binary};
             file << std::noskipws << output;
 
             return 1;

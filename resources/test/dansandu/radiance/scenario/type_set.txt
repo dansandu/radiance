@@ -20,7 +20,7 @@ Begin test suite
       test assertions failed: 1
       logging success: true
       test case run success: false
-      exception type: class std::runtime_error
+      exception type: std::runtime_error
       exception message: "Assertion failed"
   End test case
     test assertions ran: 1

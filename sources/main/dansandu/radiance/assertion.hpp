@@ -12,8 +12,6 @@
 #include <type_traits>
 #include <typeinfo>
 
-using dansandu::journey::utility::toWideString;
-
 namespace dansandu::radiance::assertion
 {
 
@@ -30,10 +28,10 @@ public:
     void throwInvoke(const std::function<void()>& expression)
     {
         using dansandu::journey::exception::WideException;
+        using dansandu::journey::utility::toWideString;
+        using dansandu::radiance::utility::getExceptionTypeName;
 
         using DecayedExpectedException = std::decay_t<ExpectedException>;
-
-        const auto& expectedExceptionTypeId = typeid(DecayedExpectedException);
 
         if constexpr (std::is_same_v<DecayedExpectedException, std::exception>)
         {
@@ -43,20 +41,18 @@ public:
             }
             catch (const std::exception& exception)
             {
-                const auto& exceptionTypeId = typeid(exception);
-
                 const auto wideException = dynamic_cast<const WideException*>(&exception);
 
                 const auto message = wideException ? wideException->getMessage() : toWideString(exception.what());
 
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = message,
-                    .expectedException = expectedExceptionTypeId.name(),
-                    .actualException = exceptionTypeId.name(),
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
+                    .actualException = getExceptionTypeName(exception),
                     .exceptionThrown = true,
                 };
 
-                if (exceptionTypeId == expectedExceptionTypeId)
+                if (typeid(exception) == typeid(DecayedExpectedException))
                 {
                     assertionResult_.assertionSuccess = true;
                 }
@@ -69,7 +65,7 @@ public:
             {
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = L"Unknown",
-                    .expectedException = expectedExceptionTypeId.name(),
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
                     .actualException = "Unknown",
                     .exceptionThrown = true,
                 };
@@ -85,8 +81,6 @@ public:
             }
             catch (const DecayedExpectedException& exception)
             {
-                const auto& exceptionTypeId = typeid(exception);
-
                 if constexpr (std::is_base_of_v<std::exception, DecayedExpectedException>)
                 {
                     const auto wideException = dynamic_cast<const WideException*>(&exception);
@@ -95,8 +89,8 @@ public:
 
                     assertionResult_.assertion = ThrowAssertion{
                         .exceptionMessage = message,
-                        .expectedException = expectedExceptionTypeId.name(),
-                        .actualException = exceptionTypeId.name(),
+                        .expectedException = getExceptionTypeName<DecayedExpectedException>(),
+                        .actualException = getExceptionTypeName(exception),
                         .exceptionThrown = true,
                     };
                 }
@@ -104,13 +98,13 @@ public:
                 {
                     assertionResult_.assertion = ThrowAssertion{
                         .exceptionMessage = L"Unknown",
-                        .expectedException = expectedExceptionTypeId.name(),
-                        .actualException = exceptionTypeId.name(),
+                        .expectedException = getExceptionTypeName<DecayedExpectedException>(),
+                        .actualException = getExceptionTypeName(exception),
                         .exceptionThrown = true,
                     };
                 }
 
-                if (exceptionTypeId == expectedExceptionTypeId)
+                if (typeid(exception) == typeid(DecayedExpectedException))
                 {
                     assertionResult_.assertionSuccess = true;
                 }
@@ -121,20 +115,18 @@ public:
             }
             catch (const std::exception& exception)
             {
-                const auto& exceptionTypeId = typeid(exception);
-
                 const auto wideException = dynamic_cast<const WideException*>(&exception);
 
                 const auto message = wideException ? wideException->getMessage() : toWideString(exception.what());
 
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = message,
-                    .expectedException = expectedExceptionTypeId.name(),
-                    .actualException = exceptionTypeId.name(),
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
+                    .actualException = getExceptionTypeName(exception),
                     .exceptionThrown = true,
                 };
 
-                if (exceptionTypeId == expectedExceptionTypeId)
+                if (typeid(exception) == typeid(DecayedExpectedException))
                 {
                     assertionResult_.assertionSuccess = true;
                 }
@@ -147,7 +139,7 @@ public:
             {
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = L"Unknown",
-                    .expectedException = expectedExceptionTypeId.name(),
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
                     .actualException = "Unknown",
                     .exceptionThrown = true,
                 };
@@ -159,7 +151,9 @@ public:
         if (!assertionResult_.assertionSuccess)
         {
             assertionResult_.assertion = ThrowAssertion{
-                .expectedException = expectedExceptionTypeId.name(),
+                .exceptionMessage = {},
+                .expectedException = getExceptionTypeName<DecayedExpectedException>(),
+                .actualException = {},
                 .exceptionThrown = false,
             };
 

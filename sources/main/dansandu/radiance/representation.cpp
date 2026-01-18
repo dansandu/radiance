@@ -25,7 +25,8 @@ std::wstring represent(const void* const value)
     if (value)
     {
         auto stream = std::wostringstream{};
-        stream << "0x" << value;
+        stream << "0x" << std::setfill(L'0') << std::setw(16) << std::hex << std::uppercase
+               << reinterpret_cast<std::uintptr_t>(value);
         return stream.str();
     }
     else

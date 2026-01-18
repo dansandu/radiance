@@ -54,7 +54,7 @@ void TestReporter::testCaseEnd(const TestCaseResult& result)
             << "    test case success: " << result.testCaseSuccess << std::endl;
 }
 
-void TestReporter::testCaseRunBegin(const TestCaseRunMetadata& metadata)
+void TestReporter::testCaseRunBegin(const TestCaseRunMetadata&)
 {
     stream_ << "    Begin test case run" << std::endl;
 }

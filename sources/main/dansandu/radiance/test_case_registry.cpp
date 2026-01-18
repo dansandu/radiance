@@ -11,6 +11,7 @@
 #include <algorithm>
 
 using dansandu::journey::Level;
+using dansandu::journey::utility::getEnvironmentVariable;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::exception::DuplicateTestCaseNameException;
 using dansandu::radiance::exception::TestCaseWithNameNotFoundException;
@@ -18,7 +19,6 @@ using dansandu::radiance::progress_bar_console_reporter::ProgressBarConsoleRepor
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::test_case::TestCase;
 using dansandu::radiance::test_suite::TestSuite;
-using dansandu::radiance::utility::getEnvironmentVariable;
 
 namespace dansandu::radiance::test_case_registry
 {
