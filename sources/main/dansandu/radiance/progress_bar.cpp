@@ -72,7 +72,7 @@ std::wstring formatDuration(const long long milliseconds)
     auto elapsedRemainder = 0LL;
     auto elapsedRemainderUnit = static_cast<const wchar_t*>(nullptr);
 
-    for (const auto [factor, unit] : promotions)
+    for (const auto& [factor, unit] : promotions)
     {
         if (elapsed >= factor)
         {

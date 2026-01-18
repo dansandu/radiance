@@ -49,12 +49,12 @@ void ProgressBarConsoleReporter::testCaseBegin(const TestCaseMetadata& metadata)
     progressBar_->updateDescription(metadata.testCaseName);
 }
 
-void ProgressBarConsoleReporter::testCaseEnd(const TestCaseResult& result)
+void ProgressBarConsoleReporter::testCaseEnd(const TestCaseResult&)
 {
     progressBar_->advance();
 }
 
-void ProgressBarConsoleReporter::testCaseRunBegin(const TestCaseRunMetadata& metadata)
+void ProgressBarConsoleReporter::testCaseRunBegin(const TestCaseRunMetadata&)
 {
     failureHandled_ = false;
 }

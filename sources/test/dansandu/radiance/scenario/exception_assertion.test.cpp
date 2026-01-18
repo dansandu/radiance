@@ -21,11 +21,11 @@ TEST_CASE("exception_assertion")
         REQUIRE_THROW(std::exception, myFunction());
     }
 
-    SECTION("std::exception throw match")
+    SECTION("std::logic_error throw match")
     {
-        const auto myFunction = []() { throw std::exception{"std::exception message"}; };
+        const auto myFunction = []() { throw std::logic_error{"std::logic_error message"}; };
 
-        REQUIRE_THROW(std::exception, myFunction());
+        REQUIRE_THROW(std::logic_error, myFunction());
     }
 
     SECTION("std::logic_error throw mismatch")

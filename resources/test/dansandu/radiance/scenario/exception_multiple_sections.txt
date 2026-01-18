@@ -43,7 +43,7 @@ Begin test suite
       test assertions failed: 0
       logging success: true
       test case run success: false
-      exception type: class std::runtime_error
+      exception type: std::runtime_error
       exception message: "error section 11"
     Begin test case run
       Begin section
@@ -64,7 +64,7 @@ Begin test suite
       test assertions failed: 0
       logging success: true
       test case run success: false
-      exception type: class std::runtime_error
+      exception type: std::runtime_error
       exception message: "error section 12"
     Begin test case run
       Begin section
@@ -114,7 +114,7 @@ Begin test suite
       test assertions failed: 0
       logging success: true
       test case run success: false
-      exception type: class std::runtime_error
+      exception type: std::runtime_error
       exception message: "error section 2"
     Begin test case run
       Begin assertion

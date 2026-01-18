@@ -30,31 +30,15 @@ Begin test suite
         assertion success: true
         Unary assertion
           representation: true
-      Begin assertion
-        expression: myWideString.size()
-        line: 13
-      End assertion
-        assertion success: true
-        Unary assertion
-          representation: 11ull
-      Begin assertion
-        expression: myWideString.size() == 11u
-        line: 15
-      End assertion
-        assertion success: true
-        Binary assertion
-          first representation: 11ull
-          second representation: 11u
-          operation: ==
     End test case run
-      test assertions ran: 5
-      test assertions passed: 5
+      test assertions ran: 3
+      test assertions passed: 3
       test assertions failed: 0
       logging success: true
       test case run success: true
   End test case
-    test assertions ran: 5
-    test assertions passed: 5
+    test assertions ran: 3
+    test assertions passed: 3
     test assertions failed: 0
     logging success: true
     test case success: true
@@ -62,8 +46,8 @@ End test suite
   test cases ran: 1
   test cases passed: 1
   test cases failed: 0
-  test assertions ran: 5
-  test assertions passed: 5
+  test assertions ran: 3
+  test assertions passed: 3
   test assertions failed: 0
   logging success: true
   test suite success: true

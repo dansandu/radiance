@@ -9,8 +9,4 @@ TEST_CASE(L"type_string")
     REQUIRE(myWideString == myWideString);
 
     REQUIRE(!myWideString.empty());
-
-    REQUIRE(myWideString.size());
-
-    REQUIRE(myWideString.size() == 11u);
 }

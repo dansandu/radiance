@@ -15,6 +15,7 @@ using dansandu::journey::utility::toWideString;
 using dansandu::radiance::assertion::Assertion;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::section_scheduler::SectionScheduler;
+using dansandu::radiance::utility::getExceptionTypeName;
 
 namespace dansandu::radiance::test_case
 {
@@ -61,6 +62,7 @@ void TestCase::run()
             .assertionsFailed = 0,
             .loggingSuccess = false,
             .testCaseRunSuccess = false,
+            .exceptionMetadata = {},
         };
 
         reporter_.testCaseRunBegin(testCaseRunMetadata);
@@ -76,14 +78,14 @@ void TestCase::run()
         catch (const WideException& wideException)
         {
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
-                .exceptionType = toWideString(typeid(wideException).name()),
+                .exceptionType = toWideString(getExceptionTypeName(wideException)),
                 .exceptionMessage = wideException.getMessage(),
             };
         }
         catch (const std::exception& exception)
         {
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
-                .exceptionType = toWideString(typeid(exception).name()),
+                .exceptionType = toWideString(getExceptionTypeName(exception)),
                 .exceptionMessage = toWideString(exception.what()),
             };
         }

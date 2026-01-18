@@ -13,8 +13,8 @@ Begin test suite
       End assertion
         assertion success: true
         Throw assertion
-          expected exception: class dansandu::journey::exception::WideException
-          actual exception: class dansandu::journey::exception::WideException
+          expected exception: dansandu::journey::exception::WideException
+          actual exception: dansandu::journey::exception::WideException
           exception thrown: true
           exception message: WideException message
       End section
@@ -36,8 +36,8 @@ Begin test suite
       End assertion
         assertion success: false
         Throw assertion
-          expected exception: class std::exception
-          actual exception: class dansandu::journey::exception::WideException
+          expected exception: std::exception
+          actual exception: dansandu::journey::exception::WideException
           exception thrown: true
           exception message: WideException message
       End section
@@ -50,23 +50,23 @@ Begin test suite
       test assertions failed: 1
       logging success: true
       test case run success: false
-      exception type: class dansandu::journey::exception::WideException
+      exception type: dansandu::journey::exception::WideException
       exception message: "WideException message"
     Begin test case run
       Begin section
-        sections: std::exception throw match
+        sections: std::logic_error throw match
       Begin assertion
         expression: myFunction()
         line: 28
       End assertion
         assertion success: true
         Throw assertion
-          expected exception: class std::exception
-          actual exception: class std::exception
+          expected exception: std::logic_error
+          actual exception: std::logic_error
           exception thrown: true
-          exception message: std::exception message
+          exception message: std::logic_error message
       End section
-        sections: std::exception throw match
+        sections: std::logic_error throw match
         logging success: true
         section success: true
     End test case run
@@ -84,8 +84,8 @@ Begin test suite
       End assertion
         assertion success: false
         Throw assertion
-          expected exception: class std::runtime_error
-          actual exception: class std::logic_error
+          expected exception: std::runtime_error
+          actual exception: std::logic_error
           exception thrown: true
           exception message: std::logic_error message
       End section
@@ -98,7 +98,7 @@ Begin test suite
       test assertions failed: 1
       logging success: true
       test case run success: false
-      exception type: class std::logic_error
+      exception type: std::logic_error
       exception message: "std::logic_error message"
     Begin test case run
       Begin section
@@ -109,7 +109,7 @@ Begin test suite
       End assertion
         assertion success: false
         Throw assertion
-          expected exception: class std::exception
+          expected exception: std::exception
           actual exception: 
           exception thrown: false
           exception message: 
@@ -123,7 +123,7 @@ Begin test suite
       test assertions failed: 1
       logging success: true
       test case run success: false
-      exception type: class std::runtime_error
+      exception type: std::runtime_error
       exception message: "Assertion failed"
     Begin test case run
       Begin section
@@ -157,7 +157,7 @@ Begin test suite
       End assertion
         assertion success: false
         Throw assertion
-          expected exception: class std::exception
+          expected exception: std::exception
           actual exception: Unknown
           exception thrown: true
           exception message: Unknown

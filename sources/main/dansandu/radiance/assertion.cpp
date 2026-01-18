@@ -10,6 +10,7 @@
 using dansandu::journey::exception::WideException;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::reporter::IReporter;
+using dansandu::radiance::utility::getExceptionTypeName;
 
 namespace dansandu::radiance::assertion
 {
@@ -18,6 +19,8 @@ Assertion::Assertion(const AssertionMetadata& assertionMetadata, IReporter& repo
     :  assertionResult_{
         .assertionMetadata = assertionMetadata,
         .assertionSuccess = false,
+        .assertion = {},
+        .exceptionMetadata = {},
         },
         reporter_{reporter}
 {
@@ -38,7 +41,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
     catch (const WideException& wideException)
     {
         assertionResult_.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(typeid(wideException).name()),
+            .exceptionType = toWideString(getExceptionTypeName(wideException)),
             .exceptionMessage = wideException.getMessage(),
         };
 
@@ -47,7 +50,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
     catch (const std::exception& exception)
     {
         assertionResult_.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(typeid(exception).name()),
+            .exceptionType = toWideString(getExceptionTypeName(exception)),
             .exceptionMessage = toWideString(exception.what()),
         };
 

@@ -44,9 +44,7 @@
     _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Woverloaded-shift-op-parentheses\"")         \
         DANSANDU_RADIANCE_INTERNAL_ASSERTION(__VA_ARGS__) _Pragma("clang diagnostic pop")
 #elif defined(__GNUC__)
-#define REQUIRE(...)                                                                                                   \
-    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Woverloaded-shift-op-parentheses\"")             \
-        DANSANDU_RADIANCE_INTERNAL_ASSERTION(__VA_ARGS__) _Pragma("GCC diagnostic pop")
+#define REQUIRE(...) DANSANDU_RADIANCE_INTERNAL_ASSERTION(__VA_ARGS__)
 #elif defined(_MSC_VER)
 #define REQUIRE(...)                                                                                                   \
     __pragma(warning(push)) __pragma(warning(disable : 4554)) DANSANDU_RADIANCE_INTERNAL_ASSERTION(__VA_ARGS__)        \
@@ -63,9 +61,7 @@
     _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wunused-value\"")                            \
         DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression) _Pragma("clang diagnostic pop")
 #elif defined(__GNUC__)
-#define REQUIRE_THROW(exception, expression)                                                                           \
-    _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wunused-value\"")                                \
-        DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression) _Pragma("GCC diagnostic pop")
+#define REQUIRE_THROW(exception, expression) DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)
 #elif defined(_MSC_VER)
 #define REQUIRE_THROW(exception, expression) DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)
 #elif
