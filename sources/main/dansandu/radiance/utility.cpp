@@ -64,28 +64,26 @@ bool tryDemangle(const std::string& symbol, std::string& output)
     char* const buffer = nullptr;
     size_t* const length = nullptr;
     auto status = -4;
-    const auto result =
+    const auto demangled =
         std::unique_ptr<char, void (*)(void*)>{abi::__cxa_demangle(symbol.c_str(), buffer, length, &status), std::free};
     if (status == 0)
     {
-        output = result.get();
+        output = demangled.get();
         return true;
     }
     return false;
 #elif defined(_MSC_VER)
     const auto classPrefix = std::string_view{"class "};
-    auto offset = size_t{0};
-    while (offset < classPrefix.size() && offset < symbol.size() && classPrefix[offset] == symbol[offset])
+    if (symbol.starts_with(classPrefix))
     {
-        ++offset;
+        output = std::string{symbol.cbegin() + classPrefix.size(), symbol.cend()};
+        return true;
     }
-    if (offset == classPrefix.size())
+    const auto structPrefix = std::string_view{"struct "};
+    if (symbol.starts_with(structPrefix))
     {
-        output = symbol.c_str() + offset;
-    }
-    else
-    {
-        output = symbol;
+        output = std::string{symbol.cbegin() + structPrefix.size(), symbol.cend()};
+        return true;
     }
     return true;
 #else
