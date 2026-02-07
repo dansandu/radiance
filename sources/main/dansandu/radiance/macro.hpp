@@ -54,7 +54,8 @@
 #endif
 
 #define DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)                                              \
-    dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(#expression, __LINE__, [&]() { expression; })
+    dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(#exception ", " #expression, __LINE__,        \
+                                                                         [&]() { expression; })
 
 #if defined(__clang__)
 #define REQUIRE_THROW(exception, expression)                                                                           \
