@@ -8,7 +8,7 @@ Begin test suite
       Begin section
         sections: WideException throw match
       Begin assertion
-        expression: myFunction()
+        expression: WideException, myFunction()
         line: 14
       End assertion
         assertion success: true
@@ -31,7 +31,7 @@ Begin test suite
       Begin section
         sections: WideException throw mismatch
       Begin assertion
-        expression: myFunction()
+        expression: std::exception, myFunction()
         line: 21
       End assertion
         assertion success: false
@@ -56,7 +56,7 @@ Begin test suite
       Begin section
         sections: std::logic_error throw match
       Begin assertion
-        expression: myFunction()
+        expression: std::logic_error, myFunction()
         line: 28
       End assertion
         assertion success: true
@@ -79,7 +79,7 @@ Begin test suite
       Begin section
         sections: std::logic_error throw mismatch
       Begin assertion
-        expression: myFunction()
+        expression: std::runtime_error, myFunction()
         line: 35
       End assertion
         assertion success: false
@@ -104,7 +104,7 @@ Begin test suite
       Begin section
         sections: no throw mismatch
       Begin assertion
-        expression: myFunction()
+        expression: std::exception, myFunction()
         line: 42
       End assertion
         assertion success: false
@@ -129,7 +129,7 @@ Begin test suite
       Begin section
         sections: int throw match
       Begin assertion
-        expression: myFunction()
+        expression: int, myFunction()
         line: 49
       End assertion
         assertion success: true
@@ -152,7 +152,7 @@ Begin test suite
       Begin section
         sections: int throw mismatch
       Begin assertion
-        expression: myFunction()
+        expression: std::exception, myFunction()
         line: 56
       End assertion
         assertion success: false
