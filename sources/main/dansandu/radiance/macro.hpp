@@ -10,7 +10,7 @@
 
 #define DANSANDU_RADIANCE_INTERNAL_TEST_CASE(name, functionName)                                                       \
     static void functionName(dansandu::radiance::test_case::TestCase&);                                                \
-    static bool DANSANDU_JOURNEY_UNIQUE_NAME(dansandu_radiance_test_case_registrar_) =                                 \
+    static bool DANSANDU_JOURNEY_UNIQUE_NAME =                                                                         \
         dansandu::radiance::test_case_registry::TestCaseRegistry::instance().registerTestCase({                        \
             .testCaseName = dansandu::journey::utility::toWideString(name),                                            \
             .filePath = __FILE__,                                                                                      \
@@ -19,8 +19,7 @@
         });                                                                                                            \
     static void functionName(dansandu::radiance::test_case::TestCase& dansandu_radiance_internal_test_case)
 
-#define TEST_CASE(name)                                                                                                \
-    DANSANDU_RADIANCE_INTERNAL_TEST_CASE(name, DANSANDU_JOURNEY_UNIQUE_NAME(dansandu_radiance_test_case_))
+#define TEST_CASE(name) DANSANDU_RADIANCE_INTERNAL_TEST_CASE(name, DANSANDU_JOURNEY_UNIQUE_NAME)
 
 #define SECTION(name)                                                                                                  \
     if (auto dansandu_radiance_internal_sectionScope =                                                                 \
