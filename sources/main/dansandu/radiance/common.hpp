@@ -24,6 +24,7 @@ struct ExceptionMetadata
 {
     std::wstring exceptionType;
     std::wstring exceptionMessage;
+    std::vector<std::wstring> sectionsCallStack;
 };
 
 struct TestSuiteResult
@@ -82,6 +83,7 @@ struct SectionMetadata
 struct SectionResult
 {
     SectionMetadata sectionMetadata;
+    bool exceptionThrown = false;
     bool loggingSuccess = false;
     bool sectionSuccess = false;
 };

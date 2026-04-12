@@ -20,6 +20,7 @@ Begin test suite
       test case run success: false
       exception type: std::runtime_error
       exception message: "first"
+      sections call stack: 
   End test case
     test assertions ran: 1
     test assertions passed: 0

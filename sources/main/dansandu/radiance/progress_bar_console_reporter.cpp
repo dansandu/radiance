@@ -59,6 +59,18 @@ void ProgressBarConsoleReporter::testCaseRunBegin(const TestCaseRunMetadata&)
     failureHandled_ = false;
 }
 
+namespace
+{
+
+std::wstring getFormattedSectionsCallStack(const std::vector<std::wstring>& sections)
+{
+    return join(sections | std::views::transform([](const auto& section)
+                                                 { return highlightText(section, TextHighlight::Magenta); }),
+                L" -> ");
+}
+
+}
+
 void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
 {
     if (!failureHandled_)
@@ -67,12 +79,29 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
 
         if (result.exceptionMetadata)
         {
-            stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                    << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
-                    << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
-                    << " exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage << '"'
-                    << std::endl
-                    << std::endl;
+            if (result.exceptionMetadata->sectionsCallStack.empty())
+            {
+                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
+                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
+                        << "    within test case "
+                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
+                        << " exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage << '"'
+                        << std::endl
+                        << std::endl;
+            }
+            else
+            {
+                const auto sections = getFormattedSectionsCallStack(result.exceptionMetadata->sectionsCallStack);
+
+                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
+                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
+                        << "    within test case "
+                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " sections "
+                        << sections << std::endl
+                        << "      exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage
+                        << '"' << std::endl
+                        << std::endl;
+            }
         }
         else if (!result.loggingSuccess)
         {
@@ -101,11 +130,7 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
 
         if (!sectionMetadata.sections.empty())
         {
-            const auto sections =
-                join(sectionMetadata.sections |
-                         std::views::transform([](const auto& section)
-                                               { return highlightText(section, TextHighlight::Magenta); }),
-                     L" -> ");
+            const auto sections = getFormattedSectionsCallStack(sectionMetadata.sections);
 
             stream_ << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
                     << " sections " << sections << std::endl;

@@ -19,6 +19,7 @@ Begin test suite
           exception message: WideException message
       End section
         sections: WideException throw match
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -42,6 +43,7 @@ Begin test suite
           exception message: WideException message
       End section
         sections: WideException throw mismatch
+        exception thrown: true
         logging success: true
         section success: false
     End test case run
@@ -52,6 +54,7 @@ Begin test suite
       test case run success: false
       exception type: dansandu::journey::exception::WideException
       exception message: "WideException message"
+      sections call stack: WideException throw mismatch
     Begin test case run
       Begin section
         sections: std::logic_error throw match
@@ -67,6 +70,7 @@ Begin test suite
           exception message: std::logic_error message
       End section
         sections: std::logic_error throw match
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -90,6 +94,7 @@ Begin test suite
           exception message: std::logic_error message
       End section
         sections: std::logic_error throw mismatch
+        exception thrown: true
         logging success: true
         section success: false
     End test case run
@@ -100,6 +105,7 @@ Begin test suite
       test case run success: false
       exception type: std::logic_error
       exception message: "std::logic_error message"
+      sections call stack: std::logic_error throw mismatch
     Begin test case run
       Begin section
         sections: no throw mismatch
@@ -115,6 +121,7 @@ Begin test suite
           exception message: 
       End section
         sections: no throw mismatch
+        exception thrown: true
         logging success: true
         section success: false
     End test case run
@@ -125,6 +132,7 @@ Begin test suite
       test case run success: false
       exception type: std::runtime_error
       exception message: "Assertion failed"
+      sections call stack: no throw mismatch
     Begin test case run
       Begin section
         sections: int throw match
@@ -140,6 +148,7 @@ Begin test suite
           exception message: Unknown
       End section
         sections: int throw match
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -163,6 +172,7 @@ Begin test suite
           exception message: Unknown
       End section
         sections: int throw mismatch
+        exception thrown: true
         logging success: true
         section success: false
     End test case run
@@ -173,6 +183,7 @@ Begin test suite
       test case run success: false
       exception type: Unknown
       exception message: "Unknown"
+      sections call stack: int throw mismatch
     Begin test case run
     End test case run
       test assertions ran: 0

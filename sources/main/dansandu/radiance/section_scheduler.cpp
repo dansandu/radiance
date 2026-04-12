@@ -33,8 +33,8 @@ SectionScope::~SectionScope() noexcept
 {
     if (scheduler)
     {
-        const auto success = uncaughtExceptions_ >= std::uncaught_exceptions();
-        scheduler->endSection(success);
+        const auto exceptionThrown = uncaughtExceptions_ < std::uncaught_exceptions();
+        scheduler->endSection(exceptionThrown);
     }
 }
 
@@ -163,7 +163,12 @@ bool SectionScheduler::tryBeginSection(SectionScope& sectionScope)
     return false;
 }
 
-void SectionScheduler::endSection(const bool success)
+const std::vector<std::wstring>& SectionScheduler::getSectionsCallStack() const
+{
+    return sectionsCallStack_;
+}
+
+void SectionScheduler::endSection(const bool exceptionThrown)
 {
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(level_ > 0);
 
@@ -177,10 +182,26 @@ void SectionScheduler::endSection(const bool success)
 
     auto sectionsCopy = sections_;
 
+    if (exceptionThrown)
+    {
+        const auto isSubstack =
+            std::equal(sections_.cbegin(), sections_.cend(), sectionsCallStack_.cbegin(),
+                       sectionsCallStack_.cbegin() + std::min(sections_.size(), sectionsCallStack_.size()));
+
+        if (!isSubstack)
+        {
+            sectionsCallStack_ = sections_;
+        }
+    }
+    else
+    {
+        sectionsCallStack_.clear();
+    }
+
     const auto loggingSuccess =
         logger_->getHighestLevelLogged() < testCaseRunMetadata_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
 
-    const auto actualSuccess = success && loggingSuccess;
+    const auto actualSuccess = !exceptionThrown && loggingSuccess;
 
     --level_;
 
@@ -224,6 +245,7 @@ void SectionScheduler::endSection(const bool success)
                 .testCaseRunMetadata = testCaseRunMetadata_,
                 .sections = std::move(sectionsCopy),
             },
+        .exceptionThrown = exceptionThrown,
         .loggingSuccess = loggingSuccess,
         .sectionSuccess = !sectionFailed_,
     });
