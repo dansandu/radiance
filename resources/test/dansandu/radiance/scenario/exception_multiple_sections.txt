@@ -27,14 +27,17 @@ Begin test suite
           representation: 111
       End section
         sections: 1, 11, 111
+        exception thrown: false
         logging success: true
         section success: true
       End section
         sections: 1, 11
+        exception thrown: true
         logging success: true
         section success: false
       End section
         sections: 1
+        exception thrown: true
         logging success: true
         section success: false
     End test case run
@@ -45,6 +48,7 @@ Begin test suite
       test case run success: false
       exception type: std::runtime_error
       exception message: "error section 11"
+      sections call stack: 1, 11
     Begin test case run
       Begin section
         sections: 1
@@ -52,10 +56,12 @@ Begin test suite
         sections: 1, 12
       End section
         sections: 1, 12
+        exception thrown: true
         logging success: true
         section success: false
       End section
         sections: 1
+        exception thrown: true
         logging success: true
         section success: false
     End test case run
@@ -66,6 +72,7 @@ Begin test suite
       test case run success: false
       exception type: std::runtime_error
       exception message: "error section 12"
+      sections call stack: 1, 12
     Begin test case run
       Begin section
         sections: 1
@@ -80,10 +87,12 @@ Begin test suite
           representation: 13
       End section
         sections: 1, 13
+        exception thrown: false
         logging success: true
         section success: true
       End section
         sections: 1
+        exception thrown: false
         logging success: true
         section success: true
       Begin assertion
@@ -106,6 +115,7 @@ Begin test suite
         sections: 2
       End section
         sections: 2
+        exception thrown: true
         logging success: true
         section success: false
     End test case run
@@ -116,6 +126,7 @@ Begin test suite
       test case run success: false
       exception type: std::runtime_error
       exception message: "error section 2"
+      sections call stack: 2
     Begin test case run
       Begin assertion
         expression: 0 == 0

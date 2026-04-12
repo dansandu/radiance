@@ -71,7 +71,8 @@ void TestReporter::testCaseRunEnd(const TestCaseRunResult& result)
     if (result.exceptionMetadata)
     {
         stream_ << "      exception type: " << result.exceptionMetadata->exceptionType << std::endl
-                << "      exception message: \"" << result.exceptionMetadata->exceptionMessage << '"' << std::endl;
+                << "      exception message: \"" << result.exceptionMetadata->exceptionMessage << '"' << std::endl
+                << "      sections call stack: " << join(result.exceptionMetadata->sectionsCallStack) << std::endl;
     }
 }
 
@@ -84,6 +85,7 @@ void TestReporter::sectionEnd(const SectionResult& result)
 {
     stream_ << "      End section" << std::endl
             << "        sections: " << join(result.sectionMetadata.sections) << std::endl
+            << "        exception thrown: " << result.exceptionThrown << std::endl
             << "        logging success: " << result.loggingSuccess << std::endl
             << "        section success: " << result.sectionSuccess << std::endl;
 }

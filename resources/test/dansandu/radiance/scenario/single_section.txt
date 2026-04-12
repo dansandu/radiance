@@ -23,6 +23,7 @@ Begin test suite
           representation: 2
       End section
         sections: 1
+        exception thrown: false
         logging success: true
         section success: true
       Begin assertion

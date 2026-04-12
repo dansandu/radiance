@@ -22,6 +22,7 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11, 111
+        exception thrown: false
         logging success: true
         section success: true
       Begin assertion
@@ -44,10 +45,12 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11
+        exception thrown: false
         logging success: true
         section success: true
       End section
         sections: 1
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -65,6 +68,7 @@ Begin test suite
         sections: 1, 11, 112
       End section
         sections: 1, 11, 112
+        exception thrown: false
         logging success: true
         section success: true
       Begin assertion
@@ -87,10 +91,12 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11
+        exception thrown: false
         logging success: true
         section success: true
       End section
         sections: 1
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -126,6 +132,7 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11, 113
+        exception thrown: false
         logging success: true
         section success: true
       Begin assertion
@@ -139,10 +146,12 @@ Begin test suite
           operation: ==
       End section
         sections: 1, 11
+        exception thrown: false
         logging success: true
         section success: true
       End section
         sections: 1
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -158,10 +167,12 @@ Begin test suite
         sections: 1, 12
       End section
         sections: 1, 12
+        exception thrown: false
         logging success: true
         section success: true
       End section
         sections: 1
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -175,6 +186,7 @@ Begin test suite
         sections: 2
       End section
         sections: 2
+        exception thrown: false
         logging success: true
         section success: true
     End test case run

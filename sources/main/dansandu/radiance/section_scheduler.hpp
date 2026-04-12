@@ -42,7 +42,7 @@ public:
 
     bool tryBeginSection(SectionScope& sectionScope);
 
-    void endSection(const bool success);
+    void endSection(const bool exceptionThrown);
 
     void endRun();
 
@@ -51,6 +51,8 @@ public:
     bool testCaseDone() const;
 
     std::wstring getLog() const;
+
+    const std::vector<std::wstring>& getSectionsCallStack() const;
 
 private:
     void debug(const int line);
@@ -61,6 +63,7 @@ private:
     std::wostringstream logStream_;
     std::vector<int> sequencer_;
     std::vector<std::wstring> sections_;
+    std::vector<std::wstring> sectionsCallStack_;
     std::vector<int> trace_;
     int level_;
     bool exitingRun_;

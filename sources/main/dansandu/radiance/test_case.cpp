@@ -80,6 +80,7 @@ void TestCase::run()
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
                 .exceptionType = toWideString(getExceptionTypeName(wideException)),
                 .exceptionMessage = wideException.getMessage(),
+                .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
         }
         catch (const std::exception& exception)
@@ -87,6 +88,7 @@ void TestCase::run()
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
                 .exceptionType = toWideString(getExceptionTypeName(exception)),
                 .exceptionMessage = toWideString(exception.what()),
+                .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
         }
         catch (...)
@@ -94,6 +96,7 @@ void TestCase::run()
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
                 .exceptionType = L"Unknown",
                 .exceptionMessage = L"Unknown",
+                .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
         }
 

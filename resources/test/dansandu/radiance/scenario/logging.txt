@@ -9,6 +9,7 @@ Begin test suite
         sections: debug
       End section
         sections: debug
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -22,6 +23,7 @@ Begin test suite
         sections: info
       End section
         sections: info
+        exception thrown: false
         logging success: true
         section success: true
     End test case run
@@ -35,6 +37,7 @@ Begin test suite
         sections: warning
       End section
         sections: warning
+        exception thrown: false
         logging success: false
         section success: false
     End test case run
@@ -48,6 +51,7 @@ Begin test suite
         sections: error
       End section
         sections: error
+        exception thrown: false
         logging success: false
         section success: false
     End test case run
@@ -61,6 +65,7 @@ Begin test suite
         sections: critical
       End section
         sections: critical
+        exception thrown: false
         logging success: false
         section success: false
     End test case run

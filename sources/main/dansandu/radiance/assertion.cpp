@@ -16,13 +16,13 @@ namespace dansandu::radiance::assertion
 {
 
 Assertion::Assertion(const AssertionMetadata& assertionMetadata, IReporter& reporter)
-    :  assertionResult_{
-        .assertionMetadata = assertionMetadata,
-        .assertionSuccess = false,
-        .assertion = {},
-        .exceptionMetadata = {},
-        },
-        reporter_{reporter}
+    : assertionResult_{
+          .assertionMetadata = assertionMetadata,
+          .assertionSuccess = false,
+          .assertion = {},
+          .exceptionMetadata = {},
+      },
+      reporter_{reporter}
 {
     reporter_.assertionBegin(assertionResult_.assertionMetadata);
 }
@@ -43,6 +43,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
         assertionResult_.exceptionMetadata = ExceptionMetadata{
             .exceptionType = toWideString(getExceptionTypeName(wideException)),
             .exceptionMessage = wideException.getMessage(),
+            .sectionsCallStack = {},
         };
 
         throw;
@@ -52,6 +53,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
         assertionResult_.exceptionMetadata = ExceptionMetadata{
             .exceptionType = toWideString(getExceptionTypeName(exception)),
             .exceptionMessage = toWideString(exception.what()),
+            .sectionsCallStack = {},
         };
 
         throw;
@@ -61,6 +63,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
         assertionResult_.exceptionMetadata = ExceptionMetadata{
             .exceptionType = L"Unknown",
             .exceptionMessage = L"Unknown",
+            .sectionsCallStack = {},
         };
 
         throw;
