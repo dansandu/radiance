@@ -136,29 +136,15 @@ std::wstring represent(const std::array<T, N>& array)
 }
 
 template<typename T>
-concept HasToStringMethod = requires(const T value) {
-    { value.toString() } -> std::convertible_to<std::string>;
-} || requires(const T value) {
-    { value.toString() } -> std::convertible_to<std::wstring>;
-};
-
-template<typename T>
-concept HasToStringFunction = requires(const T value) {
-    { toString(value) } -> std::convertible_to<std::string>;
-} || requires(const T value) {
-    { toString(value) } -> std::convertible_to<std::wstring>;
-};
-
-template<typename T>
 std::wstring represent(const T& value)
 {
-    if constexpr (HasToStringMethod<T>)
+    if constexpr (dansandu::journey::utility::HasToWideStringMethod<T>)
+    {
+        return value.toWideString();
+    }
+    else if constexpr (dansandu::journey::utility::HasToStringMethod<T>)
     {
         return dansandu::journey::utility::toWideString(value.toString());
-    }
-    else if constexpr (HasToStringFunction<T>)
-    {
-        return dansandu::journey::utility::toWideString(toString(value));
     }
     else
     {

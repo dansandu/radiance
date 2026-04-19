@@ -3,25 +3,25 @@ Begin test suite
   Begin test case
     test case name: "to_string"
     file: "to_string.test.cpp"
-    line: 37
+    line: 36
     Begin test case run
       Begin assertion
-        expression: ToStringMethod() == ToStringMethod()
-        line: 39
+        expression: ToStringType() == ToStringType()
+        line: 38
       End assertion
         assertion success: true
         Binary assertion
-          first representation: ToStringMethod()
-          second representation: ToStringMethod()
+          first representation: ToStringType
+          second representation: ToStringType
           operation: ==
       Begin assertion
-        expression: ToStringFunction() == ToStringFunction()
-        line: 41
+        expression: ToWideStringType() == ToWideStringType()
+        line: 40
       End assertion
         assertion success: true
         Binary assertion
-          first representation: ToStringFunction()
-          second representation: ToStringFunction()
+          first representation: ToWideStringType
+          second representation: ToWideStringType
           operation: ==
     End test case run
       test assertions ran: 2

@@ -5,38 +5,37 @@
 namespace
 {
 
-struct ToStringMethod
+struct ToStringType
 {
     std::string toString() const
     {
-        return "ToStringMethod()";
+        return "ToStringType";
     }
 };
 
-bool operator==(ToStringMethod, ToStringMethod)
+bool operator==(ToStringType, ToStringType)
 {
     return true;
 }
 
-struct ToStringFunction
+struct ToWideStringType
 {
+    std::wstring toWideString() const
+    {
+        return L"ToWideStringType";
+    }
 };
 
-bool operator==(ToStringFunction, ToStringFunction)
+bool operator==(ToWideStringType, ToWideStringType)
 {
     return true;
-}
-
-std::string toString(ToStringFunction)
-{
-    return "ToStringFunction()";
 }
 
 }
 
 TEST_CASE("to_string")
 {
-    REQUIRE(ToStringMethod() == ToStringMethod());
+    REQUIRE(ToStringType() == ToStringType());
 
-    REQUIRE(ToStringFunction() == ToStringFunction());
+    REQUIRE(ToWideStringType() == ToWideStringType());
 }
