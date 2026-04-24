@@ -1,4 +1,5 @@
 #include "dansandu/radiance/utility.hpp"
+#include "dansandu/journey/exception.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -6,7 +7,6 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
-#include <stdexcept>
 #include <string>
 #include <string_view>
 
@@ -39,7 +39,7 @@ std::wstring highlightText(const std::wstring& text, const TextHighlight textHig
     case TextHighlight::Magenta:
         return L"\x1B[35m" + text + L"\x1B[0m";
     default:
-        throw std::logic_error{"unknown text highlight"};
+        THROW(std::logic_error, "Unknown text highlight");
     }
 }
 

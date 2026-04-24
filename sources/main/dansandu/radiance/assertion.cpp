@@ -71,7 +71,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
 
     if (!assertionResult_.assertionSuccess)
     {
-        throw std::runtime_error{"Assertion failed"};
+        THROW(std::runtime_error, "Assertion failed");
     }
 }
 

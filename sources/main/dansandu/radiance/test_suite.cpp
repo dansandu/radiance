@@ -30,13 +30,13 @@ TestSuite::TestSuite(const TestSuiteMetadata& testSuiteMetadata,
 {
     if (testSuiteResult_.testSuiteMetadata.testCasesBeingRun != std::ssize(testCaseDescriptors))
     {
-        throw std::logic_error{"metadata number of tests being run must match the number of test descriptors"};
+        THROW(std::logic_error, "Metadata number of tests being run must match the number of test descriptors");
     }
 
     if (testSuiteResult_.testSuiteMetadata.testCasesTotal < std::ssize(testCaseDescriptors))
     {
-        throw std::logic_error{
-            "metadata total number of tests must be greater of equal to the number of test descriptors"};
+        THROW(std::logic_error,
+              "Metadata total number of tests must be greater of equal to the number of test descriptors");
     }
 
     reporter_.testSuiteBegin(testSuiteResult_.testSuiteMetadata);
