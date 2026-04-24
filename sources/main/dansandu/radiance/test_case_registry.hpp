@@ -14,7 +14,7 @@ class PRALINE_EXPORT TestCaseRegistry
 public:
     static TestCaseRegistry& instance();
 
-    bool registerTestCase(dansandu::radiance::test_case::TestCase::Descriptor testCaseDescriptor);
+    bool registerTestCase(dansandu::radiance::test_case::TestCase::Descriptor&& testCaseDescriptor);
 
     TestSuiteResult runTestCases(const std::vector<std::wstring>& testCasesNames,
                                  dansandu::radiance::reporter::IReporter& reporter) const;
@@ -22,6 +22,8 @@ public:
     TestSuiteResult runAllTestCases(dansandu::radiance::reporter::IReporter& reporter) const;
 
 private:
+    void validateTestCases() const;
+
     std::vector<dansandu::radiance::test_case::TestCase::Descriptor> testCaseDescriptors_;
 };
 

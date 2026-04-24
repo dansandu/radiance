@@ -47,7 +47,6 @@ Begin test suite
       logging success: true
       test case run success: false
       exception type: std::runtime_error
-      exception message: "error section 11"
       sections call stack: 1, 11
     Begin test case run
       Begin section
@@ -71,7 +70,6 @@ Begin test suite
       logging success: true
       test case run success: false
       exception type: std::runtime_error
-      exception message: "error section 12"
       sections call stack: 1, 12
     Begin test case run
       Begin section
@@ -125,7 +123,6 @@ Begin test suite
       logging success: true
       test case run success: false
       exception type: std::runtime_error
-      exception message: "error section 2"
       sections call stack: 2
     Begin test case run
       Begin assertion

@@ -157,7 +157,7 @@ public:
                 .exceptionThrown = false,
             };
 
-            throw std::runtime_error{"Assertion failed"};
+            THROW(std::runtime_error, "Assertion failed");
         }
     }
 

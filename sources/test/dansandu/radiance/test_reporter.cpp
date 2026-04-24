@@ -71,7 +71,6 @@ void TestReporter::testCaseRunEnd(const TestCaseRunResult& result)
     if (result.exceptionMetadata)
     {
         stream_ << "      exception type: " << result.exceptionMetadata->exceptionType << std::endl
-                << "      exception message: \"" << result.exceptionMetadata->exceptionMessage << '"' << std::endl
                 << "      sections call stack: " << join(result.exceptionMetadata->sectionsCallStack) << std::endl;
     }
 }
@@ -126,8 +125,7 @@ void TestReporter::assertionEnd(const AssertionResult& result)
                     stream_ << "        Throw assertion" << std::endl
                             << "          expected exception: " << argument.expectedException.c_str() << std::endl
                             << "          actual exception: " << argument.actualException.c_str() << std::endl
-                            << "          exception thrown: " << argument.exceptionThrown << std::endl
-                            << "          exception message: " << argument.exceptionMessage << std::endl;
+                            << "          exception thrown: " << argument.exceptionThrown << std::endl;
                 }
                 else
                 {
@@ -138,8 +136,7 @@ void TestReporter::assertionEnd(const AssertionResult& result)
     }
     else
     {
-        stream_ << "        exception type: " << result.exceptionMetadata->exceptionType << std::endl
-                << "        exception message: \"" << result.exceptionMetadata->exceptionMessage << '"' << std::endl;
+        stream_ << "        exception type: " << result.exceptionMetadata->exceptionType << std::endl;
     }
 }
 

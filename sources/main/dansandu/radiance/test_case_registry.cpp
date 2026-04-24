@@ -1,6 +1,7 @@
 
 #include "dansandu/radiance/test_case_registry.hpp"
 #include "dansandu/journey/common.hpp"
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/progress_bar_console_reporter.hpp"
 #include "dansandu/radiance/reporter.hpp"
@@ -23,33 +24,23 @@ using dansandu::radiance::test_suite::TestSuite;
 namespace dansandu::radiance::test_case_registry
 {
 
-template<typename Container, typename Predicate>
-bool containsIf(const Container& container, Predicate&& predicate)
-{
-    return std::find_if(container.cbegin(), container.cend(), std::forward<Predicate>(predicate)) != container.cend();
-}
-
 TestCaseRegistry& TestCaseRegistry::instance()
 {
     static auto testCaseRegistry = TestCaseRegistry{};
     return testCaseRegistry;
 }
 
-bool TestCaseRegistry::registerTestCase(TestCase::Descriptor descriptor)
+bool TestCaseRegistry::registerTestCase(TestCase::Descriptor&& descriptor)
 {
-    if (containsIf(testCaseDescriptors_, [&](const auto& d) { return d.testCaseName == descriptor.testCaseName; }))
-    {
-        throw DuplicateTestCaseNameException{L"Duplicate test case name '" + descriptor.testCaseName + L"'"};
-    }
-
     testCaseDescriptors_.push_back(std::move(descriptor));
-
     return true;
 }
 
 TestSuiteResult TestCaseRegistry::runTestCases(const std::vector<std::wstring>& testCasesNames,
                                                IReporter& reporter) const
 {
+    validateTestCases();
+
     auto testCasesToRun = std::vector<TestCase::Descriptor>{};
 
     for (const auto& testCaseName : testCasesNames)
@@ -58,7 +49,7 @@ TestSuiteResult TestCaseRegistry::runTestCases(const std::vector<std::wstring>& 
                                                    [&](const auto& d) { return d.testCaseName == testCaseName; });
         if (testCasePosition == testCaseDescriptors_.cend())
         {
-            throw TestCaseWithNameNotFoundException{L"No test case named '" + testCaseName + L"' was found"};
+            WTHROW(TestCaseWithNameNotFoundException, "No test case named '", testCaseName, "' was found");
         }
 
         if (std::find_if(testCasesToRun.cbegin(), testCasesToRun.cend(),
@@ -87,6 +78,8 @@ TestSuiteResult TestCaseRegistry::runTestCases(const std::vector<std::wstring>& 
 
 TestSuiteResult TestCaseRegistry::runAllTestCases(IReporter& reporter) const
 {
+    validateTestCases();
+
     auto testCasesToRun = testCaseDescriptors_;
     std::sort(testCasesToRun.begin(), testCasesToRun.end(),
               [](const auto& a, const auto& b) { return a.testCaseName < b.testCaseName; });
@@ -106,6 +99,21 @@ TestSuiteResult TestCaseRegistry::runAllTestCases(IReporter& reporter) const
     testSuite.run();
 
     return testSuite.testSuiteResult();
+}
+
+void TestCaseRegistry::validateTestCases() const
+{
+    for (size_t i = 0u; i < testCaseDescriptors_.size(); ++i)
+    {
+        for (size_t j = i + 1u; j < testCaseDescriptors_.size(); ++j)
+        {
+            if (testCaseDescriptors_[i].testCaseName == testCaseDescriptors_[j].testCaseName)
+            {
+                WTHROW(DuplicateTestCaseNameException, "Duplicate test case name '",
+                       testCaseDescriptors_[i].testCaseName, "'");
+            }
+        }
+    }
 }
 
 int runTestSuite(const int argumentCount, const char* const* const arguments)

@@ -1,4 +1,5 @@
 #include "dansandu/radiance/progress_bar.hpp"
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/utility.hpp"
 
@@ -109,7 +110,7 @@ ProgressBar::ProgressBar(const std::wstring& stageName, const int resolution,
 {
     if (resolution < 0)
     {
-        throw std::invalid_argument{"progress bar resolution must be greater or equal to 0"};
+        THROW(std::invalid_argument, "Progress bar resolution must be greater or equal to 0");
     }
 
     display(true);
@@ -188,13 +189,13 @@ void ProgressBar::advance(const int amount)
 {
     if (resolution_ == 0)
     {
-        throw std::invalid_argument{"cannot advance if progress bar resolution is 0 -- the bar will be filled on "
-                                    "successful deconstruction"};
+        THROW(std::invalid_argument,
+              "Cannot advance if progress bar resolution is 0 -- the bar will be filled on successful deconstruction");
     }
 
     if (amount <= 0)
     {
-        throw std::invalid_argument{"progress bar advance amount must be greater than 0"};
+        THROW(std::invalid_argument, "Progress bar advance amount must be greater than 0");
     }
 
     progress_ = std::min(progress_ + amount, resolution_);
