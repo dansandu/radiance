@@ -57,6 +57,7 @@ void ProgressBarConsoleReporter::testCaseEnd(const TestCaseResult&)
 void ProgressBarConsoleReporter::testCaseRunBegin(const TestCaseRunMetadata&)
 {
     failureHandled_ = false;
+    firstLoggingFailureSectionPath_.clear();
 }
 
 namespace
@@ -105,13 +106,38 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
         }
         else if (!result.loggingSuccess)
         {
-            stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                    << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
-                    << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
-                    << " " << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure)
-                    << "(s) or above were logged -- see log file for details" << std::endl
-                    << std::endl;
+            if (firstLoggingFailureSectionPath_.empty())
+            {
+                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
+                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
+                        << "    within test case "
+                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " "
+                        << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure)
+                        << "(s) or above were logged -- see log file for details" << std::endl
+                        << std::endl;
+            }
+            else
+            {
+                const auto sections = getFormattedSectionsCallStack(firstLoggingFailureSectionPath_);
+
+                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
+                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
+                        << "    within test case "
+                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " sections "
+                        << sections << std::endl
+                        << "      " << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure)
+                        << "(s) or above were logged -- see log file for details" << std::endl
+                        << std::endl;
+            }
         }
+    }
+}
+
+void ProgressBarConsoleReporter::sectionEnd(const SectionResult& result)
+{
+    if (!result.loggingSuccess && firstLoggingFailureSectionPath_.empty())
+    {
+        firstLoggingFailureSectionPath_ = result.sectionMetadata.sections;
     }
 }
 

@@ -26,11 +26,14 @@ public:
 
     void testCaseRunEnd(const TestCaseRunResult& result) override;
 
+    void sectionEnd(const SectionResult& result) override;
+
     void assertionEnd(const AssertionResult& result) override;
 
 private:
     std::wostringstream stream_;
     std::optional<dansandu::radiance::progress_bar::ProgressBar> progressBar_;
+    std::vector<std::wstring> firstLoggingFailureSectionPath_;
     bool failureHandled_;
 };
 
