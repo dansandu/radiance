@@ -240,22 +240,26 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
                         }
                         else
                         {
-                            stream_ << "      mismatch between expected logs:" << std::endl;
+                            stream_ << "      mismatch between expected logs:" << std::endl << std::endl;
                         }
 
                         printLogs(stream_, argument.expectedLogs, logLimit);
 
                         if (argument.actualLogs.size() > logLimit)
                         {
-                            stream_ << "      and actual logs (displaying only the first " << logLimit
-                                    << "):" << std::endl;
+                            stream_ << std::endl
+                                    << "      and actual logs (displaying only the first " << logLimit
+                                    << "):" << std::endl
+                                    << std::endl;
                         }
                         else
                         {
-                            stream_ << "      and actual logs:" << std::endl;
+                            stream_ << std::endl << "      and actual logs:" << std::endl << std::endl;
                         }
 
                         printLogs(stream_, argument.actualLogs, logLimit);
+
+                        stream_ << std::endl;
                     }
                     else
                     {
