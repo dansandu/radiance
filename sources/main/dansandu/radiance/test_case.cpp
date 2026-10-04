@@ -62,6 +62,7 @@ void TestCase::run()
             .assertionsRan = 0,
             .assertionsPassed = 0,
             .assertionsFailed = 0,
+            .failingLogs = {},
             .loggingSuccess = false,
             .testCaseRunSuccess = false,
             .exceptionMetadata = {},
