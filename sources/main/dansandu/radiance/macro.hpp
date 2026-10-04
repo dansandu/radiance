@@ -65,6 +65,10 @@
     dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(                                              \
         #exception ", " #expression, __LINE__, [&]() { expression; })
 
+#define DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)                                             \
+    dansandu_radiance_internal_test_case.handleLogAssertion(                                                           \
+        #expectedLogs ", " #expression, __LINE__, expectedLogs, [&]() { expression; })
+
 #if defined(__clang__)
 #define REQUIRE_THROW(exception, expression)                                                                           \
     _Pragma("clang diagnostic push")                                                                                   \
@@ -75,6 +79,20 @@
 #define REQUIRE_THROW(exception, expression) DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)
 #elif defined(_MSC_VER)
 #define REQUIRE_THROW(exception, expression) DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)
+#elif
+#error "Unknown compiler"
+#endif
+
+#if defined(__clang__)
+#define REQUIRE_LOG(expectedLogs, expression)                                                                          \
+    _Pragma("clang diagnostic push")                                                                                   \
+    _Pragma("clang diagnostic ignored \"-Wunused-value\"")                                                             \
+    DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)                                                 \
+    _Pragma("clang diagnostic pop")
+#elif defined(__GNUC__)
+#define REQUIRE_LOG(expectedLogs, expression) DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)
+#elif defined(_MSC_VER)
+#define REQUIRE_LOG(expectedLogs, expression) DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)
 #elif
 #error "Unknown compiler"
 #endif

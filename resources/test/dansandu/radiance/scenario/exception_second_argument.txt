@@ -15,6 +15,7 @@ Begin test suite
       test assertions ran: 1
       test assertions passed: 0
       test assertions failed: 1
+      test failing logs:
       logging success: true
       test case run success: false
       exception type: std::runtime_error

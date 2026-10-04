@@ -34,6 +34,7 @@ Begin test suite
       test assertions ran: 3
       test assertions passed: 3
       test assertions failed: 0
+      test failing logs:
       logging success: true
       test case run success: true
   End test case

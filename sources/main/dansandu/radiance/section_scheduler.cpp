@@ -1,5 +1,5 @@
 #include "dansandu/radiance/section_scheduler.hpp"
-#include "dansandu/journey/logging.hpp"
+#include "dansandu/journey/reporter.hpp"
 #include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/utility.hpp"
 
@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-using dansandu::journey::logging::Logger;
+using dansandu::journey::reporter::InMemoryReporter;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::utility::join;
@@ -53,13 +53,14 @@ SectionScheduler::~SectionScheduler() noexcept
 {
 }
 
-void SectionScheduler::beginRun(const TestCaseRunMetadata& testCaseRunMetadata, const Logger& logger)
+void SectionScheduler::beginRun(const TestCaseRunMetadata& testCaseRunMetadata,
+                                const InMemoryReporter& inMemoryReporter)
 {
-    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(!logger_.has_value());
+    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(!inMemoryReporter_.has_value());
 
     testCaseRunMetadata_ = testCaseRunMetadata;
 
-    logger_ = logger;
+    inMemoryReporter_ = inMemoryReporter;
 
     logStream_ << "BEGIN RUN" << std::endl;
 
@@ -178,7 +179,7 @@ void SectionScheduler::endSection(const bool exceptionThrown)
 
     DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(std::ssize(trace_) > 1);
 
-    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(logger_.has_value());
+    DANSANDU_RADIANCE_INTERNAL_ASSERT_THAT(inMemoryReporter_.has_value());
 
     auto sectionsCopy = sections_;
 
@@ -198,8 +199,7 @@ void SectionScheduler::endSection(const bool exceptionThrown)
         sectionsCallStack_.clear();
     }
 
-    const auto loggingSuccess =
-        logger_->getHighestLevelLogged() < testCaseRunMetadata_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
+    const auto loggingSuccess = inMemoryReporter_->getLoggedEntries().empty();
 
     const auto actualSuccess = !exceptionThrown && loggingSuccess;
 
@@ -255,7 +255,7 @@ void SectionScheduler::endRun()
 {
     logStream_ << "END RUN" << std::endl;
 
-    logger_.reset();
+    inMemoryReporter_.reset();
 
     DANSANDU_RADIANCE_INTERNAL_DEBUG();
 }

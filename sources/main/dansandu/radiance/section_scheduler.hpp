@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dansandu/journey/logging.hpp"
+#include "dansandu/journey/reporter.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/reporter.hpp"
 
@@ -34,7 +34,8 @@ public:
 
     ~SectionScheduler() noexcept;
 
-    void beginRun(const TestCaseRunMetadata& testCaseRunMetadata, const dansandu::journey::logging::Logger& logger);
+    void beginRun(const TestCaseRunMetadata& testCaseRunMetadata,
+                  const dansandu::journey::reporter::InMemoryReporter& inMemoryReporter);
 
     SectionScope newSection(const std::string& sectionName);
 
@@ -71,7 +72,7 @@ private:
     bool seekingSection_;
     bool testCaseDone_;
     dansandu::radiance::reporter::IReporter& reporter_;
-    std::optional<dansandu::journey::logging::Logger> logger_;
+    std::optional<dansandu::journey::reporter::InMemoryReporter> inMemoryReporter_;
 };
 
 }

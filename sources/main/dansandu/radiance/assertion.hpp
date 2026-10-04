@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dansandu/journey/exception.hpp"
+#include "dansandu/journey/reporter.hpp"
 #include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/binding.hpp"
 #include "dansandu/radiance/common.hpp"
@@ -23,6 +24,9 @@ public:
     ~Assertion() noexcept;
 
     void invoke(const std::function<void(AssertionResult&)>& expression);
+
+    void logInvoke(const dansandu::journey::reporter::InMemoryReporter& testCaseInMemoryReporter,
+                   const std::vector<Log>& expectedLogs, const std::function<void()>& expression);
 
     template<typename ExpectedException>
     void throwInvoke(const std::function<void()>& expression)

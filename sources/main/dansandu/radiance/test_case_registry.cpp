@@ -2,6 +2,8 @@
 #include "dansandu/radiance/test_case_registry.hpp"
 #include "dansandu/journey/common.hpp"
 #include "dansandu/journey/exception.hpp"
+#include "dansandu/journey/logging.hpp"
+#include "dansandu/journey/reporter.hpp"
 #include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/progress_bar_console_reporter.hpp"
 #include "dansandu/radiance/reporter.hpp"
@@ -12,6 +14,8 @@
 #include <algorithm>
 
 using dansandu::journey::Level;
+using dansandu::journey::logging::Logger;
+using dansandu::journey::reporter::LogFileReporter;
 using dansandu::journey::utility::getEnvironmentVariable;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::exception::DuplicateTestCaseNameException;
@@ -118,7 +122,13 @@ void TestCaseRegistry::validateTestCases() const
 
 int runTestSuite(const int argumentCount, const char* const* const arguments)
 {
+    const auto logFileReporterName = L"RadianceTestSuiteLogFile";
+
+    Logger::getGlobalInstance().addReporter(logFileReporterName, Level::debug, LogFileReporter("unit_tests.log"));
+
     auto reporter = ProgressBarConsoleReporter{};
+
+    auto returnCode = 0;
 
     if (argumentCount > 0)
     {
@@ -131,14 +141,21 @@ int runTestSuite(const int argumentCount, const char* const* const arguments)
 
         const auto testSuiteResult = TestCaseRegistry::instance().runTestCases(testCasesNames, reporter);
 
-        return !testSuiteResult.testSuiteSuccess;
+        returnCode = !testSuiteResult.testSuiteSuccess;
     }
     else
     {
         const auto testSuiteResult = TestCaseRegistry::instance().runAllTestCases(reporter);
 
-        return !testSuiteResult.testSuiteSuccess;
+        returnCode = !testSuiteResult.testSuiteSuccess;
     }
+
+    // MSVC crashes the application if the log file reporter is destructed by the global/static logger destructor.
+    // Remove the reporter here to avoid the crash. Also, it's good practice to remove the reporter when it's no longer
+    // needed.
+    Logger::getGlobalInstance().removeReporter(logFileReporterName);
+
+    return returnCode;
 }
 
 }

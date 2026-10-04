@@ -1,5 +1,6 @@
 #pragma once
 
+#include "dansandu/journey/reporter.hpp"
 #include "dansandu/radiance/assertion.hpp"
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/exception.hpp"
@@ -7,9 +8,11 @@
 #include "dansandu/radiance/section_scheduler.hpp"
 
 #include <functional>
+#include <optional>
 #include <string>
 #include <type_traits>
 #include <typeinfo>
+#include <vector>
 
 namespace dansandu::radiance::test_case
 {
@@ -34,6 +37,9 @@ public:
 
     void handleAssertion(const char* const expressionString, const int lineNumber,
                          const std::function<void(AssertionResult&)>& expression);
+
+    void handleLogAssertion(const char* const expressionString, const int lineNumber,
+                            const std::vector<Log>& expectedLogs, const std::function<void()>& expression);
 
     template<typename ExpectedException>
     void handleThrowAssertion(const char* const expressionString, const int lineNumber,
@@ -71,6 +77,7 @@ private:
     Descriptor descriptor_;
     dansandu::radiance::section_scheduler::SectionScheduler sectionScheduler_;
     dansandu::radiance::reporter::IReporter& reporter_;
+    std::optional<dansandu::journey::reporter::InMemoryReporter> inMemoryReporter_;
 };
 
 }
