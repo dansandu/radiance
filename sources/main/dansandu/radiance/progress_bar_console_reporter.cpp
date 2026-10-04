@@ -77,7 +77,7 @@ void printLogs(std::wostringstream& stream, const std::vector<Log>& logs, size_t
 {
     for (auto index = 0uz; index < std::min(logs.size(), logLimit); ++index)
     {
-        stream << toStringWithConsoleHighlight(logs[index].level) << " | " << logs[index].message << std::endl;
+        stream << toStringWithConsoleHighlight(logs[index].level) << " " << logs[index].message << std::endl;
     }
 }
 
@@ -123,20 +123,7 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
                         << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
                         << "    within test case "
                         << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " "
-                        << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure);
-
-                if (result.failingLogs.size() > logLimit)
-                {
-                    stream_ << "(s) or above were logged (displaying only the first " << logLimit << "):" << std::endl;
-                }
-                else
-                {
-                    stream_ << "(s) or above were logged:" << std::endl;
-                }
-
-                printLogs(stream_, result.failingLogs, logLimit);
-
-                stream_ << std::endl;
+                        << toStringWithConsoleHighlight(testCaseMetadata.testSuiteMetadata.loggingLevelFailure);
             }
             else
             {
@@ -147,10 +134,22 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
                         << "    within test case "
                         << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " sections "
                         << sections << std::endl
-                        << "      " << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure)
-                        << "(s) or above were logged -- see log file for details" << std::endl
-                        << std::endl;
+                        << "      "
+                        << toStringWithConsoleHighlight(testCaseMetadata.testSuiteMetadata.loggingLevelFailure);
             }
+
+            if (result.failingLogs.size() > logLimit)
+            {
+                stream_ << "(s) or above were logged (displaying only the first " << logLimit << "):" << std::endl;
+            }
+            else
+            {
+                stream_ << "(s) or above were logged:" << std::endl;
+            }
+
+            printLogs(stream_, result.failingLogs, logLimit);
+
+            stream_ << std::endl;
         }
     }
 }
