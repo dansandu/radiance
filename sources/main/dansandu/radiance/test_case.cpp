@@ -10,12 +10,14 @@
 using dansandu::journey::Level;
 using dansandu::journey::exception::WideException;
 using dansandu::journey::logging::Logger;
+using dansandu::journey::reporter::InMemoryReporter;
 using dansandu::journey::reporter::LogFileReporter;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::assertion::Assertion;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::section_scheduler::SectionScheduler;
 using dansandu::radiance::utility::getExceptionTypeName;
+using dansandu::radiance::utility::journeyLogsToRadianceLogs;
 
 namespace dansandu::radiance::test_case
 {
@@ -46,14 +48,14 @@ void TestCase::run()
         .testCaseMetadata = testCaseResult_.testCaseMetadata,
     };
 
-    const auto logFileReporter = LogFileReporter("unit_tests.log");
-
     do
     {
-        auto logger = Logger(L"unit_tests", Level::debug);
-        logger.addReporter(logger.getName(), Level::debug, logFileReporter);
+        const auto reporterName = L"RadianceTestCaseLogger_" + testCaseResult_.testCaseMetadata.testCaseName;
+        const auto reporterLevel = testCaseResult_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
 
-        Logger::getGlobalInstance().addChildLogger(logger);
+        inMemoryReporter_ = InMemoryReporter{};
+
+        Logger::getGlobalInstance().addReporter(reporterName, reporterLevel, *inMemoryReporter_);
 
         testCaseRunResult_ = TestCaseRunResult{
             .testCaseRunMetadata = testCaseRunMetadata,
@@ -67,7 +69,7 @@ void TestCase::run()
 
         reporter_.testCaseRunBegin(testCaseRunMetadata);
 
-        sectionScheduler_.beginRun(testCaseRunMetadata, logger);
+        sectionScheduler_.beginRun(testCaseRunMetadata, *inMemoryReporter_);
 
         try
         {
@@ -100,8 +102,10 @@ void TestCase::run()
             };
         }
 
-        testCaseRunResult_.loggingSuccess =
-            logger.getHighestLevelLogged() < testCaseResult_.testCaseMetadata.testSuiteMetadata.loggingLevelFailure;
+        testCaseRunResult_.failingLogs = journeyLogsToRadianceLogs(inMemoryReporter_->getLoggedEntries());
+
+        testCaseRunResult_.loggingSuccess = testCaseRunResult_.failingLogs.empty();
+
         testCaseRunResult_.testCaseRunSuccess =
             testCaseRunResult_.testCaseRunSuccess && testCaseRunResult_.loggingSuccess;
 
@@ -115,7 +119,9 @@ void TestCase::run()
 
         reporter_.testCaseRunEnd(testCaseRunResult_);
 
-        Logger::getGlobalInstance().removeChildLogger(logger.getName());
+        Logger::getGlobalInstance().removeReporter(reporterName);
+
+        inMemoryReporter_.reset();
 
     } while (!sectionScheduler_.testCaseDone());
 }
@@ -134,6 +140,31 @@ void TestCase::handleAssertion(const char* const expressionString, const int lin
     try
     {
         assertion.invoke(expression);
+
+        ++testCaseRunResult_.assertionsPassed;
+    }
+    catch (...)
+    {
+        ++testCaseRunResult_.assertionsFailed;
+
+        throw;
+    }
+}
+
+void TestCase::handleLogAssertion(const char* const expressionString, const int lineNumber,
+                                  const std::vector<Log>& expectedLogs, const std::function<void()>& expression)
+{
+    ++testCaseRunResult_.assertionsRan;
+
+    const auto assertionMetadata = AssertionMetadata{.sectionMetadata = sectionScheduler_.currentSection(),
+                                                     .expression = expressionString,
+                                                     .lineNumber = lineNumber};
+
+    auto assertion = Assertion{assertionMetadata, reporter_};
+
+    try
+    {
+        assertion.logInvoke(*inMemoryReporter_, expectedLogs, expression);
 
         ++testCaseRunResult_.assertionsPassed;
     }

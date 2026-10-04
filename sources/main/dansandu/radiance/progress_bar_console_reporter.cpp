@@ -8,6 +8,7 @@
 #include <type_traits>
 
 using dansandu::journey::toString;
+using dansandu::journey::toStringWithConsoleHighlight;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::utility::highlightText;
 using dansandu::radiance::utility::join;
@@ -15,6 +16,8 @@ using dansandu::radiance::utility::TextHighlight;
 
 namespace dansandu::radiance::progress_bar_console_reporter
 {
+
+constexpr auto logLimit = 5uz;
 
 ProgressBarConsoleReporter::ProgressBarConsoleReporter() : failureHandled_{false}
 {
@@ -70,6 +73,14 @@ std::wstring getFormattedSectionsCallStack(const std::vector<std::wstring>& sect
                 L" -> ");
 }
 
+void printLogs(std::wostringstream& stream, const std::vector<Log>& logs, size_t logLimit)
+{
+    for (auto index = 0uz; index < std::min(logs.size(), logLimit); ++index)
+    {
+        stream << toStringWithConsoleHighlight(logs[index].level) << " | " << logs[index].message << std::endl;
+    }
+}
+
 }
 
 void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
@@ -112,9 +123,20 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
                         << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
                         << "    within test case "
                         << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " "
-                        << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure)
-                        << "(s) or above were logged -- see log file for details" << std::endl
-                        << std::endl;
+                        << toString(testCaseMetadata.testSuiteMetadata.loggingLevelFailure);
+
+                if (result.failingLogs.size() > logLimit)
+                {
+                    stream_ << "(s) or above were logged (displaying only the first " << logLimit << "):" << std::endl;
+                }
+                else
+                {
+                    stream_ << "(s) or above were logged:" << std::endl;
+                }
+
+                printLogs(stream_, result.failingLogs, logLimit);
+
+                stream_ << std::endl;
             }
             else
             {
@@ -206,6 +228,35 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
                                     << "            " << argument.actualException.c_str() << ": \""
                                     << argument.exceptionMessage << '"' << std::endl;
                         }
+                    }
+                    else if constexpr (std::is_same_v<ArgumentType, LogAssertion>)
+                    {
+                        stream_ << "      " << highlightText(L"REQUIRE_LOG", TextHighlight::Blue) << "("
+                                << assertionMetadata.expression.c_str() << ')' << std::endl;
+
+                        if (argument.expectedLogs.size() > logLimit)
+                        {
+                            stream_ << "      mismatch between expected logs (displaying only the first " << logLimit
+                                    << "):" << std::endl;
+                        }
+                        else
+                        {
+                            stream_ << "      mismatch between expected logs:" << std::endl;
+                        }
+
+                        printLogs(stream_, argument.expectedLogs, logLimit);
+
+                        if (argument.actualLogs.size() > logLimit)
+                        {
+                            stream_ << "      and actual logs (displaying only the first " << logLimit
+                                    << "):" << std::endl;
+                        }
+                        else
+                        {
+                            stream_ << "      and actual logs:" << std::endl;
+                        }
+
+                        printLogs(stream_, argument.actualLogs, logLimit);
                     }
                     else
                     {

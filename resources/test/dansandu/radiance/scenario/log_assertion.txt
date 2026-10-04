@@ -1,0 +1,136 @@
+Begin test suite
+  test cases being run: 1
+  Begin test case
+    test case name: "log_assertion"
+    file: "log_assertion.test.cpp"
+    line: 7
+    Begin test case run
+      Begin section
+        sections: match
+      Begin assertion
+        expression: expectedLogs, errorFunction()
+        line: 17
+      End assertion
+        assertion success: true
+        Log assertion
+          expected logs:
+            ERROR Some error
+          actual logs:
+            ERROR Some error
+      End section
+        sections: match
+        exception thrown: false
+        logging success: true
+        section success: true
+    End test case run
+      test assertions ran: 1
+      test assertions passed: 1
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      test case run success: true
+    Begin test case run
+      Begin section
+        sections: level mismatch
+      Begin assertion
+        expression: expectedLogs, errorFunction()
+        line: 26
+      End assertion
+        assertion success: false
+        Log assertion
+          expected logs:
+            WARNING Some error
+          actual logs:
+            ERROR Some error
+      End section
+        sections: level mismatch
+        exception thrown: true
+        logging success: true
+        section success: false
+    End test case run
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test failing logs:
+      logging success: true
+      test case run success: false
+      exception type: std::runtime_error
+      sections call stack: level mismatch
+    Begin test case run
+      Begin section
+        sections: message mismatch
+      Begin assertion
+        expression: expectedLogs, errorFunction()
+        line: 35
+      End assertion
+        assertion success: false
+        Log assertion
+          expected logs:
+            ERROR Some warning
+          actual logs:
+            ERROR Some error
+      End section
+        sections: message mismatch
+        exception thrown: true
+        logging success: true
+        section success: false
+    End test case run
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test failing logs:
+      logging success: true
+      test case run success: false
+      exception type: std::runtime_error
+      sections call stack: message mismatch
+    Begin test case run
+      Begin section
+        sections: count mismatch
+      Begin assertion
+        expression: expectedLogs, errorFunction()
+        line: 45
+      End assertion
+        assertion success: false
+        Log assertion
+          expected logs:
+            ERROR Some error
+            ERROR Some error
+          actual logs:
+            ERROR Some error
+      End section
+        sections: count mismatch
+        exception thrown: true
+        logging success: true
+        section success: false
+    End test case run
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test failing logs:
+      logging success: true
+      test case run success: false
+      exception type: std::runtime_error
+      sections call stack: count mismatch
+    Begin test case run
+    End test case run
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      test case run success: true
+  End test case
+    test assertions ran: 4
+    test assertions passed: 1
+    test assertions failed: 3
+    logging success: true
+    test case success: false
+End test suite
+  test cases ran: 1
+  test cases passed: 0
+  test cases failed: 1
+  test assertions ran: 4
+  test assertions passed: 1
+  test assertions failed: 3
+  logging success: true
+  test suite success: false

@@ -63,12 +63,21 @@ struct TestCaseRunMetadata
     TestCaseMetadata testCaseMetadata;
 };
 
+struct Log
+{
+    friend bool operator==(const Log& left, const Log& right) = default;
+
+    dansandu::journey::Level level;
+    std::wstring message;
+};
+
 struct TestCaseRunResult
 {
     TestCaseRunMetadata testCaseRunMetadata;
     int assertionsRan = 0;
     int assertionsPassed = 0;
     int assertionsFailed = 0;
+    std::vector<Log> failingLogs;
     bool loggingSuccess = false;
     bool testCaseRunSuccess = false;
     std::optional<ExceptionMetadata> exceptionMetadata;
@@ -115,11 +124,17 @@ struct ThrowAssertion
     bool exceptionThrown = false;
 };
 
+struct LogAssertion
+{
+    std::vector<Log> expectedLogs;
+    std::vector<Log> actualLogs;
+};
+
 struct AssertionResult
 {
     AssertionMetadata assertionMetadata;
     bool assertionSuccess = false;
-    std::variant<UnaryAssertion, BinaryAssertion, ThrowAssertion> assertion;
+    std::variant<UnaryAssertion, BinaryAssertion, ThrowAssertion, LogAssertion> assertion;
     std::optional<ExceptionMetadata> exceptionMetadata;
 };
 

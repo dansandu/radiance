@@ -16,6 +16,7 @@ Begin test suite
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      test failing logs:
       logging success: true
       test case run success: true
     Begin test case run
@@ -30,6 +31,7 @@ Begin test suite
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      test failing logs:
       logging success: true
       test case run success: true
     Begin test case run
@@ -44,6 +46,8 @@ Begin test suite
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      test failing logs:
+        WARNING WarningMessage
       logging success: false
       test case run success: false
     Begin test case run
@@ -58,6 +62,8 @@ Begin test suite
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      test failing logs:
+        ERROR ErrorMessage
       logging success: false
       test case run success: false
     Begin test case run
@@ -72,6 +78,8 @@ Begin test suite
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      test failing logs:
+        CRITICAL CriticalMessage
       logging success: false
       test case run success: false
     Begin test case run
@@ -79,6 +87,7 @@ Begin test suite
       test assertions ran: 0
       test assertions passed: 0
       test assertions failed: 0
+      test failing logs:
       logging success: true
       test case run success: true
   End test case

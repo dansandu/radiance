@@ -1,5 +1,8 @@
 #pragma once
 
+#include "dansandu/journey/common.hpp"
+#include "dansandu/radiance/common.hpp"
+
 #include <filesystem>
 #include <sstream>
 #include <string>
@@ -24,6 +27,8 @@ PRALINE_EXPORT std::wstring readFile(const std::filesystem::path& filePath);
 PRALINE_EXPORT std::wstring removeCarriage(std::wstring text);
 
 PRALINE_EXPORT bool tryDemangle(const std::string& symbol, std::string& output);
+
+PRALINE_EXPORT std::vector<Log> journeyLogsToRadianceLogs(const std::vector<dansandu::journey::LogEntry>& logs);
 
 template<typename Exception>
 std::string getExceptionTypeName()

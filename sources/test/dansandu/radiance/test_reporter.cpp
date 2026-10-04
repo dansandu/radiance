@@ -1,4 +1,5 @@
 #include "dansandu/radiance/test_reporter.hpp"
+#include "dansandu/journey/common.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <filesystem>
@@ -7,6 +8,7 @@
 #include <string_view>
 #include <type_traits>
 
+using dansandu::journey::toString;
 using dansandu::radiance::utility::join;
 
 namespace dansandu::radiance::test_reporter
@@ -65,7 +67,14 @@ void TestReporter::testCaseRunEnd(const TestCaseRunResult& result)
             << "      test assertions ran: " << result.assertionsRan << std::endl
             << "      test assertions passed: " << result.assertionsPassed << std::endl
             << "      test assertions failed: " << result.assertionsFailed << std::endl
-            << "      logging success: " << result.loggingSuccess << std::endl
+            << "      test failing logs:" << std::endl;
+
+    for (const auto& log : result.failingLogs)
+    {
+        stream_ << "        " << toString(log.level) << " " << log.message << std::endl;
+    }
+
+    stream_ << "      logging success: " << result.loggingSuccess << std::endl
             << "      test case run success: " << result.testCaseRunSuccess << std::endl;
 
     if (result.exceptionMetadata)
@@ -126,6 +135,22 @@ void TestReporter::assertionEnd(const AssertionResult& result)
                             << "          expected exception: " << argument.expectedException.c_str() << std::endl
                             << "          actual exception: " << argument.actualException.c_str() << std::endl
                             << "          exception thrown: " << argument.exceptionThrown << std::endl;
+                }
+                else if constexpr (std::is_same_v<ArgumentType, LogAssertion>)
+                {
+                    stream_ << "        Log assertion" << std::endl << "          expected logs:" << std::endl;
+
+                    for (const auto& log : argument.expectedLogs)
+                    {
+                        stream_ << "            " << toString(log.level) << " " << log.message << std::endl;
+                    }
+
+                    stream_ << "          actual logs:" << std::endl;
+
+                    for (const auto& log : argument.actualLogs)
+                    {
+                        stream_ << "            " << toString(log.level) << " " << log.message << std::endl;
+                    }
                 }
                 else
                 {

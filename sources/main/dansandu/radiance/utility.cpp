@@ -91,4 +91,19 @@ bool tryDemangle(const std::string& symbol, std::string& output)
 #endif
 }
 
+std::vector<Log> journeyLogsToRadianceLogs(const std::vector<dansandu::journey::LogEntry>& logs)
+{
+    auto result = std::vector<Log>{};
+
+    for (const auto& log : logs)
+    {
+        result.push_back(Log{
+            .level = log.level,
+            .message = log.message,
+        });
+    }
+
+    return result;
+}
+
 }
