@@ -124,6 +124,10 @@ int runTestSuite(const int argumentCount, const char* const* const arguments)
 {
     const auto logFileReporterName = L"RadianceTestSuiteLogFile";
 
+    // Tests use REQUIRE_LOG and expect certain logs (including debug) to go through. Ensure that all logs go through by
+    // setting the level to debug for the global logger.
+    Logger::getGlobalInstance().setLevel(Level::debug);
+
     Logger::getGlobalInstance().addReporter(logFileReporterName, Level::debug, LogFileReporter("unit_tests.log"));
 
     auto reporter = ProgressBarConsoleReporter{};
