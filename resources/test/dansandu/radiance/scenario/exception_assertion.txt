@@ -128,7 +128,7 @@ Begin test suite
       test failing logs:
       logging success: true
       test case run success: false
-      exception type: std::runtime_error
+      exception type: dansandu::radiance::exception::AssertionFailureException
       sections call stack: no throw mismatch
     Begin test case run
       Begin section
@@ -164,7 +164,7 @@ Begin test suite
         assertion success: false
         Throw assertion
           expected exception: std::exception
-          actual exception: Unknown
+          actual exception: <Unknown>
           exception thrown: true
       End section
         sections: int throw mismatch
@@ -178,7 +178,7 @@ Begin test suite
       test failing logs:
       logging success: true
       test case run success: false
-      exception type: Unknown
+      exception type: <Unknown>
       sections call stack: int throw mismatch
     Begin test case run
     End test case run

@@ -8,6 +8,7 @@
 #include "dansandu/radiance/utility.hpp"
 
 using dansandu::journey::Level;
+using dansandu::journey::exception::getExceptionTypeName;
 using dansandu::journey::exception::WideException;
 using dansandu::journey::logging::Logger;
 using dansandu::journey::reporter::InMemoryReporter;
@@ -16,7 +17,6 @@ using dansandu::journey::utility::toWideString;
 using dansandu::radiance::assertion::Assertion;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::section_scheduler::SectionScheduler;
-using dansandu::radiance::utility::getExceptionTypeName;
 using dansandu::radiance::utility::journeyLogsToRadianceLogs;
 
 namespace dansandu::radiance::test_case
@@ -72,6 +72,8 @@ void TestCase::run()
 
         sectionScheduler_.beginRun(testCaseRunMetadata, *inMemoryReporter_);
 
+        constexpr auto includeNamespace = true;
+
         try
         {
             descriptor_.invoker(*this);
@@ -81,7 +83,7 @@ void TestCase::run()
         catch (const WideException& wideException)
         {
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
-                .exceptionType = toWideString(getExceptionTypeName(wideException)),
+                .exceptionType = toWideString(getExceptionTypeName(includeNamespace, wideException)),
                 .exceptionMessage = wideException.getMessage(),
                 .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
@@ -89,7 +91,7 @@ void TestCase::run()
         catch (const std::exception& exception)
         {
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
-                .exceptionType = toWideString(getExceptionTypeName(exception)),
+                .exceptionType = toWideString(getExceptionTypeName(includeNamespace, exception)),
                 .exceptionMessage = toWideString(exception.what()),
                 .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
@@ -97,8 +99,8 @@ void TestCase::run()
         catch (...)
         {
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
-                .exceptionType = L"Unknown",
-                .exceptionMessage = L"Unknown",
+                .exceptionType = L"<Unknown>",
+                .exceptionMessage = L"<Unknown>",
                 .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
         }

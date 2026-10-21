@@ -54,7 +54,7 @@ Begin test suite
       test failing logs:
       logging success: true
       test case run success: false
-      exception type: std::runtime_error
+      exception type: dansandu::radiance::exception::AssertionFailureException
       sections call stack: level mismatch
     Begin test case run
       Begin section
@@ -81,7 +81,7 @@ Begin test suite
       test failing logs:
       logging success: true
       test case run success: false
-      exception type: std::runtime_error
+      exception type: dansandu::radiance::exception::AssertionFailureException
       sections call stack: message mismatch
     Begin test case run
       Begin section
@@ -109,7 +109,7 @@ Begin test suite
       test failing logs:
       logging success: true
       test case run success: false
-      exception type: std::runtime_error
+      exception type: dansandu::radiance::exception::AssertionFailureException
       sections call stack: count mismatch
     Begin test case run
     End test case run

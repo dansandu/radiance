@@ -31,11 +31,13 @@ public:
     template<typename ExpectedException>
     void throwInvoke(const std::function<void()>& expression)
     {
+        using dansandu::journey::exception::getExceptionTypeName;
         using dansandu::journey::exception::WideException;
         using dansandu::journey::utility::toWideString;
-        using dansandu::radiance::utility::getExceptionTypeName;
 
         using DecayedExpectedException = std::decay_t<ExpectedException>;
+
+        constexpr auto includeNamespace = true;
 
         if constexpr (std::is_same_v<DecayedExpectedException, std::exception>)
         {
@@ -49,10 +51,12 @@ public:
 
                 const auto message = wideException ? wideException->getMessage() : toWideString(exception.what());
 
+                const auto includeExceptionNamespace = true;
+
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = message,
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
-                    .actualException = getExceptionTypeName(exception),
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeExceptionNamespace),
+                    .actualException = getExceptionTypeName(includeExceptionNamespace, exception),
                     .exceptionThrown = true,
                 };
 
@@ -68,9 +72,9 @@ public:
             catch (...)
             {
                 assertionResult_.assertion = ThrowAssertion{
-                    .exceptionMessage = L"Unknown",
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
-                    .actualException = "Unknown",
+                    .exceptionMessage = L"<Unknown>",
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                    .actualException = "<Unknown>",
                     .exceptionThrown = true,
                 };
 
@@ -93,17 +97,17 @@ public:
 
                     assertionResult_.assertion = ThrowAssertion{
                         .exceptionMessage = message,
-                        .expectedException = getExceptionTypeName<DecayedExpectedException>(),
-                        .actualException = getExceptionTypeName(exception),
+                        .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                        .actualException = getExceptionTypeName(includeNamespace, exception),
                         .exceptionThrown = true,
                     };
                 }
                 else
                 {
                     assertionResult_.assertion = ThrowAssertion{
-                        .exceptionMessage = L"Unknown",
-                        .expectedException = getExceptionTypeName<DecayedExpectedException>(),
-                        .actualException = getExceptionTypeName(exception),
+                        .exceptionMessage = L"<Unknown>",
+                        .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                        .actualException = getExceptionTypeName(includeNamespace, exception),
                         .exceptionThrown = true,
                     };
                 }
@@ -125,8 +129,8 @@ public:
 
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = message,
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
-                    .actualException = getExceptionTypeName(exception),
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                    .actualException = getExceptionTypeName(includeNamespace, exception),
                     .exceptionThrown = true,
                 };
 
@@ -142,9 +146,9 @@ public:
             catch (...)
             {
                 assertionResult_.assertion = ThrowAssertion{
-                    .exceptionMessage = L"Unknown",
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(),
-                    .actualException = "Unknown",
+                    .exceptionMessage = L"<Unknown>",
+                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                    .actualException = "<Unknown>",
                     .exceptionThrown = true,
                 };
 
@@ -156,12 +160,13 @@ public:
         {
             assertionResult_.assertion = ThrowAssertion{
                 .exceptionMessage = {},
-                .expectedException = getExceptionTypeName<DecayedExpectedException>(),
+                .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
                 .actualException = {},
                 .exceptionThrown = false,
             };
 
-            THROW(std::runtime_error, "Assertion failed");
+            using dansandu::radiance::exception::AssertionFailureException;
+            WTHROW(AssertionFailureException, "Assertion failed");
         }
     }
 

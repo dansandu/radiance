@@ -21,7 +21,7 @@ Begin test suite
       test failing logs:
       logging success: true
       test case run success: false
-      exception type: std::runtime_error
+      exception type: dansandu::radiance::exception::AssertionFailureException
       sections call stack: 
   End test case
     test assertions ran: 1

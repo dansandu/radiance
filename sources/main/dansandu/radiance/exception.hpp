@@ -17,4 +17,10 @@ public:
     using WideException::WideException;
 };
 
+class AssertionFailureException : public dansandu::journey::exception::WideException
+{
+public:
+    using WideException::WideException;
+};
+
 }
