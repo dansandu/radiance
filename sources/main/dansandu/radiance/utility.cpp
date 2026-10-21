@@ -10,10 +10,6 @@
 #include <string>
 #include <string_view>
 
-#if defined(__GNUG__)
-#include <cxxabi.h>
-#endif
-
 namespace dansandu::radiance::utility
 {
 
@@ -56,39 +52,6 @@ std::wstring removeCarriage(std::wstring text)
 {
     text.erase(std::remove(text.begin(), text.end(), L'\r'), text.end());
     return text;
-}
-
-bool tryDemangle(const std::string& symbol, std::string& output)
-{
-#if defined(__GNUG__)
-    char* const buffer = nullptr;
-    size_t* const length = nullptr;
-    auto status = -4;
-    const auto demangled =
-        std::unique_ptr<char, void (*)(void*)>{abi::__cxa_demangle(symbol.c_str(), buffer, length, &status), std::free};
-    if (status == 0)
-    {
-        output = demangled.get();
-        return true;
-    }
-    return false;
-#elif defined(_MSC_VER)
-    const auto classPrefix = std::string_view{"class "};
-    if (symbol.starts_with(classPrefix))
-    {
-        output = std::string{symbol.cbegin() + classPrefix.size(), symbol.cend()};
-        return true;
-    }
-    const auto structPrefix = std::string_view{"struct "};
-    if (symbol.starts_with(structPrefix))
-    {
-        output = std::string{symbol.cbegin() + structPrefix.size(), symbol.cend()};
-        return true;
-    }
-    return true;
-#else
-#error "Unkown platform"
-#endif
 }
 
 std::vector<Log> journeyLogsToRadianceLogs(const std::vector<dansandu::journey::LogEntry>& logs)

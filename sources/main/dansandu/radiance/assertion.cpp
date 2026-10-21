@@ -14,12 +14,13 @@
 #include <string>
 
 using dansandu::journey::Level;
+using dansandu::journey::exception::getExceptionTypeName;
 using dansandu::journey::exception::WideException;
 using dansandu::journey::logging::Logger;
 using dansandu::journey::reporter::InMemoryReporter;
 using dansandu::journey::utility::toWideString;
+using dansandu::radiance::exception::AssertionFailureException;
 using dansandu::radiance::reporter::IReporter;
-using dansandu::radiance::utility::getExceptionTypeName;
 using dansandu::radiance::utility::journeyLogsToRadianceLogs;
 
 namespace dansandu::radiance::assertion
@@ -49,6 +50,8 @@ template<typename... A, typename... AA>
 void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::function<void(A...)>& expression,
                              AA&&... arguments)
 {
+    constexpr auto includeNamespace = true;
+
     try
     {
         expression(std::forward<AA>(arguments)...);
@@ -56,7 +59,7 @@ void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::functi
     catch (const WideException& wideException)
     {
         assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(getExceptionTypeName(wideException)),
+            .exceptionType = toWideString(getExceptionTypeName(includeNamespace, wideException)),
             .exceptionMessage = wideException.getMessage(),
             .sectionsCallStack = {},
         };
@@ -66,7 +69,7 @@ void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::functi
     catch (const std::exception& exception)
     {
         assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(getExceptionTypeName(exception)),
+            .exceptionType = toWideString(getExceptionTypeName(includeNamespace, exception)),
             .exceptionMessage = toWideString(exception.what()),
             .sectionsCallStack = {},
         };
@@ -76,8 +79,8 @@ void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::functi
     catch (...)
     {
         assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = L"Unknown",
-            .exceptionMessage = L"Unknown",
+            .exceptionType = L"<Unknown>",
+            .exceptionMessage = L"<Unknown>",
             .sectionsCallStack = {},
         };
 
@@ -93,7 +96,7 @@ void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
 
     if (!assertionResult_.assertionSuccess)
     {
-        THROW(std::runtime_error, "Assertion failed");
+        WTHROW(AssertionFailureException, "Assertion failed");
     }
 }
 
@@ -128,7 +131,7 @@ void Assertion::logInvoke(const InMemoryReporter& testCaseInMemoryReporter, cons
 
     if (!assertionResult_.assertionSuccess)
     {
-        THROW(std::runtime_error, "Assertion failed");
+        WTHROW(AssertionFailureException, "Assertion failed");
     }
 }
 

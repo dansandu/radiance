@@ -26,27 +26,7 @@ PRALINE_EXPORT std::wstring readFile(const std::filesystem::path& filePath);
 
 PRALINE_EXPORT std::wstring removeCarriage(std::wstring text);
 
-PRALINE_EXPORT bool tryDemangle(const std::string& symbol, std::string& output);
-
 PRALINE_EXPORT std::vector<Log> journeyLogsToRadianceLogs(const std::vector<dansandu::journey::LogEntry>& logs);
-
-template<typename Exception>
-std::string getExceptionTypeName()
-{
-    const auto mangled = typeid(Exception).name();
-    auto demangled = std::string{mangled};
-    tryDemangle(mangled, demangled);
-    return demangled;
-}
-
-template<typename Exception>
-std::string getExceptionTypeName(const Exception& exception)
-{
-    const auto mangled = typeid(exception).name();
-    auto demangled = std::string{mangled};
-    tryDemangle(mangled, demangled);
-    return demangled;
-}
 
 template<typename Iterable>
 auto join(const Iterable& iterable, const std::wstring separator = L", ")
