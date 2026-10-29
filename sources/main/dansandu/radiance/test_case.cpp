@@ -8,11 +8,11 @@
 #include "dansandu/radiance/utility.hpp"
 
 using dansandu::journey::Level;
-using dansandu::journey::exception::getExceptionTypeName;
 using dansandu::journey::exception::WideException;
 using dansandu::journey::logging::Logger;
 using dansandu::journey::reporter::InMemoryReporter;
 using dansandu::journey::reporter::LogFileReporter;
+using dansandu::journey::utility::getTypeName;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::assertion::Assertion;
 using dansandu::radiance::reporter::IReporter;
@@ -83,7 +83,7 @@ void TestCase::run()
         catch (const WideException& wideException)
         {
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
-                .exceptionType = toWideString(getExceptionTypeName(includeNamespace, wideException)),
+                .exceptionType = toWideString(getTypeName(includeNamespace, wideException)),
                 .exceptionMessage = wideException.getMessage(),
                 .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
@@ -91,7 +91,7 @@ void TestCase::run()
         catch (const std::exception& exception)
         {
             testCaseRunResult_.exceptionMetadata = ExceptionMetadata{
-                .exceptionType = toWideString(getExceptionTypeName(includeNamespace, exception)),
+                .exceptionType = toWideString(getTypeName(includeNamespace, exception)),
                 .exceptionMessage = toWideString(exception.what()),
                 .sectionsCallStack = sectionScheduler_.getSectionsCallStack(),
             };
