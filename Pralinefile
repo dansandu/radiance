@@ -1,6 +1,6 @@
 organization: dansandu
 artifact: radiance
-version: 1.0.0.SNAPSHOT
+version: 1.0.0
 test_service:
   service_name: dansandu-radiance-radiance_scenarios
 dependencies:
