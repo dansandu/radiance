@@ -31,8 +31,8 @@ public:
     template<typename ExpectedException>
     void throwInvoke(const std::function<void()>& expression)
     {
-        using dansandu::journey::exception::getExceptionTypeName;
         using dansandu::journey::exception::WideException;
+        using dansandu::journey::utility::getTypeName;
         using dansandu::journey::utility::toWideString;
 
         using DecayedExpectedException = std::decay_t<ExpectedException>;
@@ -55,8 +55,8 @@ public:
 
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = message,
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeExceptionNamespace),
-                    .actualException = getExceptionTypeName(includeExceptionNamespace, exception),
+                    .expectedException = getTypeName<DecayedExpectedException>(includeExceptionNamespace),
+                    .actualException = getTypeName(includeExceptionNamespace, exception),
                     .exceptionThrown = true,
                 };
 
@@ -73,7 +73,7 @@ public:
             {
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = L"<Unknown>",
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                    .expectedException = getTypeName<DecayedExpectedException>(includeNamespace),
                     .actualException = "<Unknown>",
                     .exceptionThrown = true,
                 };
@@ -97,8 +97,8 @@ public:
 
                     assertionResult_.assertion = ThrowAssertion{
                         .exceptionMessage = message,
-                        .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
-                        .actualException = getExceptionTypeName(includeNamespace, exception),
+                        .expectedException = getTypeName<DecayedExpectedException>(includeNamespace),
+                        .actualException = getTypeName(includeNamespace, exception),
                         .exceptionThrown = true,
                     };
                 }
@@ -106,8 +106,8 @@ public:
                 {
                     assertionResult_.assertion = ThrowAssertion{
                         .exceptionMessage = L"<Unknown>",
-                        .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
-                        .actualException = getExceptionTypeName(includeNamespace, exception),
+                        .expectedException = getTypeName<DecayedExpectedException>(includeNamespace),
+                        .actualException = getTypeName(includeNamespace, exception),
                         .exceptionThrown = true,
                     };
                 }
@@ -129,8 +129,8 @@ public:
 
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = message,
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
-                    .actualException = getExceptionTypeName(includeNamespace, exception),
+                    .expectedException = getTypeName<DecayedExpectedException>(includeNamespace),
+                    .actualException = getTypeName(includeNamespace, exception),
                     .exceptionThrown = true,
                 };
 
@@ -147,7 +147,7 @@ public:
             {
                 assertionResult_.assertion = ThrowAssertion{
                     .exceptionMessage = L"<Unknown>",
-                    .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                    .expectedException = getTypeName<DecayedExpectedException>(includeNamespace),
                     .actualException = "<Unknown>",
                     .exceptionThrown = true,
                 };
@@ -160,7 +160,7 @@ public:
         {
             assertionResult_.assertion = ThrowAssertion{
                 .exceptionMessage = {},
-                .expectedException = getExceptionTypeName<DecayedExpectedException>(includeNamespace),
+                .expectedException = getTypeName<DecayedExpectedException>(includeNamespace),
                 .actualException = {},
                 .exceptionThrown = false,
             };

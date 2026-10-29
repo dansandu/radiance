@@ -14,10 +14,10 @@
 #include <string>
 
 using dansandu::journey::Level;
-using dansandu::journey::exception::getExceptionTypeName;
 using dansandu::journey::exception::WideException;
 using dansandu::journey::logging::Logger;
 using dansandu::journey::reporter::InMemoryReporter;
+using dansandu::journey::utility::getTypeName;
 using dansandu::journey::utility::toWideString;
 using dansandu::radiance::exception::AssertionFailureException;
 using dansandu::radiance::reporter::IReporter;
@@ -59,7 +59,7 @@ void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::functi
     catch (const WideException& wideException)
     {
         assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(getExceptionTypeName(includeNamespace, wideException)),
+            .exceptionType = toWideString(getTypeName(includeNamespace, wideException)),
             .exceptionMessage = wideException.getMessage(),
             .sectionsCallStack = {},
         };
@@ -69,7 +69,7 @@ void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::functi
     catch (const std::exception& exception)
     {
         assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(getExceptionTypeName(includeNamespace, exception)),
+            .exceptionType = toWideString(getTypeName(includeNamespace, exception)),
             .exceptionMessage = toWideString(exception.what()),
             .sectionsCallStack = {},
         };
