@@ -1,0 +1,58 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: MultipleInheritanceTest
+    test class file name: "MultipleInheritanceTest.cpp"
+    test class line number: 18
+    Begin test method
+      test method name: members_of_all_bases_are_accessible
+      test method line number: 26
+      Begin assertion
+        expression: fixtureName_ == "fixture"
+        line: 28
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: "fixture"s
+          second representation: "fixture"
+          operation: ==
+      Begin assertion
+        expression: testName_ == "test"
+        line: 30
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: "test"s
+          second representation: "test"
+          operation: ==
+    End test method
+      test assertions ran: 2
+      test assertions passed: 2
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: true
+  End test class
+    test methods ran: 1
+    test methods passed: 1
+    test methods failed: 0
+    test assertions ran: 2
+    test assertions passed: 2
+    test assertions failed: 0
+    logging success: true
+    test class success: true
+End test suite
+  test classes ran: 1
+  test classes passed: 1
+  test classes failed: 0
+  test methods ran: 1
+  test methods passed: 1
+  test methods failed: 0
+  test assertions ran: 2
+  test assertions passed: 2
+  test assertions failed: 0
+  logging success: true
+  test suite success: true

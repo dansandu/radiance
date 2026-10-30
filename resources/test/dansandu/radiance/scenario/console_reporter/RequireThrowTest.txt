@@ -1,0 +1,17 @@
+  Assertion failed sources/test/dansandu/radiance/scenario/RequireThrowTest.cpp(18)
+    within RequireThrowTest::exception_throw_mismatch
+      REQUIRE_THROW(std::exception, throw Exception{"Exception mismatch message"})
+        a different type of exception was thrown:
+          dansandu::journey::exception::Exception: Exception mismatch message
+
+  Assertion failed sources/test/dansandu/radiance/scenario/RequireThrowTest.cpp(28)
+    within RequireThrowTest::logic_error_throw_mismatch
+      REQUIRE_THROW(std::runtime_error, throw std::logic_error{"std::logic_error mismatch message"})
+        a different type of exception was thrown:
+          std::logic_error: std::logic_error mismatch message
+
+  Assertion failed sources/test/dansandu/radiance/scenario/RequireThrowTest.cpp(33)
+    within RequireThrowTest::no_throw_mismatch
+      REQUIRE_THROW(std::exception, ;)
+        no exception was thrown
+

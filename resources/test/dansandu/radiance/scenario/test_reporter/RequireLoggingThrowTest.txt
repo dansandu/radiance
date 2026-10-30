@@ -1,0 +1,94 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: RequireLoggingThrowTest
+    test class file name: "RequireLoggingThrowTest.cpp"
+    test class line number: 12
+    Begin test method
+      test method name: expression_throws
+      test method line number: 40
+      Begin assertion
+        expression: expectedLogs, logErrorAndThrow("Logged before throw")
+        line: 46
+      End assertion
+        assertion success: false
+        exception type: std::runtime_error
+      Begin assertion
+        expression: static_cast<int>(logs.size()) == 2
+        line: 29
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 2
+          second representation: 2
+          operation: ==
+      Begin assertion
+        expression: logs.at(0).level == Level::error
+        line: 31
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: ???
+          second representation: ???
+          operation: ==
+      Begin assertion
+        expression: logs.at(0).message == "Logged before throw"
+        line: 33
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: "Logged before throw"s
+          second representation: "Logged before throw"
+          operation: ==
+      Begin assertion
+        expression: logs.at(1).level == Level::warning
+        line: 35
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: ???
+          second representation: ???
+          operation: ==
+      Begin assertion
+        expression: logs.at(1).message == "Logged after throw"
+        line: 37
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: "Logged after throw"s
+          second representation: "Logged after throw"
+          operation: ==
+    End test method
+      test assertions ran: 6
+      test assertions passed: 5
+      test assertions failed: 1
+      test failing logs:
+        WARNING Logged after throw
+      logging success: false
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: false
+      exception type: std::runtime_error
+      exception message: Expression failure
+  End test class
+    test methods ran: 1
+    test methods passed: 0
+    test methods failed: 1
+    test assertions ran: 6
+    test assertions passed: 5
+    test assertions failed: 1
+    logging success: false
+    test class success: false
+End test suite
+  test classes ran: 1
+  test classes passed: 0
+  test classes failed: 1
+  test methods ran: 1
+  test methods passed: 0
+  test methods failed: 1
+  test assertions ran: 6
+  test assertions passed: 5
+  test assertions failed: 1
+  logging success: false
+  test suite success: false

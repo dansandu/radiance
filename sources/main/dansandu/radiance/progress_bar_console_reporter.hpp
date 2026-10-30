@@ -2,9 +2,12 @@
 
 #include "dansandu/radiance/progress_bar.hpp"
 #include "dansandu/radiance/reporter.hpp"
+#include "dansandu/radiance/utility.hpp"
 
+#include <functional>
 #include <optional>
 #include <sstream>
+#include <string>
 
 namespace dansandu::radiance::progress_bar_console_reporter
 {
@@ -12,28 +15,33 @@ namespace dansandu::radiance::progress_bar_console_reporter
 class PRALINE_EXPORT ProgressBarConsoleReporter : public dansandu::radiance::reporter::IReporter
 {
 public:
-    ProgressBarConsoleReporter();
+    using Printer = std::function<void(const std::string& text)>;
 
-    void testSuiteBegin(const TestSuiteMetadata& metadata) override;
+    using Highlighter =
+        std::function<std::string(const std::string& text, dansandu::radiance::utility::TextHighlight textHighlight)>;
 
-    void testSuiteEnd(const TestSuiteResult& result) override;
+    ProgressBarConsoleReporter(Printer progressBarPrinter, Printer outputPrinter, Highlighter highlighter);
 
-    void testCaseBegin(const TestCaseMetadata& metadata) override;
+    void testSuiteBegin(const TestSuiteMetadata& testSuiteMetadata) override;
 
-    void testCaseEnd(const TestCaseResult& result) override;
+    void testSuiteEnd(const TestSuiteResult& testSuiteResult) override;
 
-    void testCaseRunBegin(const TestCaseRunMetadata& metadata) override;
+    void testClassBegin(const TestClassMetadata& testClassMetadata) override;
 
-    void testCaseRunEnd(const TestCaseRunResult& result) override;
+    void testClassEnd(const TestClassResult& testClassResult) override;
 
-    void sectionEnd(const SectionResult& result) override;
+    void testMethodBegin(const TestMethodMetadata& testMethodMetadata) override;
 
-    void assertionEnd(const AssertionResult& result) override;
+    void testMethodEnd(const TestMethodResult& testMethodResult) override;
+
+    void assertionEnd(const AssertionResult& assertionResult) override;
 
 private:
-    std::wostringstream stream_;
+    Printer progressBarPrinter_;
+    Printer outputPrinter_;
+    Highlighter highlighter_;
+    std::ostringstream stream_;
     std::optional<dansandu::radiance::progress_bar::ProgressBar> progressBar_;
-    std::vector<std::wstring> firstLoggingFailureSectionPath_;
     bool failureHandled_;
 };
 

@@ -3,6 +3,10 @@
 namespace dansandu::radiance::reporter
 {
 
+IReporter::IReporter()
+{
+}
+
 IReporter::~IReporter() noexcept
 {
 }
@@ -15,27 +19,19 @@ void IReporter::testSuiteEnd(const TestSuiteResult&)
 {
 }
 
-void IReporter::testCaseBegin(const TestCaseMetadata&)
+void IReporter::testClassBegin(const TestClassMetadata&)
 {
 }
 
-void IReporter::testCaseEnd(const TestCaseResult&)
+void IReporter::testClassEnd(const TestClassResult&)
 {
 }
 
-void IReporter::testCaseRunBegin(const TestCaseRunMetadata&)
+void IReporter::testMethodBegin(const TestMethodMetadata&)
 {
 }
 
-void IReporter::testCaseRunEnd(const TestCaseRunResult&)
-{
-}
-
-void IReporter::sectionBegin(const SectionMetadata&)
-{
-}
-
-void IReporter::sectionEnd(const SectionResult&)
+void IReporter::testMethodEnd(const TestMethodResult&)
 {
 }
 

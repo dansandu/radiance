@@ -1,0 +1,15 @@
+  Test method failed sources/test/dansandu/radiance/scenario/LoggingFailureTest.cpp(7)
+    within LoggingFailureTest::logs_below_limit
+      WARNING(s) or above were logged:
+WARNING first warning
+ERROR first error
+
+  Test method failed sources/test/dansandu/radiance/scenario/LoggingFailureTest.cpp(14)
+    within LoggingFailureTest::logs_above_limit
+      WARNING(s) or above were logged (displaying first 5):
+ERROR error number 1
+ERROR error number 2
+ERROR error number 3
+ERROR error number 4
+ERROR error number 5
+

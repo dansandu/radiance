@@ -20,18 +20,24 @@ enum class TextHighlight
     Magenta,
 };
 
-PRALINE_EXPORT std::wstring highlightText(const std::wstring& text, const TextHighlight textHighlight);
+PRALINE_EXPORT std::string highlightText(const std::string& text, const TextHighlight textHighlight);
 
-PRALINE_EXPORT std::wstring readFile(const std::filesystem::path& filePath);
+PRALINE_EXPORT std::string readFile(const std::filesystem::path& filePath);
 
-PRALINE_EXPORT std::wstring removeCarriage(std::wstring text);
+PRALINE_EXPORT std::string removeCarriage(std::string text);
 
 PRALINE_EXPORT std::vector<Log> journeyLogsToRadianceLogs(const std::vector<dansandu::journey::LogEntry>& logs);
 
+PRALINE_EXPORT std::string normalizePath(const std::string& root, const std::string& path);
+
+// Checks whether both paths refer to the same existing file, regardless of how each path is spelled (e.g. relative,
+// absolute or through a symbolic link). Returns false if either path doesn't exist.
+PRALINE_EXPORT bool isSameFile(const std::filesystem::path& firstPath, const std::filesystem::path& secondPath);
+
 template<typename Iterable>
-auto join(const Iterable& iterable, const std::wstring separator = L", ")
+auto join(const Iterable& iterable, const std::string separator = ", ")
 {
-    auto stream = std::wostringstream{};
+    auto stream = std::ostringstream{};
     for (const auto& element : iterable)
     {
         stream << element << separator;

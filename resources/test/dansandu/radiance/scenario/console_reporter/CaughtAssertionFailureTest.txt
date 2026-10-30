@@ -1,0 +1,4 @@
+  Assertion failed sources/test/dansandu/radiance/scenario/CaughtAssertionFailureTest.cpp(13)
+    within CaughtAssertionFailureTest::caught_failing_assertion
+      REQUIRE(false)
+

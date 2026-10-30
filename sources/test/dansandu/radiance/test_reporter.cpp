@@ -21,15 +21,20 @@ TestReporter::TestReporter()
 
 void TestReporter::testSuiteBegin(const TestSuiteMetadata& metadata)
 {
-    stream_ << "Begin test suite" << std::endl << "  test cases being run: " << metadata.testCasesBeingRun << std::endl;
+    stream_ << "Begin test suite" << std::endl
+            << "  test classes to run: " << metadata.testClassesToRun << std::endl
+            << "  logging level failure: " << toString(metadata.loggingLevelFailure) << std::endl;
 }
 
 void TestReporter::testSuiteEnd(const TestSuiteResult& result)
 {
     stream_ << "End test suite" << std::endl
-            << "  test cases ran: " << result.testCasesRan << std::endl
-            << "  test cases passed: " << result.testCasesPassed << std::endl
-            << "  test cases failed: " << result.testCasesFailed << std::endl
+            << "  test classes ran: " << result.testClassesRan << std::endl
+            << "  test classes passed: " << result.testClassesPassed << std::endl
+            << "  test classes failed: " << result.testClassesFailed << std::endl
+            << "  test methods ran: " << result.testMethodsRan << std::endl
+            << "  test methods passed: " << result.testMethodsPassed << std::endl
+            << "  test methods failed: " << result.testMethodsFailed << std::endl
             << "  test assertions ran: " << result.assertionsRan << std::endl
             << "  test assertions passed: " << result.assertionsPassed << std::endl
             << "  test assertions failed: " << result.assertionsFailed << std::endl
@@ -37,33 +42,38 @@ void TestReporter::testSuiteEnd(const TestSuiteResult& result)
             << "  test suite success: " << result.testSuiteSuccess << std::endl;
 }
 
-void TestReporter::testCaseBegin(const TestCaseMetadata& metadata)
+void TestReporter::testClassBegin(const TestClassMetadata& metadata)
 {
-    const auto fileName = std::filesystem::path{metadata.filePath}.filename();
-    stream_ << "  Begin test case" << std::endl
-            << "    test case name: \"" << metadata.testCaseName << '"' << std::endl
-            << "    file: " << fileName << std::endl
-            << "    line: " << metadata.lineNumber << std::endl;
+    const auto fileName = std::filesystem::path{metadata.testClassFilePath}.filename();
+    stream_ << "  Begin test class" << std::endl
+            << "    test class name: " << metadata.testClassName << std::endl
+            << "    test class file name: " << fileName << std::endl
+            << "    test class line number: " << metadata.testClassLineNumber << std::endl;
 }
 
-void TestReporter::testCaseEnd(const TestCaseResult& result)
+void TestReporter::testClassEnd(const TestClassResult& result)
 {
-    stream_ << "  End test case" << std::endl
+    stream_ << "  End test class" << std::endl
+            << "    test methods ran: " << result.testMethodsRan << std::endl
+            << "    test methods passed: " << result.testMethodsPassed << std::endl
+            << "    test methods failed: " << result.testMethodsFailed << std::endl
             << "    test assertions ran: " << result.assertionsRan << std::endl
             << "    test assertions passed: " << result.assertionsPassed << std::endl
             << "    test assertions failed: " << result.assertionsFailed << std::endl
             << "    logging success: " << result.loggingSuccess << std::endl
-            << "    test case success: " << result.testCaseSuccess << std::endl;
+            << "    test class success: " << result.testClassSuccess << std::endl;
 }
 
-void TestReporter::testCaseRunBegin(const TestCaseRunMetadata&)
+void TestReporter::testMethodBegin(const TestMethodMetadata& metadata)
 {
-    stream_ << "    Begin test case run" << std::endl;
+    stream_ << "    Begin test method" << std::endl
+            << "      test method name: " << metadata.testMethodName << std::endl
+            << "      test method line number: " << metadata.testMethodLineNumber << std::endl;
 }
 
-void TestReporter::testCaseRunEnd(const TestCaseRunResult& result)
+void TestReporter::testMethodEnd(const TestMethodResult& result)
 {
-    stream_ << "    End test case run" << std::endl
+    stream_ << "    End test method" << std::endl
             << "      test assertions ran: " << result.assertionsRan << std::endl
             << "      test assertions passed: " << result.assertionsPassed << std::endl
             << "      test assertions failed: " << result.assertionsFailed << std::endl
@@ -75,34 +85,29 @@ void TestReporter::testCaseRunEnd(const TestCaseRunResult& result)
     }
 
     stream_ << "      logging success: " << result.loggingSuccess << std::endl
-            << "      test case run success: " << result.testCaseRunSuccess << std::endl;
+            << "      setup status: " << toString(result.setUpStatus) << std::endl
+            << "      cleanup status: " << toString(result.cleanUpStatus) << std::endl
+            << "      test method success: " << result.testMethodSuccess << std::endl;
 
     if (result.exceptionMetadata)
     {
         stream_ << "      exception type: " << result.exceptionMetadata->exceptionType << std::endl
-                << "      sections call stack: " << join(result.exceptionMetadata->sectionsCallStack) << std::endl;
+                << "      exception message: " << result.exceptionMetadata->exceptionMessage << std::endl;
     }
-}
 
-void TestReporter::sectionBegin(const SectionMetadata& metadata)
-{
-    stream_ << "      Begin section" << std::endl << "        sections: " << join(metadata.sections) << std::endl;
-}
-
-void TestReporter::sectionEnd(const SectionResult& result)
-{
-    stream_ << "      End section" << std::endl
-            << "        sections: " << join(result.sectionMetadata.sections) << std::endl
-            << "        exception thrown: " << result.exceptionThrown << std::endl
-            << "        logging success: " << result.loggingSuccess << std::endl
-            << "        section success: " << result.sectionSuccess << std::endl;
+    if (result.cleanUpExceptionMetadata)
+    {
+        stream_ << "      cleanup exception type: " << result.cleanUpExceptionMetadata->exceptionType << std::endl
+                << "      cleanup exception message: " << result.cleanUpExceptionMetadata->exceptionMessage
+                << std::endl;
+    }
 }
 
 void TestReporter::assertionBegin(const AssertionMetadata& metadata)
 {
     stream_ << "      Begin assertion" << std::endl
             << "        expression: " << metadata.expression.c_str() << std::endl
-            << "        line: " << metadata.lineNumber << std::endl;
+            << "        line: " << metadata.assertionLineNumber << std::endl;
 }
 
 void TestReporter::assertionEnd(const AssertionResult& result)
@@ -157,7 +162,8 @@ void TestReporter::assertionEnd(const AssertionResult& result)
                     static_assert(false, "Assertion visitor is non-exhaustive");
                 }
             },
-            result.assertion);
+            result.assertion
+        );
     }
     else
     {
@@ -165,7 +171,7 @@ void TestReporter::assertionEnd(const AssertionResult& result)
     }
 }
 
-std::wstring TestReporter::getString() const
+std::string TestReporter::getString() const
 {
     return stream_.str();
 }

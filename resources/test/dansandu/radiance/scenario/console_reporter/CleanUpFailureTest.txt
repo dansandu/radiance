@@ -1,0 +1,12 @@
+  Test method failed sources/test/dansandu/radiance/scenario/CleanUpFailureTest.cpp(13)
+    within CleanUpFailureTest::failing_cleanup_with_successful_method
+      an exception was thrown during cleanup:
+        std::runtime_error: cleanup failed
+
+  Test method failed sources/test/dansandu/radiance/scenario/CleanUpFailureTest.cpp(17)
+    within CleanUpFailureTest::failing_cleanup_with_failing_method
+      an exception was thrown:
+        std::domain_error: method failed
+      an exception was also thrown during cleanup:
+        std::runtime_error: cleanup failed
+

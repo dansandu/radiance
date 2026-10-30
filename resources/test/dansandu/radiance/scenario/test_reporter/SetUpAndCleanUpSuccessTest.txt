@@ -1,0 +1,58 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: SetUpAndCleanUpSuccessTest
+    test class file name: "SetUpAndCleanUpSuccessTest.cpp"
+    test class line number: 4
+    Begin test method
+      test method name: check_set_up
+      test method line number: 33
+      Begin assertion
+        expression: secret_ == 17
+        line: 35
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 17
+          second representation: 17
+          operation: ==
+      Begin assertion
+        expression: name_ == "Jimmy"
+        line: 37
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: "Jimmy"s
+          second representation: "Jimmy"
+          operation: ==
+    End test method
+      test assertions ran: 2
+      test assertions passed: 2
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: true
+  End test class
+    test methods ran: 1
+    test methods passed: 1
+    test methods failed: 0
+    test assertions ran: 2
+    test assertions passed: 2
+    test assertions failed: 0
+    logging success: true
+    test class success: true
+End test suite
+  test classes ran: 1
+  test classes passed: 1
+  test classes failed: 0
+  test methods ran: 1
+  test methods passed: 1
+  test methods failed: 0
+  test assertions ran: 2
+  test assertions passed: 2
+  test assertions failed: 0
+  logging success: true
+  test suite success: true

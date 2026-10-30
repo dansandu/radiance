@@ -1,0 +1,42 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: ConstructionFailureTest
+    test class file name: "ConstructionFailureTest.cpp"
+    test class line number: 6
+    Begin test method
+      test method name: method_after_failing_construction
+      test method line number: 19
+    End test method
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: not run
+      cleanup status: not run
+      test method success: false
+      exception type: std::runtime_error
+      exception message: construction failed
+  End test class
+    test methods ran: 1
+    test methods passed: 0
+    test methods failed: 1
+    test assertions ran: 0
+    test assertions passed: 0
+    test assertions failed: 0
+    logging success: true
+    test class success: false
+End test suite
+  test classes ran: 1
+  test classes passed: 0
+  test classes failed: 1
+  test methods ran: 1
+  test methods passed: 0
+  test methods failed: 1
+  test assertions ran: 0
+  test assertions passed: 0
+  test assertions failed: 0
+  logging success: true
+  test suite success: false

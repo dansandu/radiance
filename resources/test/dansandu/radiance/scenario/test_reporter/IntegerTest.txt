@@ -1,0 +1,68 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: IntegerTest
+    test class file name: "IntegerTest.cpp"
+    test class line number: 3
+    Begin test method
+      test method name: integer_binary_assertion_representation
+      test method line number: 6
+      Begin assertion
+        expression: 23 % 10 == 3
+        line: 8
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 3
+          second representation: 3
+          operation: ==
+    End test method
+      test assertions ran: 1
+      test assertions passed: 1
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: true
+    Begin test method
+      test method name: integer_unary_assertion_representation
+      test method line number: 11
+      Begin assertion
+        expression: myFunction()
+        line: 13
+      End assertion
+        assertion success: true
+        Unary assertion
+          representation: 5
+    End test method
+      test assertions ran: 1
+      test assertions passed: 1
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: true
+  End test class
+    test methods ran: 2
+    test methods passed: 2
+    test methods failed: 0
+    test assertions ran: 2
+    test assertions passed: 2
+    test assertions failed: 0
+    logging success: true
+    test class success: true
+End test suite
+  test classes ran: 1
+  test classes passed: 1
+  test classes failed: 0
+  test methods ran: 2
+  test methods passed: 2
+  test methods failed: 0
+  test assertions ran: 2
+  test assertions passed: 2
+  test assertions failed: 0
+  logging success: true
+  test suite success: true

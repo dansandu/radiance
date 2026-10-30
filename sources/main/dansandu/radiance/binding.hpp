@@ -13,16 +13,20 @@ template<typename T>
 struct ArgumentBinding
 {
     const T* argument;
-    std::wstring representation;
+    std::string representation;
 };
 
 template<typename T, typename U>
 auto operator==(const ArgumentBinding<T>& first, const ArgumentBinding<U>& second)
 {
-    return std::make_pair(BinaryAssertion{.firstRepresentation = first.representation,
-                                          .secondRepresentation = second.representation,
-                                          .operation = "=="},
-                          static_cast<bool>(*first.argument == *second.argument));
+    return std::make_pair(
+        BinaryAssertion{
+            .firstRepresentation = first.representation,
+            .secondRepresentation = second.representation,
+            .operation = "=="
+        },
+        static_cast<bool>(*first.argument == *second.argument)
+    );
 }
 
 template<typename T, typename U>
@@ -34,7 +38,8 @@ auto operator!=(const ArgumentBinding<T>& first, const ArgumentBinding<U>& secon
             .secondRepresentation = second.representation,
             .operation = "!=",
         },
-        static_cast<bool>(*first.argument != *second.argument));
+        static_cast<bool>(*first.argument != *second.argument)
+    );
 }
 
 template<typename T, typename U>
@@ -46,7 +51,8 @@ auto operator<(const ArgumentBinding<T>& first, const ArgumentBinding<U>& second
             .secondRepresentation = second.representation,
             .operation = "<",
         },
-        static_cast<bool>(*first.argument < *second.argument));
+        static_cast<bool>(*first.argument < *second.argument)
+    );
 }
 
 template<typename T, typename U>
@@ -58,7 +64,8 @@ auto operator<=(const ArgumentBinding<T>& first, const ArgumentBinding<U>& secon
             .secondRepresentation = second.representation,
             .operation = "<=",
         },
-        static_cast<bool>(*first.argument <= *second.argument));
+        static_cast<bool>(*first.argument <= *second.argument)
+    );
 }
 
 template<typename T, typename U>
@@ -70,7 +77,8 @@ auto operator>(const ArgumentBinding<T>& first, const ArgumentBinding<U>& second
             .secondRepresentation = second.representation,
             .operation = ">",
         },
-        static_cast<bool>(*first.argument > *second.argument));
+        static_cast<bool>(*first.argument > *second.argument)
+    );
 }
 
 template<typename T, typename U>
@@ -82,7 +90,8 @@ auto operator>=(const ArgumentBinding<T>& first, const ArgumentBinding<U>& secon
             .secondRepresentation = second.representation,
             .operation = ">=",
         },
-        static_cast<bool>(*first.argument >= *second.argument));
+        static_cast<bool>(*first.argument >= *second.argument)
+    );
 }
 
 struct ArgumentBinder
@@ -92,8 +101,9 @@ struct ArgumentBinder
 template<typename T>
 auto operator<<(const ArgumentBinder, const T& argument)
 {
-    return ArgumentBinding<T>{.argument = &argument,
-                              .representation = dansandu::radiance::representation::represent(argument)};
+    return ArgumentBinding<T>{
+        .argument = &argument, .representation = dansandu::radiance::representation::represent(argument)
+    };
 }
 
 template<typename T>
@@ -109,7 +119,8 @@ auto operator>>(const ArgumentBinding<T>& binding, const ArgumentBinder)
         UnaryAssertion{
             .representation = binding.representation,
         },
-        static_cast<bool>(*binding.argument));
+        static_cast<bool>(*binding.argument)
+    );
 }
 
 }

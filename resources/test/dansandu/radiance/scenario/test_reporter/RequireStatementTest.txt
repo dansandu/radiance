@@ -1,0 +1,49 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: RequireStatementTest
+    test class file name: "RequireStatementTest.cpp"
+    test class line number: 3
+    Begin test method
+      test method name: require_in_if_statement_without_braces
+      test method line number: 6
+      Begin assertion
+        expression: value + 1 == 8
+        line: 11
+      End assertion
+        assertion success: true
+        Binary assertion
+          first representation: 8
+          second representation: 8
+          operation: ==
+    End test method
+      test assertions ran: 1
+      test assertions passed: 1
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: true
+  End test class
+    test methods ran: 1
+    test methods passed: 1
+    test methods failed: 0
+    test assertions ran: 1
+    test assertions passed: 1
+    test assertions failed: 0
+    logging success: true
+    test class success: true
+End test suite
+  test classes ran: 1
+  test classes passed: 1
+  test classes failed: 0
+  test methods ran: 1
+  test methods passed: 1
+  test methods failed: 0
+  test assertions ran: 1
+  test assertions passed: 1
+  test assertions failed: 0
+  logging success: true
+  test suite success: true
