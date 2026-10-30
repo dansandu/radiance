@@ -13,7 +13,7 @@ template<typename T>
 struct ArgumentBinding
 {
     const T* argument;
-    std::wstring representation;
+    std::string representation;
 };
 
 template<typename T, typename U>

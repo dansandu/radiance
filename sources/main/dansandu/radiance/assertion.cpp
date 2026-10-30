@@ -1,6 +1,5 @@
 #include "dansandu/radiance/assertion.hpp"
 #include "dansandu/journey/exception.hpp"
-#include "dansandu/journey/logging.hpp"
 #include "dansandu/journey/reporter.hpp"
 #include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/binding.hpp"
@@ -12,19 +11,53 @@
 #include <algorithm>
 #include <cstdint>
 #include <string>
+#include <typeinfo>
 
 using dansandu::journey::Level;
-using dansandu::journey::exception::WideException;
 using dansandu::journey::logging::Logger;
 using dansandu::journey::reporter::InMemoryReporter;
 using dansandu::journey::utility::getTypeName;
-using dansandu::journey::utility::toWideString;
 using dansandu::radiance::exception::AssertionFailureException;
 using dansandu::radiance::reporter::IReporter;
 using dansandu::radiance::utility::journeyLogsToRadianceLogs;
 
 namespace dansandu::radiance::assertion
 {
+
+namespace
+{
+
+template<typename... A, typename... AA>
+void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::function<void(A...)>& expression,
+                             AA&&... arguments)
+{
+    try
+    {
+        expression(std::forward<AA>(arguments)...);
+    }
+    catch (const std::exception& exception)
+    {
+        const auto includeNamespace = true;
+
+        assertionResult.exceptionMetadata = ExceptionMetadata{
+            .exceptionType = getTypeName(includeNamespace, exception),
+            .exceptionMessage = exception.what(),
+        };
+
+        throw;
+    }
+    catch (...)
+    {
+        assertionResult.exceptionMetadata = ExceptionMetadata{
+            .exceptionType = "<Unknown>",
+            .exceptionMessage = "<Unknown>",
+        };
+
+        throw;
+    }
+}
+
+}
 
 Assertion::Assertion(const AssertionMetadata& assertionMetadata, IReporter& reporter)
     : assertionResult_{
@@ -43,60 +76,13 @@ Assertion::~Assertion() noexcept
     reporter_.assertionEnd(assertionResult_);
 }
 
-namespace
-{
-
-template<typename... A, typename... AA>
-void wrapInTryCatchAndInvoke(AssertionResult& assertionResult, const std::function<void(A...)>& expression,
-                             AA&&... arguments)
-{
-    constexpr auto includeNamespace = true;
-
-    try
-    {
-        expression(std::forward<AA>(arguments)...);
-    }
-    catch (const WideException& wideException)
-    {
-        assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(getTypeName(includeNamespace, wideException)),
-            .exceptionMessage = wideException.getMessage(),
-            .sectionsCallStack = {},
-        };
-
-        throw;
-    }
-    catch (const std::exception& exception)
-    {
-        assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = toWideString(getTypeName(includeNamespace, exception)),
-            .exceptionMessage = toWideString(exception.what()),
-            .sectionsCallStack = {},
-        };
-
-        throw;
-    }
-    catch (...)
-    {
-        assertionResult.exceptionMetadata = ExceptionMetadata{
-            .exceptionType = L"<Unknown>",
-            .exceptionMessage = L"<Unknown>",
-            .sectionsCallStack = {},
-        };
-
-        throw;
-    }
-}
-
-}
-
 void Assertion::invoke(const std::function<void(AssertionResult&)>& expression)
 {
     wrapInTryCatchAndInvoke(assertionResult_, expression, assertionResult_);
 
     if (!assertionResult_.assertionSuccess)
     {
-        WTHROW(AssertionFailureException, "Assertion failed");
+        THROW(AssertionFailureException, "Assertion failed");
     }
 }
 
@@ -105,7 +91,7 @@ void Assertion::logInvoke(const InMemoryReporter& testCaseInMemoryReporter, cons
 {
     static uint64_t uniqueId = 0;
 
-    const auto reporterName = L"RadianceAssertionLogTracker_" + std::to_wstring(uniqueId++);
+    const auto reporterName = "RadianceAssertionLogTracker_" + std::to_string(uniqueId++);
 
     const auto reporter = InMemoryReporter{};
 
@@ -131,7 +117,58 @@ void Assertion::logInvoke(const InMemoryReporter& testCaseInMemoryReporter, cons
 
     if (!assertionResult_.assertionSuccess)
     {
-        WTHROW(AssertionFailureException, "Assertion failed");
+        THROW(AssertionFailureException, "Assertion failed");
+    }
+}
+
+void Assertion::throwInvoke(const std::function<void()>& expression, const std::type_info& expectedExceptionType)
+{
+    const auto includeNamespace = true;
+
+    try
+    {
+        expression();
+    }
+    catch (const std::exception& exception)
+    {
+        assertionResult_.assertion = ThrowAssertion{
+            .exceptionMessage = exception.what(),
+            .expectedException = getTypeName(includeNamespace, expectedExceptionType),
+            .actualException = getTypeName(includeNamespace, exception),
+            .exceptionThrown = true,
+        };
+
+        if (typeid(exception) == expectedExceptionType)
+        {
+            assertionResult_.assertionSuccess = true;
+        }
+        else
+        {
+            throw;
+        }
+    }
+    catch (...)
+    {
+        assertionResult_.assertion = ThrowAssertion{
+            .exceptionMessage = "<Unknown>",
+            .expectedException = getTypeName(includeNamespace, expectedExceptionType),
+            .actualException = "<Unknown>",
+            .exceptionThrown = true,
+        };
+
+        throw;
+    }
+
+    if (!assertionResult_.assertionSuccess)
+    {
+        assertionResult_.assertion = ThrowAssertion{
+            .exceptionMessage = {},
+            .expectedException = getTypeName(includeNamespace, expectedExceptionType),
+            .actualException = {},
+            .exceptionThrown = false,
+        };
+
+        THROW(AssertionFailureException, "Assertion failed");
     }
 }
 

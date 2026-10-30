@@ -1,34 +1,14 @@
 #pragma once
 
 #include "dansandu/journey/macro.hpp"
-#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/binding.hpp"
-#include "dansandu/radiance/section_scheduler.hpp"
-#include "dansandu/radiance/test_case.hpp"
-#include "dansandu/radiance/test_case_registry.hpp"
-#include "dansandu/radiance/utility.hpp"
+#include "dansandu/radiance/registered_test_class.hpp"
+#include "dansandu/radiance/test_method_context.hpp"
 
-#define DANSANDU_RADIANCE_INTERNAL_TEST_CASE(name, functionName)                                                       \
-    static void functionName(dansandu::radiance::test_case::TestCase&);                                                \
-    static bool DANSANDU_JOURNEY_UNIQUE_NAME =                                                                         \
-        dansandu::radiance::test_case_registry::TestCaseRegistry::instance().registerTestCase({                        \
-            .testCaseName = dansandu::journey::utility::toWideString(name),                                            \
-            .filePath = __FILE__,                                                                                      \
-            .lineNumber = __LINE__,                                                                                    \
-            .invoker = functionName,                                                                                   \
-        });                                                                                                            \
-    static void functionName(dansandu::radiance::test_case::TestCase& dansandu_radiance_internal_test_case)
-
-#define TEST_CASE(name) DANSANDU_RADIANCE_INTERNAL_TEST_CASE(name, DANSANDU_JOURNEY_UNIQUE_NAME)
-
-#define SECTION(name)                                                                                                  \
-    if (auto dansandu_radiance_internal_sectionScope =                                                                 \
-            dansandu_radiance_internal_test_case.sectionScheduler().newSection(name);                                  \
-        dansandu_radiance_internal_test_case.sectionScheduler().tryBeginSection(                                       \
-            dansandu_radiance_internal_sectionScope))
+#include <typeid>
 
 #define DANSANDU_RADIANCE_INTERNAL_ASSERTION(...)                                                                      \
-    dansandu_radiance_internal_test_case.handleAssertion(                                                              \
+    BaseTestClass::handleAssertion(                                                           \
         #__VA_ARGS__, __LINE__,                                                                                        \
         [&](dansandu::radiance::AssertionResult& dansandu_radiance_internal_assertionResult)                           \
         {                                                                                                              \
@@ -62,11 +42,11 @@
 #endif
 
 #define DANSANDU_RADIANCE_INTERNAL_THROW_ASSERTION(exception, expression)                                              \
-    dansandu_radiance_internal_test_case.handleThrowAssertion<exception>(                                              \
-        #exception ", " #expression, __LINE__, [&]() { expression; })
+    BaseTestClass::handleThrowAssertion(                                                  \
+        #exception ", " #expression, __LINE__, [&]() { expression; }, typeid(exception))
 
-#define DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)                                             \
-    dansandu_radiance_internal_test_case.handleLogAssertion(                                                           \
+#define DANSANDU_RADIANCE_INTERNAL_LOGGING_ASSERTION(expectedLogs, expression)                                             \
+    BaseTestClass::handleLoggingAssertion(                                                           \
         #expectedLogs ", " #expression, __LINE__, expectedLogs, [&]() { expression; })
 
 #if defined(__clang__)
@@ -84,16 +64,46 @@
 #endif
 
 #if defined(__clang__)
-#define REQUIRE_LOG(expectedLogs, expression)                                                                          \
+#define REQUIRE_LOGGING(expectedLogs, expression)                                                                          \
     _Pragma("clang diagnostic push")                                                                                   \
     _Pragma("clang diagnostic ignored \"-Wunused-value\"")                                                             \
-    DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)                                                 \
+    DANSANDU_RADIANCE_INTERNAL_LOGGING_ASSERTION(expectedLogs, expression)                                                 \
     _Pragma("clang diagnostic pop")
 #elif defined(__GNUC__)
-#define REQUIRE_LOG(expectedLogs, expression) DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)
+#define REQUIRE_LOGGING(expectedLogs, expression) DANSANDU_RADIANCE_INTERNAL_LOGGING_ASSERTION(expectedLogs, expression)
 #elif defined(_MSC_VER)
-#define REQUIRE_LOG(expectedLogs, expression) DANSANDU_RADIANCE_INTERNAL_LOG_ASSERTION(expectedLogs, expression)
+#define REQUIRE_LOGGING(expectedLogs, expression) DANSANDU_RADIANCE_INTERNAL_LOGGING_ASSERTION(expectedLogs, expression)
 #elif
 #error "Unknown compiler"
 #endif
 // clang-format on
+
+#define TEST_CLASS(className)                                                                                          \
+    class PRALINE_EXPORT className                                                                                     \
+        : public ::dansandu::radiance::registered_test_class::RegisteredTestClass<className, __FILE__, __LINE__>
+
+#define DANSANDU_RADIANCE_INTERNAL_TEST_METHOD_PREFIX dansandu_radiance_test_method_
+
+#define DANSANDU_RADIANCE_INTERANL_TEST_METHOD_NAME_2(prefix, line, methodName) prefix##line##_##methodName
+
+#define DANSANDU_RADIANCE_INTERANL_TEST_METHOD_NAME(prefix, line, methodName) DANSANDU_RADIANCE_INTERANL_TEST_METHOD_NAME_2(prefix, line, methodName)
+
+#if defined(__clang__)
+#define TEST_METHOD(methodName)                                                                                        \
+    [[clang::used]] void DANSANDU_RADIANCE_INTERANL_TEST_METHOD_NAME(DANSANDU_RADIANCE_INTERNAL_TEST_METHOD_PREFIX, __LINE__, methodName)()
+#elif defined(__GNUC__)
+#define TEST_METHOD(methodName)                                                                                        \
+    [[gnu::used]] void DANSANDU_RADIANCE_INTERANL_TEST_METHOD_NAME(DANSANDU_RADIANCE_INTERNAL_TEST_METHOD_PREFIX, __LINE__, methodName)()
+#elif defined(_MSC_VER)
+#define TEST_METHOD(methodName)                                                                                        \
+    void DANSANDU_RADIANCE_INTERANL_TEST_METHOD_NAME(DANSANDU_RADIANCE_INTERNAL_TEST_METHOD_PREFIX, __LINE__, methodName)()
+#elif
+#error "Unknown compiler"
+#endif
+
+namespace dansandu::radiance::macro
+{
+
+constexpr auto radianceTestMethodPrefix = DANSANDU_JOURNEY_STRINGIFY(DANSANDU_RADIANCE_INTERNAL_TEST_METHOD_PREFIX);
+
+}

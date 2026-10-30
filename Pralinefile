@@ -2,7 +2,7 @@ organization: dansandu
 artifact: radiance
 version: 2.0.0.SNAPSHOT
 test_service:
-  service_name: dansandu-radiance-radiance_scenarios
+  service_name: dansandu-radiance-radiance_scenarios_v2
 dependencies:
 - organization: dansandu
   artifact: journey

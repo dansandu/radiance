@@ -1,5 +1,6 @@
 #include "dansandu/radiance/progress_bar_console_reporter.hpp"
 #include "dansandu/journey/common.hpp"
+#include "dansandu/journey/utility.hpp"
 #include "dansandu/radiance/utility.hpp"
 
 #include <ios>
@@ -9,9 +10,9 @@
 
 using dansandu::journey::toString;
 using dansandu::journey::toStringWithConsoleHighlight;
+using dansandu::journey::utility::writeToStandardOutput;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::utility::highlightText;
-using dansandu::radiance::utility::join;
 using dansandu::radiance::utility::TextHighlight;
 
 namespace dansandu::radiance::progress_bar_console_reporter
@@ -24,56 +25,48 @@ ProgressBarConsoleReporter::ProgressBarConsoleReporter() : failureHandled_{false
     stream_ << std::boolalpha;
 }
 
-void ProgressBarConsoleReporter::testSuiteBegin(const TestSuiteMetadata& metadata)
+void ProgressBarConsoleReporter::testSuiteBegin(const TestSuiteMetadata& testSuiteMetadata)
 {
-    const auto stageName = L"test";
-    const auto resolution = metadata.testCasesBeingRun;
+    const auto stageName = "test";
+    const auto resolution = testSuiteMetadata.testClassesToRun;
     const auto displayElapsedTime = true;
 
-    progressBar_.emplace(stageName, resolution, [](const auto& text) { std::wcout << text; }, displayElapsedTime);
+    progressBar_.emplace(stageName, resolution, [](const auto& text) { writeToStandardOutput(text, /*flush*/ true); }, displayElapsedTime);
 }
 
-void ProgressBarConsoleReporter::testSuiteEnd(const TestSuiteResult& result)
+void ProgressBarConsoleReporter::testSuiteEnd(const TestSuiteResult& testSuiteResult)
 {
-    progressBar_->updateSummary(result.testCasesFailed, result.testSuiteMetadata.testCasesBeingSkipped,
-                                result.testCasesPassed, result.assertionsPassed);
+    progressBar_->updateSummary(testSuiteResult.testClassesFailed, testSuiteResult.testSuiteMetadata.testClassesToSkip,
+                                testSuiteResult.testClassesPassed, testSuiteResult.assertionsPassed);
     progressBar_.reset();
 
     const auto output = stream_.str();
 
     if (!output.empty())
     {
-        std::wcout << output;
+        writeToStandardOutput(output, /*flush*/ true);
     }
 }
 
-void ProgressBarConsoleReporter::testCaseBegin(const TestCaseMetadata& metadata)
+void ProgressBarConsoleReporter::testClassBegin(const TestClassMetadata& testClassMetadata)
 {
-    progressBar_->updateDescription(metadata.testCaseName);
+    progressBar_->updateDescription(testClassMetadata.testClassName);
 }
 
-void ProgressBarConsoleReporter::testCaseEnd(const TestCaseResult&)
+void ProgressBarConsoleReporter::testClassEnd(const TestClassResult&)
 {
     progressBar_->advance();
 }
 
-void ProgressBarConsoleReporter::testCaseRunBegin(const TestCaseRunMetadata&)
+void ProgressBarConsoleReporter::testMethodBegin(const TestMethodMetadata&)
 {
     failureHandled_ = false;
-    firstLoggingFailureSectionPath_.clear();
 }
 
 namespace
 {
 
-std::wstring getFormattedSectionsCallStack(const std::vector<std::wstring>& sections)
-{
-    return join(sections | std::views::transform([](const auto& section)
-                                                 { return highlightText(section, TextHighlight::Magenta); }),
-                L" -> ");
-}
-
-void printLogs(std::wostringstream& stream, const std::vector<Log>& logs, size_t logLimit)
+void printLogs(std::ostringstream& stream, const std::vector<Log>& logs, size_t logLimit)
 {
     for (auto index = 0uz; index < std::min(logs.size(), logLimit); ++index)
     {
@@ -83,62 +76,31 @@ void printLogs(std::wostringstream& stream, const std::vector<Log>& logs, size_t
 
 }
 
-void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
+void ProgressBarConsoleReporter::testMethodEnd(const TestMethodResult& testMethodResult)
 {
     if (!failureHandled_)
     {
-        const auto& testCaseMetadata = result.testCaseRunMetadata.testCaseMetadata;
+        const auto& testClassMetadata = testMethodResult.testMethodMetadata.testClassMetadata;
 
-        if (result.exceptionMetadata)
+        if (testMethodResult.exceptionMetadata)
         {
-            if (result.exceptionMetadata->sectionsCallStack.empty())
-            {
-                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
-                        << "    within test case "
-                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
-                        << " exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage << '"'
-                        << std::endl
-                        << std::endl;
-            }
-            else
-            {
-                const auto sections = getFormattedSectionsCallStack(result.exceptionMetadata->sectionsCallStack);
-
-                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
-                        << "    within test case "
-                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " sections "
-                        << sections << std::endl
-                        << "      exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage
-                        << '"' << std::endl
-                        << std::endl;
-            }
+            stream_ << "  " << highlightText("Test class failed", TextHighlight::Red) << " "
+                    << testClassMetadata.testClassFilePath.c_str() << "(" << testClassMetadata.testClassLineNumber << ")" << std::endl
+                    << "    within test class "
+                    << highlightText(testClassMetadata.testClassName, TextHighlight::Magenta)
+                    << " exception was thrown with message: \"" << testMethodResult.exceptionMetadata->exceptionMessage << '"'
+                    << std::endl
+                    << std::endl;
         }
-        else if (!result.loggingSuccess)
+        else if (!testMethodResult.loggingSuccess)
         {
-            if (firstLoggingFailureSectionPath_.empty())
-            {
-                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
-                        << "    within test case "
-                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " "
-                        << toStringWithConsoleHighlight(testCaseMetadata.testSuiteMetadata.loggingLevelFailure);
-            }
-            else
-            {
-                const auto sections = getFormattedSectionsCallStack(firstLoggingFailureSectionPath_);
+            stream_ << "  " << highlightText("Test class failed", TextHighlight::Red) << " "
+                    << testClassMetadata.testClassFilePath.c_str() << "(" << testClassMetadata.testClassLineNumber << ")" << std::endl
+                    << "    within test class "
+                    << highlightText(testClassMetadata.testClassName, TextHighlight::Magenta) << " "
+                    << toStringWithConsoleHighlight(testClassMetadata.testSuiteMetadata.loggingLevelFailure);
 
-                stream_ << "  " << highlightText(L"Test case failed", TextHighlight::Red) << " "
-                        << testCaseMetadata.filePath.c_str() << "(" << testCaseMetadata.lineNumber << ")" << std::endl
-                        << "    within test case "
-                        << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta) << " sections "
-                        << sections << std::endl
-                        << "      "
-                        << toStringWithConsoleHighlight(testCaseMetadata.testSuiteMetadata.loggingLevelFailure);
-            }
-
-            if (result.failingLogs.size() > logLimit)
+            if (testMethodResult.failingLogs.size() > logLimit)
             {
                 stream_ << "(s) or above were logged (displaying only the first " << logLimit << "):" << std::endl;
             }
@@ -147,48 +109,40 @@ void ProgressBarConsoleReporter::testCaseRunEnd(const TestCaseRunResult& result)
                 stream_ << "(s) or above were logged:" << std::endl;
             }
 
-            printLogs(stream_, result.failingLogs, logLimit);
+            printLogs(stream_, testMethodResult.failingLogs, logLimit);
 
             stream_ << std::endl;
         }
     }
 }
 
-void ProgressBarConsoleReporter::sectionEnd(const SectionResult& result)
+void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& assertionResult)
 {
-    if (!result.loggingSuccess && firstLoggingFailureSectionPath_.empty())
-    {
-        firstLoggingFailureSectionPath_ = result.sectionMetadata.sections;
-    }
-}
-
-void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
-{
-    if (!result.assertionSuccess)
+    if (!assertionResult.assertionSuccess)
     {
         failureHandled_ = true;
 
-        const auto& assertionMetadata = result.assertionMetadata;
-        const auto& sectionMetadata = assertionMetadata.sectionMetadata;
-        const auto& testCaseMetadata = sectionMetadata.testCaseRunMetadata.testCaseMetadata;
+        const auto& assertionMetadata = assertionResult.assertionMetadata;
+        const auto& testClassMetadata = assertionMetadata.testMethodMetadata.testClassMetadata;
 
-        stream_ << "  " << highlightText(L"Assertion failed", TextHighlight::Red) << " "
-                << testCaseMetadata.filePath.c_str() << "(" << assertionMetadata.lineNumber << ")" << std::endl;
+        stream_ << "  " << highlightText("Assertion failed", TextHighlight::Red) << " "
+                << testClassMetadata.testClassFilePath.c_str() << "(" << assertionMetadata.assertionLineNumber << ")" << std::endl;
 
         if (!sectionMetadata.sections.empty())
         {
             const auto sections = getFormattedSectionsCallStack(sectionMetadata.sections);
 
-            stream_ << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
-                    << " sections " << sections << std::endl;
+            stream_ << "    within test class "
+                    << highlightText(testClassMetadata.testClassName, TextHighlight::Magenta) << " sections "
+                    << sections << std::endl;
         }
         else
         {
-            stream_ << "    within test case " << highlightText(testCaseMetadata.testCaseName, TextHighlight::Magenta)
-                    << std::endl;
+            stream_ << "    within test class "
+                    << highlightText(testClassMetadata.testClassName, TextHighlight::Magenta) << std::endl;
         }
 
-        if (!result.exceptionMetadata)
+        if (!assertionResult.exceptionMetadata)
         {
             std::visit(
                 [&](auto&& argument)
@@ -197,24 +151,24 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
 
                     if constexpr (std::is_same_v<ArgumentType, UnaryAssertion>)
                     {
-                        stream_ << "      " << highlightText(L"REQUIRE", TextHighlight::Blue) << "("
+                        stream_ << "      " << highlightText("REQUIRE", TextHighlight::Blue) << "("
                                 << assertionMetadata.expression.c_str() << ')' << std::endl
                                 << "              " << argument.representation << std::endl
-                                << "      evaluates to " << result.assertionSuccess << std::endl
+                                << "      evaluates to " << assertionResult.assertionSuccess << std::endl
                                 << std::endl;
                     }
                     else if constexpr (std::is_same_v<ArgumentType, BinaryAssertion>)
                     {
-                        stream_ << "      " << highlightText(L"REQUIRE", TextHighlight::Blue) << "("
+                        stream_ << "      " << highlightText("REQUIRE", TextHighlight::Blue) << "("
                                 << assertionMetadata.expression.c_str() << ')' << std::endl
                                 << "              " << argument.firstRepresentation << ' ' << argument.operation.c_str()
                                 << ' ' << argument.secondRepresentation << std::endl
-                                << "      evaluates to " << result.assertionSuccess << std::endl
+                                << "      evaluates to " << assertionResult.assertionSuccess << std::endl
                                 << std::endl;
                     }
                     else if constexpr (std::is_same_v<ArgumentType, ThrowAssertion>)
                     {
-                        stream_ << "      " << highlightText(L"REQUIRE_THROW", TextHighlight::Blue) << "("
+                        stream_ << "      " << highlightText("REQUIRE_THROW", TextHighlight::Blue) << "("
                                 << assertionMetadata.expression.c_str() << ')' << std::endl;
 
                         if (!argument.exceptionThrown)
@@ -230,7 +184,7 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
                     }
                     else if constexpr (std::is_same_v<ArgumentType, LogAssertion>)
                     {
-                        stream_ << "      " << highlightText(L"REQUIRE_LOG", TextHighlight::Blue) << "("
+                        stream_ << "      " << highlightText("REQUIRE_LOGGING", TextHighlight::Blue) << "("
                                 << assertionMetadata.expression.c_str() << ')' << std::endl;
 
                         if (argument.expectedLogs.size() > logLimit)
@@ -266,12 +220,12 @@ void ProgressBarConsoleReporter::assertionEnd(const AssertionResult& result)
                         static_assert(false, "Assertion visitor is non-exhaustive");
                     }
                 },
-                result.assertion);
+                assertionResult.assertion);
         }
         else
         {
-            stream_ << "      exception was thrown with message: \"" << result.exceptionMetadata->exceptionMessage
-                    << '"' << std::endl
+            stream_ << "      exception was thrown with message: \""
+                    << assertionResult.exceptionMetadata->exceptionMessage << '"' << std::endl
                     << std::endl;
         }
     }

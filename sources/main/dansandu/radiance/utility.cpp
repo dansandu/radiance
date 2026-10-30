@@ -13,7 +13,7 @@
 namespace dansandu::radiance::utility
 {
 
-std::wstring highlightText(const std::wstring& text, const TextHighlight textHighlight)
+std::string highlightText(const std::string& text, const TextHighlight textHighlight)
 {
     if (text.empty())
     {
@@ -25,32 +25,32 @@ std::wstring highlightText(const std::wstring& text, const TextHighlight textHig
     case TextHighlight::None:
         return text;
     case TextHighlight::Red:
-        return L"\x1B[31m" + text + L"\x1B[0m";
+        return "\x1B[31m" + text + "\x1B[0m";
     case TextHighlight::Green:
-        return L"\x1B[32m" + text + L"\x1B[0m";
+        return "\x1B[32m" + text + "\x1B[0m";
     case TextHighlight::Yellow:
-        return L"\x1B[33m" + text + L"\x1B[0m";
+        return "\x1B[33m" + text + "\x1B[0m";
     case TextHighlight::Blue:
-        return L"\x1B[34m" + text + L"\x1B[0m";
+        return "\x1B[34m" + text + "\x1B[0m";
     case TextHighlight::Magenta:
-        return L"\x1B[35m" + text + L"\x1B[0m";
+        return "\x1B[35m" + text + "\x1B[0m";
     default:
         THROW(std::logic_error, "Unknown text highlight");
     }
 }
 
-std::wstring readFile(const std::filesystem::path& filePath)
+std::string readFile(const std::filesystem::path& filePath)
 {
-    auto file = std::wifstream{filePath, std::ios_base::binary};
+    auto file = std::ifstream{filePath, std::ios_base::binary};
     file >> std::noskipws;
-    auto stream = std::wostringstream{};
+    auto stream = std::ostringstream{};
     stream << file.rdbuf();
     return stream.str();
 }
 
-std::wstring removeCarriage(std::wstring text)
+std::string removeCarriage(std::string text)
 {
-    text.erase(std::remove(text.begin(), text.end(), L'\r'), text.end());
+    text.erase(std::remove(text.begin(), text.end(), '\r'), text.end());
     return text;
 }
 

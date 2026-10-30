@@ -14,6 +14,9 @@
 #include <string>
 
 using dansandu::journey::utility::getEnvironmentVariable;
+using dansandu::journey::utility::writeToStandardError;
+using dansandu::journey::utility::format;
+using dansandu::journey::utility::writeToStandardOutput;
 using dansandu::radiance::progress_bar::ProgressBar;
 using dansandu::radiance::test_case_registry::TestCaseRegistry;
 using dansandu::radiance::test_reporter::TestReporter;
@@ -32,12 +35,12 @@ int runScenarios(const int, const char* const* const)
     const auto scenarios = std::vector<std::filesystem::directory_entry>(std::filesystem::begin(scenariosReader),
                                                                          std::filesystem::end(scenariosReader));
 
-    const auto stageName = L"test";
+    const auto stageName = "test";
     const auto scenariosTotal = static_cast<int>(scenarios.size());
     const auto displayElapsedTime = true;
 
     std::optional<ProgressBar> progressBar(
-        std::in_place, stageName, scenariosTotal, [](const auto& text) { std::wcout << text; }, displayElapsedTime);
+        std::in_place, stageName, scenariosTotal, [](const auto& text) { writeToStandardOutput(text); }, displayElapsedTime);
 
     auto scenariosFailed = 0;
     auto scenariosPassed = 0;
@@ -45,16 +48,16 @@ int runScenarios(const int, const char* const* const)
 
     for (const auto& entry : scenarios)
     {
-        const auto fileExtension = entry.path().extension().wstring();
-        const auto fileName = entry.path().filename().wstring();
-        const auto testCaseName = fileName.substr(0, fileName.size() - fileExtension.size());
+        const auto fileExtension = entry.path().extension().string();
+        const auto fileName = entry.path().filename().string();
+        const auto testClassName = fileName.substr(0, fileName.size() - fileExtension.size());
         const auto expectedOutput = removeCarriage(readFile(entry.path()));
 
-        progressBar->updateDescription(testCaseName);
+        progressBar->updateDescription(testClassName);
 
         auto reporter = TestReporter{};
 
-        TestCaseRegistry::instance().runTestCases({testCaseName}, reporter);
+        TestCaseRegistry::instance().runTestCases({testClassName}, reporter);
 
         const auto output = reporter.getString();
 
@@ -67,12 +70,12 @@ int runScenarios(const int, const char* const* const)
             progressBar->updateSummary(scenariosFailed, scenariosSkipped, scenariosPassed, assertionsPassed);
             progressBar.reset();
 
-            const auto outputFilePath = L"target/temporary/actual_" + entry.path().filename().wstring();
+            const auto outputFilePath = "target/temporary/actual_" + entry.path().filename().string();
 
-            std::wcout << "Scenario \"" << testCaseName << "\" failed. See \"" << outputFilePath
-                       << "\" for actual output." << std::endl;
+            writeToStandardError(format("Scenario \"", testClassName, "\" failed. See \"", outputFilePath
+                       , "\" for actual output.\n"));
 
-            auto file = std::wofstream{std::filesystem::path{outputFilePath}, std::ios_base::binary};
+            auto file = std::ofstream{std::filesystem::path{outputFilePath}, std::ios_base::binary};
             file << std::noskipws << output;
 
             return 1;

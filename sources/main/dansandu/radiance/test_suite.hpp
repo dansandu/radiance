@@ -2,30 +2,18 @@
 
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/reporter.hpp"
-#include "dansandu/radiance/test_case.hpp"
+#include "dansandu/radiance/test_class_descriptor.hpp"
+#include "dansandu/journey/common.hpp"
 
 #include <vector>
 
 namespace dansandu::radiance::test_suite
 {
 
-class PRALINE_EXPORT TestSuite
-{
-public:
-    TestSuite(const TestSuiteMetadata& testSuiteMetadata,
-              const std::vector<dansandu::radiance::test_case::TestCase::Descriptor>& testCaseDescriptors,
-              dansandu::radiance::reporter::IReporter& reporter);
-
-    ~TestSuite() noexcept;
-
-    void run();
-
-    const TestSuiteResult& testSuiteResult() const;
-
-private:
-    TestSuiteResult testSuiteResult_;
-    std::vector<dansandu::radiance::test_case::TestCase::Descriptor> testCaseDescriptors_;
-    dansandu::radiance::reporter::IReporter& reporter_;
-};
+TestSuiteResult runTestSuite(
+    const std::vector<dansandu::radiance::test_class_descriptor::TestClassDescriptor>& testClassDescriptors,
+    const int testClassesTotal,
+    const dansandu::journey::Level loggingLevelFailure,
+    dansandu::radiance::reporter::IReporter& reporter);
 
 }

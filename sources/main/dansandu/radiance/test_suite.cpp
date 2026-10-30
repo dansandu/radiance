@@ -2,89 +2,71 @@
 #include "dansandu/radiance/common.hpp"
 #include "dansandu/radiance/exception.hpp"
 #include "dansandu/radiance/reporter.hpp"
-#include "dansandu/radiance/section_scheduler.hpp"
-
-#include <type_traits>
-#include <typeinfo>
+#include "dansandu/journey/common.hpp"
 
 using dansandu::radiance::reporter::IReporter;
-using dansandu::radiance::section_scheduler::SectionScheduler;
-using dansandu::radiance::test_case::TestCase;
+using dansandu::radiance::test_class_descriptor::TestClassDescriptor;
+using dansandu::journey::Level;
 
 namespace dansandu::radiance::test_suite
 {
 
-TestSuite::TestSuite(const TestSuiteMetadata& testSuiteMetadata,
-                     const std::vector<TestCase::Descriptor>& testCaseDescriptors, IReporter& reporter)
-    : testSuiteResult_{.testSuiteMetadata = testSuiteMetadata,
-                       .testCasesRan = 0,
-                       .testCasesPassed = 0,
-                       .testCasesFailed = 0,
-                       .assertionsRan = 0,
-                       .assertionsPassed = 0,
-                       .assertionsFailed = 0,
-                       .loggingSuccess = true,
-                       .testSuiteSuccess = true},
-      testCaseDescriptors_{testCaseDescriptors},
-      reporter_{reporter}
+TestSuiteResult runTestSuite(
+    const std::vector<TestClassDescriptor>& testClassDescriptors, const int testClassesTotal,
+    const Level loggingLevelFailure, IReporter& reporter
+)
 {
-    if (testSuiteResult_.testSuiteMetadata.testCasesBeingRun != std::ssize(testCaseDescriptors))
+    const auto testClassesToRun = static_cast<int>(testClassDescriptors.size());
+
+    if (testClassesTotal < testClassesToRun)
     {
-        THROW(std::logic_error, "Metadata number of tests being run must match the number of test descriptors");
+        THROW(std::logic_error, "Total number of test classes ", testClassesTotal, " must be greater of equal to the number of test classes to run ", testClassesToRun);
     }
 
-    if (testSuiteResult_.testSuiteMetadata.testCasesTotal < std::ssize(testCaseDescriptors))
+    auto testSuiteResult = TestSuiteResult{
+        .testSuiteMetadata = TestSuiteMetadata{
+            .testClassesTotal = testClassesTotal,
+            .testClassesToRun = testClassesToRun,
+            .testClassesToSkip = testClassesTotal - testClassesToRun,
+            .loggingLevelFailure = loggingLevelFailure,
+        },
+        .testClassesRan = 0,
+        .testClassesPassed = 0,
+        .testClassesFailed = 0,
+        .assertionsRan = 0,
+        .assertionsPassed = 0,
+        .assertionsFailed = 0,
+        .loggingSuccess = true,
+        .testSuiteSuccess = true,
+    };
+
+    reporter.testSuiteBegin(testSuiteResult.testSuiteMetadata);
+
+    for (const auto& testClassDescriptor : testClassDescriptors)
     {
-        THROW(std::logic_error,
-              "Metadata total number of tests must be greater of equal to the number of test descriptors");
-    }
+        ++testSuiteResult.testClassesRan;
 
-    reporter_.testSuiteBegin(testSuiteResult_.testSuiteMetadata);
-}
+        const auto testClassResult = testClassDescriptor.runTestClass(testSuiteResult.testSuiteMetadata, reporter);
 
-TestSuite::~TestSuite() noexcept
-{
-    reporter_.testSuiteEnd(testSuiteResult_);
-}
-
-void TestSuite::run()
-{
-    for (const auto& descriptor : testCaseDescriptors_)
-    {
-        ++testSuiteResult_.testCasesRan;
-
-        const auto testCaseMetadata = TestCaseMetadata{
-            .testSuiteMetadata = testSuiteResult_.testSuiteMetadata,
-            .testCaseName = descriptor.testCaseName,
-            .filePath = descriptor.filePath,
-            .lineNumber = descriptor.lineNumber,
-        };
-
-        auto testCase = TestCase{testCaseMetadata, descriptor, reporter_};
-
-        testCase.run();
-
-        if (testCase.testCaseResult().testCaseSuccess)
+        if (testClassResult.testClassSuccess)
         {
-            ++testSuiteResult_.testCasesPassed;
+            ++testSuiteResult.testClassesPassed;
         }
         else
         {
-            ++testSuiteResult_.testCasesFailed;
+            ++testSuiteResult.testClassesFailed;
         }
 
-        testSuiteResult_.assertionsRan += testCase.testCaseResult().assertionsRan;
-        testSuiteResult_.assertionsPassed += testCase.testCaseResult().assertionsPassed;
-        testSuiteResult_.assertionsFailed += testCase.testCaseResult().assertionsFailed;
-        testSuiteResult_.loggingSuccess = testSuiteResult_.loggingSuccess && testCase.testCaseResult().loggingSuccess;
-        testSuiteResult_.testSuiteSuccess =
-            testSuiteResult_.testSuiteSuccess && testCase.testCaseResult().testCaseSuccess;
+        testSuiteResult.assertionsRan += testClassResult.assertionsRan;
+        testSuiteResult.assertionsPassed += testClassResult.assertionsPassed;
+        testSuiteResult.assertionsFailed += testClassResult.assertionsFailed;
+        testSuiteResult.loggingSuccess &= testClassResult.loggingSuccess;
+        testSuiteResult.testSuiteSuccess &= testClassResult.testClassSuccess;
     }
-}
 
-const TestSuiteResult& TestSuite::testSuiteResult() const
-{
-    return testSuiteResult_;
+    reporter.testSuiteEnd(testSuiteResult);
+
+    return testSuiteResult;
 }
 
 }

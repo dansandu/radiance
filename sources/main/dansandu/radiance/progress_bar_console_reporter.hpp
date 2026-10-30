@@ -9,31 +9,28 @@
 namespace dansandu::radiance::progress_bar_console_reporter
 {
 
-class PRALINE_EXPORT ProgressBarConsoleReporter : public dansandu::radiance::reporter::IReporter
+class ProgressBarConsoleReporter : public dansandu::radiance::reporter::IReporter
 {
 public:
     ProgressBarConsoleReporter();
 
-    void testSuiteBegin(const TestSuiteMetadata& metadata) override;
+    void testSuiteBegin(const TestSuiteMetadata& testSuiteMetadata) override;
 
-    void testSuiteEnd(const TestSuiteResult& result) override;
+    void testSuiteEnd(const TestSuiteResult& testSuiteResult) override;
 
-    void testCaseBegin(const TestCaseMetadata& metadata) override;
+    void testClassBegin(const TestClassMetadata& testClassMetadata) override;
 
-    void testCaseEnd(const TestCaseResult& result) override;
+    void testClassEnd(const TestClassResult& testClassResult) override;
 
-    void testCaseRunBegin(const TestCaseRunMetadata& metadata) override;
+    void testMethodBegin(const TestMethodMetadata& testMethodMetadata) override;
 
-    void testCaseRunEnd(const TestCaseRunResult& result) override;
+    void testMethodEnd(const TestMethodResult& testMethodResult) override;
 
-    void sectionEnd(const SectionResult& result) override;
-
-    void assertionEnd(const AssertionResult& result) override;
+    void assertionEnd(const AssertionResult& assertionResult) override;
 
 private:
-    std::wostringstream stream_;
+    std::ostringstream stream_;
     std::optional<dansandu::radiance::progress_bar::ProgressBar> progressBar_;
-    std::vector<std::wstring> firstLoggingFailureSectionPath_;
     bool failureHandled_;
 };
 

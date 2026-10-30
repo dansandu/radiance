@@ -20,18 +20,18 @@ enum class TextHighlight
     Magenta,
 };
 
-PRALINE_EXPORT std::wstring highlightText(const std::wstring& text, const TextHighlight textHighlight);
+PRALINE_EXPORT std::string highlightText(const std::string& text, const TextHighlight textHighlight);
 
-PRALINE_EXPORT std::wstring readFile(const std::filesystem::path& filePath);
+PRALINE_EXPORT std::string readFile(const std::filesystem::path& filePath);
 
-PRALINE_EXPORT std::wstring removeCarriage(std::wstring text);
+PRALINE_EXPORT std::string removeCarriage(std::string text);
 
 PRALINE_EXPORT std::vector<Log> journeyLogsToRadianceLogs(const std::vector<dansandu::journey::LogEntry>& logs);
 
 template<typename Iterable>
-auto join(const Iterable& iterable, const std::wstring separator = L", ")
+auto join(const Iterable& iterable, const std::string separator = ", ")
 {
-    auto stream = std::wostringstream{};
+    auto stream = std::ostringstream{};
     for (const auto& element : iterable)
     {
         stream << element << separator;

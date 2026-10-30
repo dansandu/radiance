@@ -16,26 +16,22 @@ public:
 
     void testSuiteEnd(const TestSuiteResult& result) override;
 
-    void testCaseBegin(const TestCaseMetadata& metadata) override;
+    void testClassBegin(const TestClassMetadata& metadata) override;
 
-    void testCaseEnd(const TestCaseResult& result) override;
+    void testClassEnd(const TestClassResult& result) override;
 
-    void testCaseRunBegin(const TestCaseRunMetadata& metadata) override;
+    void testMethodBegin(const TestMethodMetadata& metadata) override;
 
-    void testCaseRunEnd(const TestCaseRunResult& result) override;
-
-    void sectionBegin(const SectionMetadata& metadata) override;
-
-    void sectionEnd(const SectionResult& result) override;
+    void testMethodEnd(const TestMethodResult& result) override;
 
     void assertionBegin(const AssertionMetadata& metadata) override;
 
     void assertionEnd(const AssertionResult& result) override;
 
-    std::wstring getString() const;
+    std::string getString() const;
 
 private:
-    std::wostringstream stream_;
+    std::ostringstream stream_;
 };
 
 }
