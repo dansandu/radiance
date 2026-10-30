@@ -3,6 +3,7 @@
 #include "dansandu/journey/common.hpp"
 
 #include <cmath>
+#include <memory>
 #include <optional>
 #include <string>
 #include <type_traits>
@@ -136,6 +137,14 @@ struct AssertionResult
     bool assertionSuccess = false;
     std::variant<UnaryAssertion, BinaryAssertion, ThrowAssertion, LogAssertion> assertion;
     std::optional<ExceptionMetadata> exceptionMetadata;
+};
+
+using TestClassFactory = std::unique_ptr<void, void (*)(void*)> (*)();
+
+struct TestClassDescriptor
+{
+    std::string testClassName;
+    TestClassFactory testClassFactory;
 };
 
 template<typename T>
