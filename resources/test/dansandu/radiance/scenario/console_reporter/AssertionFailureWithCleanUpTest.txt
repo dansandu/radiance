@@ -1,0 +1,4 @@
+  Assertion failed sources/test/dansandu/radiance/scenario/AssertionFailureWithCleanUpTest.cpp(26)
+    within AssertionFailureWithCleanUpTest::failing_assertion
+      REQUIRE(false)
+

@@ -1,0 +1,60 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: LoggingFailureTest
+    test class file name: "LoggingFailureTest.cpp"
+    test class line number: 4
+    Begin test method
+      test method name: logs_below_limit
+      test method line number: 7
+    End test method
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test failing logs:
+        WARNING first warning
+        ERROR first error
+      logging success: false
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: false
+    Begin test method
+      test method name: logs_above_limit
+      test method line number: 14
+    End test method
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test failing logs:
+        ERROR error number 1
+        ERROR error number 2
+        ERROR error number 3
+        ERROR error number 4
+        ERROR error number 5
+        ERROR error number 6
+      logging success: false
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: false
+  End test class
+    test methods ran: 2
+    test methods passed: 0
+    test methods failed: 2
+    test assertions ran: 0
+    test assertions passed: 0
+    test assertions failed: 0
+    logging success: false
+    test class success: false
+End test suite
+  test classes ran: 1
+  test classes passed: 0
+  test classes failed: 1
+  test methods ran: 2
+  test methods passed: 0
+  test methods failed: 2
+  test assertions ran: 0
+  test assertions passed: 0
+  test assertions failed: 0
+  logging success: false
+  test suite success: false

@@ -5,22 +5,22 @@
 namespace dansandu::radiance::exception
 {
 
-class DuplicateTestCaseNameException : public dansandu::journey::exception::WideException
+class DuplicateTestCaseNameException : public dansandu::journey::exception::Exception
 {
 public:
-    using WideException::WideException;
+    using Exception::Exception;
 };
 
-class TestCaseWithNameNotFoundException : public dansandu::journey::exception::WideException
+class TestCaseWithNameNotFoundException : public dansandu::journey::exception::Exception
 {
 public:
-    using WideException::WideException;
+    using Exception::Exception;
 };
 
-class AssertionFailureException : public dansandu::journey::exception::WideException
+class AssertionFailureException : public dansandu::journey::exception::Exception
 {
 public:
-    using WideException::WideException;
+    using Exception::Exception;
 };
 
 }

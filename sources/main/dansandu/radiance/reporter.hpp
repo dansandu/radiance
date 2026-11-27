@@ -8,34 +8,30 @@ namespace dansandu::radiance::reporter
 class PRALINE_EXPORT IReporter
 {
 public:
-    IReporter() = default;
-
     IReporter(const IReporter& other) = delete;
     IReporter(IReporter&& other) noexcept = delete;
     IReporter& operator=(const IReporter& other) = delete;
     IReporter& operator=(IReporter&& other) noexcept = delete;
 
+    IReporter();
+
     virtual ~IReporter() noexcept = 0;
 
-    virtual void testSuiteBegin(const TestSuiteMetadata& metadata);
+    virtual void testSuiteBegin(const TestSuiteMetadata& testSuiteMetadata);
 
-    virtual void testSuiteEnd(const TestSuiteResult& result);
+    virtual void testSuiteEnd(const TestSuiteResult& testSuiteResult);
 
-    virtual void testCaseBegin(const TestCaseMetadata& metadata);
+    virtual void testClassBegin(const TestClassMetadata& testClassMetadata);
 
-    virtual void testCaseEnd(const TestCaseResult& result);
+    virtual void testClassEnd(const TestClassResult& testClassResult);
 
-    virtual void testCaseRunBegin(const TestCaseRunMetadata& metadata);
+    virtual void testMethodBegin(const TestMethodMetadata& testMethodMetadata);
 
-    virtual void testCaseRunEnd(const TestCaseRunResult& result);
+    virtual void testMethodEnd(const TestMethodResult& testMethodResult);
 
-    virtual void sectionBegin(const SectionMetadata& metadata);
+    virtual void assertionBegin(const AssertionMetadata& assertionMetadata);
 
-    virtual void sectionEnd(const SectionResult& result);
-
-    virtual void assertionBegin(const AssertionMetadata& metadata);
-
-    virtual void assertionEnd(const AssertionResult& result);
+    virtual void assertionEnd(const AssertionResult& assertionResult);
 };
 
 }

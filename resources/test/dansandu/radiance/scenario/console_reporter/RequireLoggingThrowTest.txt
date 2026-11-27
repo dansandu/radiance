@@ -1,0 +1,5 @@
+  Assertion failed sources/test/dansandu/radiance/scenario/RequireLoggingThrowTest.cpp(46)
+    within RequireLoggingThrowTest::expression_throws
+      an exception was thrown:
+        std::runtime_error: Expression failure
+

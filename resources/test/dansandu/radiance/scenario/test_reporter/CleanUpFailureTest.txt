@@ -1,0 +1,58 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: CleanUpFailureTest
+    test class file name: "CleanUpFailureTest.cpp"
+    test class line number: 5
+    Begin test method
+      test method name: failing_cleanup_with_successful_method
+      test method line number: 13
+    End test method
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: failed
+      test method success: false
+      cleanup exception type: std::runtime_error
+      cleanup exception message: cleanup failed
+    Begin test method
+      test method name: failing_cleanup_with_failing_method
+      test method line number: 17
+    End test method
+      test assertions ran: 0
+      test assertions passed: 0
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: failed
+      test method success: false
+      exception type: std::domain_error
+      exception message: method failed
+      cleanup exception type: std::runtime_error
+      cleanup exception message: cleanup failed
+  End test class
+    test methods ran: 2
+    test methods passed: 0
+    test methods failed: 2
+    test assertions ran: 0
+    test assertions passed: 0
+    test assertions failed: 0
+    logging success: true
+    test class success: false
+End test suite
+  test classes ran: 1
+  test classes passed: 0
+  test classes failed: 1
+  test methods ran: 2
+  test methods passed: 0
+  test methods failed: 2
+  test assertions ran: 0
+  test assertions passed: 0
+  test assertions failed: 0
+  logging success: true
+  test suite success: false

@@ -14,25 +14,49 @@ namespace dansandu::radiance
 
 struct TestSuiteMetadata
 {
-    int testCasesTotal = 0;
-    int testCasesBeingRun = 0;
-    int testCasesBeingSkipped = 0;
+    int testClassesTotal = 0;
+    int testClassesToRun = 0;
+    int testClassesToSkip = 0;
     dansandu::journey::Level loggingLevelFailure = dansandu::journey::Level::warning;
 };
 
+enum class StageStatus
+{
+    NotRun,
+    Succeeded,
+    Failed,
+};
+
+constexpr const char* toString(const StageStatus stageStatus)
+{
+    switch (stageStatus)
+    {
+    case StageStatus::NotRun:
+        return "not run";
+    case StageStatus::Succeeded:
+        return "succeeded";
+    case StageStatus::Failed:
+        return "failed";
+    }
+
+    return "<Unknown>";
+}
+
 struct ExceptionMetadata
 {
-    std::wstring exceptionType;
-    std::wstring exceptionMessage;
-    std::vector<std::wstring> sectionsCallStack;
+    std::string exceptionType;
+    std::string exceptionMessage;
 };
 
 struct TestSuiteResult
 {
     TestSuiteMetadata testSuiteMetadata;
-    int testCasesRan = 0;
-    int testCasesPassed = 0;
-    int testCasesFailed = 0;
+    int testClassesRan = 0;
+    int testClassesPassed = 0;
+    int testClassesFailed = 0;
+    int testMethodsRan = 0;
+    int testMethodsPassed = 0;
+    int testMethodsFailed = 0;
     int assertionsRan = 0;
     int assertionsPassed = 0;
     int assertionsFailed = 0;
@@ -40,27 +64,32 @@ struct TestSuiteResult
     bool testSuiteSuccess = false;
 };
 
-struct TestCaseMetadata
+struct TestClassMetadata
 {
     TestSuiteMetadata testSuiteMetadata;
-    std::wstring testCaseName;
-    std::string filePath;
-    int lineNumber = 0;
+    std::string testClassName;
+    std::string testClassFilePath;
+    int testClassLineNumber = 0;
 };
 
-struct TestCaseResult
+struct TestClassResult
 {
-    TestCaseMetadata testCaseMetadata;
+    TestClassMetadata testClassMetadata;
+    int testMethodsRan = 0;
+    int testMethodsPassed = 0;
+    int testMethodsFailed = 0;
     int assertionsRan = 0;
     int assertionsPassed = 0;
     int assertionsFailed = 0;
     bool loggingSuccess = false;
-    bool testCaseSuccess = false;
+    bool testClassSuccess = false;
 };
 
-struct TestCaseRunMetadata
+struct TestMethodMetadata
 {
-    TestCaseMetadata testCaseMetadata;
+    TestClassMetadata testClassMetadata;
+    std::string testMethodName;
+    int testMethodLineNumber = 0;
 };
 
 struct Log
@@ -68,57 +97,46 @@ struct Log
     friend bool operator==(const Log& left, const Log& right) = default;
 
     dansandu::journey::Level level;
-    std::wstring message;
+    std::string message;
 };
 
-struct TestCaseRunResult
+struct TestMethodResult
 {
-    TestCaseRunMetadata testCaseRunMetadata;
+    TestMethodMetadata testMethodMetadata;
     int assertionsRan = 0;
     int assertionsPassed = 0;
     int assertionsFailed = 0;
     std::vector<Log> failingLogs;
     bool loggingSuccess = false;
-    bool testCaseRunSuccess = false;
+    StageStatus setUpStatus = StageStatus::NotRun;
+    StageStatus cleanUpStatus = StageStatus::NotRun;
+    bool testMethodSuccess = false;
     std::optional<ExceptionMetadata> exceptionMetadata;
-};
-
-struct SectionMetadata
-{
-    TestCaseRunMetadata testCaseRunMetadata;
-    std::vector<std::wstring> sections;
-};
-
-struct SectionResult
-{
-    SectionMetadata sectionMetadata;
-    bool exceptionThrown = false;
-    bool loggingSuccess = false;
-    bool sectionSuccess = false;
+    std::optional<ExceptionMetadata> cleanUpExceptionMetadata;
 };
 
 struct AssertionMetadata
 {
-    SectionMetadata sectionMetadata;
+    TestMethodMetadata testMethodMetadata;
     std::string expression;
-    int lineNumber = 0;
+    int assertionLineNumber = 0;
 };
 
 struct UnaryAssertion
 {
-    std::wstring representation;
+    std::string representation;
 };
 
 struct BinaryAssertion
 {
-    std::wstring firstRepresentation;
-    std::wstring secondRepresentation;
+    std::string firstRepresentation;
+    std::string secondRepresentation;
     std::string operation;
 };
 
 struct ThrowAssertion
 {
-    std::wstring exceptionMessage;
+    std::string exceptionMessage;
     std::string expectedException;
     std::string actualException;
     bool exceptionThrown = false;

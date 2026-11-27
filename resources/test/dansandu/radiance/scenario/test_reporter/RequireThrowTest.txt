@@ -1,0 +1,139 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: RequireThrowTest
+    test class file name: "RequireThrowTest.cpp"
+    test class line number: 8
+    Begin test method
+      test method name: exception_throw_match
+      test method line number: 11
+      Begin assertion
+        expression: Exception, throw Exception{"Exception match message"}
+        line: 13
+      End assertion
+        assertion success: true
+        Throw assertion
+          expected exception: dansandu::journey::exception::Exception
+          actual exception: dansandu::journey::exception::Exception
+          exception thrown: true
+    End test method
+      test assertions ran: 1
+      test assertions passed: 1
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: true
+    Begin test method
+      test method name: exception_throw_mismatch
+      test method line number: 16
+      Begin assertion
+        expression: std::exception, throw Exception{"Exception mismatch message"}
+        line: 18
+      End assertion
+        assertion success: false
+        Throw assertion
+          expected exception: std::exception
+          actual exception: dansandu::journey::exception::Exception
+          exception thrown: true
+    End test method
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: false
+      exception type: dansandu::journey::exception::Exception
+      exception message: Exception mismatch message
+    Begin test method
+      test method name: logic_error_throw_match
+      test method line number: 21
+      Begin assertion
+        expression: std::logic_error, throw std::logic_error{"std::logic_error match message"}
+        line: 23
+      End assertion
+        assertion success: true
+        Throw assertion
+          expected exception: std::logic_error
+          actual exception: std::logic_error
+          exception thrown: true
+    End test method
+      test assertions ran: 1
+      test assertions passed: 1
+      test assertions failed: 0
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: true
+    Begin test method
+      test method name: logic_error_throw_mismatch
+      test method line number: 26
+      Begin assertion
+        expression: std::runtime_error, throw std::logic_error{"std::logic_error mismatch message"}
+        line: 28
+      End assertion
+        assertion success: false
+        Throw assertion
+          expected exception: std::runtime_error
+          actual exception: std::logic_error
+          exception thrown: true
+    End test method
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: false
+      exception type: std::logic_error
+      exception message: std::logic_error mismatch message
+    Begin test method
+      test method name: no_throw_mismatch
+      test method line number: 31
+      Begin assertion
+        expression: std::exception, ;
+        line: 33
+      End assertion
+        assertion success: false
+        Throw assertion
+          expected exception: std::exception
+          actual exception: 
+          exception thrown: false
+    End test method
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: false
+      exception type: dansandu::radiance::exception::AssertionFailureException
+      exception message: Assertion failed
+  End test class
+    test methods ran: 5
+    test methods passed: 2
+    test methods failed: 3
+    test assertions ran: 5
+    test assertions passed: 2
+    test assertions failed: 3
+    logging success: true
+    test class success: false
+End test suite
+  test classes ran: 1
+  test classes passed: 0
+  test classes failed: 1
+  test methods ran: 5
+  test methods passed: 2
+  test methods failed: 3
+  test assertions ran: 5
+  test assertions passed: 2
+  test assertions failed: 3
+  logging success: true
+  test suite success: false

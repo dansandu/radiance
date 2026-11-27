@@ -1,0 +1,5 @@
+  Test method failed sources/test/dansandu/radiance/scenario/ConstructionFailureTest.cpp(19)
+    within ConstructionFailureTest::method_after_failing_construction
+      an exception was thrown during construction:
+        std::runtime_error: construction failed
+

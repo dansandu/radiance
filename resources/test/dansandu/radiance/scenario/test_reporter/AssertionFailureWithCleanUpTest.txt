@@ -1,0 +1,49 @@
+Begin test suite
+  test classes to run: 1
+  logging level failure: WARNING
+  Begin test class
+    test class name: AssertionFailureWithCleanUpTest
+    test class file name: "AssertionFailureWithCleanUpTest.cpp"
+    test class line number: 4
+    Begin test method
+      test method name: failing_assertion
+      test method line number: 24
+      Begin assertion
+        expression: false
+        line: 26
+      End assertion
+        assertion success: false
+        Unary assertion
+          representation: false
+    End test method
+      test assertions ran: 1
+      test assertions passed: 0
+      test assertions failed: 1
+      test failing logs:
+      logging success: true
+      setup status: succeeded
+      cleanup status: succeeded
+      test method success: false
+      exception type: dansandu::radiance::exception::AssertionFailureException
+      exception message: Assertion failed
+  End test class
+    test methods ran: 1
+    test methods passed: 0
+    test methods failed: 1
+    test assertions ran: 1
+    test assertions passed: 0
+    test assertions failed: 1
+    logging success: true
+    test class success: false
+End test suite
+  test classes ran: 1
+  test classes passed: 0
+  test classes failed: 1
+  test methods ran: 1
+  test methods passed: 0
+  test methods failed: 1
+  test assertions ran: 1
+  test assertions passed: 0
+  test assertions failed: 1
+  logging success: true
+  test suite success: false

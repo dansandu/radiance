@@ -1,0 +1,34 @@
+  Assertion failed sources/test/dansandu/radiance/scenario/RequireLoggingTest.cpp(25)
+    within RequireLoggingTest::level_mismatch
+      REQUIRE_LOGGING(expectedLogs_, logError(message))
+        mismatch between expected logs:
+
+WARNING Another error
+
+        and actual logs:
+
+ERROR Another error
+
+  Assertion failed sources/test/dansandu/radiance/scenario/RequireLoggingTest.cpp(32)
+    within RequireLoggingTest::message_mismatch
+      REQUIRE_LOGGING(expectedLogs_, logError("Actual message"))
+        mismatch between expected logs:
+
+ERROR Expected message
+
+        and actual logs:
+
+ERROR Actual message
+
+  Assertion failed sources/test/dansandu/radiance/scenario/RequireLoggingTest.cpp(40)
+    within RequireLoggingTest::number_of_logs_mismatch
+      REQUIRE_LOGGING(expectedLogs_, logError("Some error"))
+        mismatch between expected logs:
+
+ERROR Some error
+ERROR Some error
+
+        and actual logs:
+
+ERROR Some error
+

@@ -1,0 +1,5 @@
+  Test method failed sources/test/dansandu/radiance/scenario/SetUpFailureTest.cpp(19)
+    within SetUpFailureTest::method_after_failing_set_up
+      an exception was thrown during setup:
+        std::runtime_error: setup failed
+
